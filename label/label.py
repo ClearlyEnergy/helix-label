@@ -22,7 +22,8 @@ class Label:
         in_file = INPUT_TEMPLATE_PATH + 'ResidentialGreenandEnergyEfficientAddendum.pdf'
         out_file = OUTPUT_PATH+'GreenAddendum.pdf'
         write_green_addendum_pdf(in_file, data_dict, out_file)
-        self._write_S3(self, out_file)
+        out_filename = self._write_S3(out_file)
+        return 'https://s3.amazonaws.com/certification-label/' + out_filename
         
     def _write_S3(self, file_name):
 #        bucket = os.environ.get('S3_BUCKET','')
@@ -30,4 +31,5 @@ class Label:
         filename = str(uuid.uuid4())+'.pdf'
         self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name)
         os.remove(file_name)
+        return filename
  
