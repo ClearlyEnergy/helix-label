@@ -13,18 +13,17 @@ OUTPUT_PATH = "../tmp/"
 class Label:
     def __init__(self):
         self.module_path = os.path.abspath(os.path.dirname(__file__))
-        self.in_path = os.path.join(self.module_path, INPUT_TEMPLATE_PATH)
-        self.out_path = os.path.join(self.module_path, OUTPUT_PATH)
+        self.in_path = os.path.normpath(os.path.join(self.module_path, INPUT_TEMPLATE_PATH))
+        self.out_path = os.path.normpath(os.path.join(self.module_path, OUTPUT_PATH))
         self.s3_resource = boto3.resource(
             's3',
             aws_access_key_id=os.environ.get('S3_KEY', ''),
             aws_secret_access_key=os.environ.get('S3_SECRET', '')
             )
-        print self
         
     def green_addendum(self, data_dict):
-        in_file = self.in_path + 'ResidentialGreenandEnergyEfficientAddendum.pdf'
-        out_file = self.out_path +'GreenAddendum.pdf'
+        in_file = self.in_path + '/ResidentialGreenandEnergyEfficientAddendum.pdf'
+        out_file = self.out_path +'/GreenAddendum.pdf'
         write_green_addendum_pdf(in_file, data_dict, out_file)
         out_filename = self._write_S3(out_file)
         return 'https://s3.amazonaws.com/certification-label/' + out_filename
