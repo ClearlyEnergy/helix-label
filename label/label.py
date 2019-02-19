@@ -24,8 +24,11 @@ class Label:
     def green_addendum(self, data_dict):
         in_file = self.in_path + '/ResidentialGreenandEnergyEfficientAddendum.pdf'
         out_file = self.out_path +'/GreenAddendum.pdf'
+        print('generating pdf')
         write_green_addendum_pdf(in_file, data_dict, out_file)
+        print('before write')
         out_filename = self._write_S3(out_file)
+        print('after write')
         return out_filename
         
     def _write_S3(self, file_name):

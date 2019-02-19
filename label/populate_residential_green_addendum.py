@@ -31,7 +31,7 @@ def write_green_addendum_pdf(input_pdf_path, data_dict, output_pdf_path):
                         rct = field.Rect
                         hight = round(float(rct[3]) - float(rct[1]),2)
                         width = round(float(rct[2]) - float(rct[0]),2)
-    
+
                         #create Xobject
                         xobj = IndirectPdfDict(
                                     BBox = [0, 0, width, hight],
@@ -49,7 +49,7 @@ def write_green_addendum_pdf(input_pdf_path, data_dict, output_pdf_path):
                          0 g
                          (''' + data_dict[key] + ''') Tj
                         ET EMC'''
-    
+
                         #put all together
                         field.AP = PdfDict(N = xobj)
                     elif field.FT == ANNOT_BUTTON_KEY: #checkboxes
@@ -60,7 +60,7 @@ def write_green_addendum_pdf(input_pdf_path, data_dict, output_pdf_path):
                         })
 
 #    if output_pdf_path:
-        PdfWriter().write(output_pdf_path, template_pdf)
+    PdfWriter().write(output_pdf_path, template_pdf)
 #        return True
 #    else:
 #        return template_pdf
