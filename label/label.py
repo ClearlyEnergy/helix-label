@@ -5,7 +5,7 @@ import os.path
 import boto3
 import uuid
 #lab = label.Label('filetype')
-# lab.green_addendum('./out_test.pdf', data_dict)
+# lab.green_addendum(data_dict)
 
 INPUT_TEMPLATE_PATH = "../templates/"
 OUTPUT_PATH = "../tmp/"
@@ -26,13 +26,12 @@ class Label:
         out_file = self.out_path +'/GreenAddendum.pdf'
         write_green_addendum_pdf(in_file, data_dict, out_file)
         out_filename = self._write_S3(out_file)
-        return 'https://s3.amazonaws.com/certification-label/' + out_filename
+        return out_filename
         
     def _write_S3(self, file_name):
-#        bucket = os.environ.get('S3_BUCKET','')
-        bucket = 'certification-label'
-        filename = str(uuid.uuid4())+'.pdf'
+        bucket = os.environ.get('S3_BUCKET','')
+#        bucket = 'ce-seed'
+        filename = 'labels/' + str(uuid.uuid4())+'.pdf'
         self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name)
         os.remove(file_name)
         return filename
- 
