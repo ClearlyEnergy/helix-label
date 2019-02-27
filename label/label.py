@@ -32,6 +32,6 @@ class Label:
         bucket = os.environ.get('S3_BUCKET','')
 #        bucket = 'ce-seed'
         filename = 'labels/' + str(uuid.uuid4())+'.pdf'
-        self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name)
+        self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs={'ACL':'public-read'})
         os.remove(file_name)
         return filename
