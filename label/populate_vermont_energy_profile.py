@@ -73,10 +73,10 @@ def write_vermont_energy_profile_pdf(data_dict):
     Story.append(Spacer(1, 12))
 
     ### HEADER
-    vthep_logo = "images/VHESLogoV4.jpg"
+    vthep_logo = "./images/VHESLogoV4.jpg"
     im = Image(vthep_logo, 1.63*inch, 1.75*inch)
     
-    wedge = "images/wedge.png"
+    wedge = "./images/wedge.png"
     im2 = Image(wedge, 3.70*inch, 1.70*inch)
 
     styles = getSampleStyleSheet()
@@ -126,7 +126,7 @@ def write_vermont_energy_profile_pdf(data_dict):
     text_left_15 = Paragraph("AFFILIATION:", p5)
      
     ##BODY RIGHT
-    chevron = "images/chevron_green.jpg"
+    chevron = "./images/chevron_green.jpg"
     im2 = Image(chevron, 5.90*inch, 0.6*inch)
     
     p7 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_xl, fontName = font_bold, spaceBefore = -38, leftIndent = 10, textColor=colors.white)
