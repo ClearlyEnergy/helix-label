@@ -1,4 +1,5 @@
 from populate_residential_green_addendum import write_green_addendum_pdf
+from populate_vermont_energy_profile import write_vermont_energy_profile_pdf
 from pdfrw import PdfWriter
 import os
 import os.path
@@ -26,6 +27,11 @@ class Label:
         out_file = self.out_path +'/GreenAddendum.pdf'
         write_green_addendum_pdf(in_file, data_dict, out_file)
         out_filename = self._write_S3(out_file)
+        return out_filename
+        
+    def vermont_energy_profile(self, data_dict):
+        write_vermont_energy_profile_pdf(data_dict)
+        out_filename = self._write_S3('')
         return out_filename
         
     def _write_S3(self, file_name):
