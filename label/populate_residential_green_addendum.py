@@ -3,9 +3,10 @@
 
 import os
 from pdfrw import PdfWriter, PdfReader, IndirectPdfDict, PdfName, PdfDict
+import pkg_resources
 
-INVOICE_TEMPLATE_PATH = './templates/ResidentialGreenandEnergyEfficientAddendum.pdf'
-INVOICE_OUTPUT_PATH = './GA_out.pdf'
+INVOICE_TEMPLATE_PATH = pkg_resources.resource_filename('label', 'templates/ResidentialGreenandEnergyEfficientAddendum.pdf')
+INVOICE_OUTPUT_PATH = pkg_resources.resource_filename('label','GA_out.pdf')
 
 
 ANNOT_KEY = '/Annots'

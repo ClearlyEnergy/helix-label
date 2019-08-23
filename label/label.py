@@ -8,8 +8,8 @@ import uuid
 #lab = label.Label('filetype')
 # lab.green_addendum(data_dict)
 
-INPUT_TEMPLATE_PATH = "../templates/"
-OUTPUT_PATH = "../tmp/"
+INPUT_TEMPLATE_PATH = "./templates/"
+OUTPUT_PATH = "./tmp/"
 
 class Label:
     def __init__(self):
@@ -30,8 +30,10 @@ class Label:
         return out_filename
         
     def vermont_energy_profile(self, data_dict):
-        write_vermont_energy_profile_pdf(data_dict)
-        out_filename = self._write_S3('')
+        out_file = self.out_path + 'VTLabel.pdf'
+        print(out_file)
+        write_vermont_energy_profile_pdf(data_dict, out_file)
+        out_filename = self._write_S3(out_file)
         return out_filename
         
     def _write_S3(self, file_name):
