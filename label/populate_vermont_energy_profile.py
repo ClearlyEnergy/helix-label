@@ -21,13 +21,13 @@ import datetime
 
 
 #Adding Arial Unicode for checkboxes
-my_location_of_TTF = '/Library/Fonts/'
-my_local_location_of_TTF = '/Users/vero/Library/Fonts/'
+my_local_location_of_TTF = '.fonts/'
+
 pdfmetrics.registerFont(TTFont('Inter',my_local_location_of_TTF+'Inter-Regular.ttf'))
 pdfmetrics.registerFont(TTFont('InterBold',my_local_location_of_TTF+'Inter-Bold.ttf'))
 pdfmetrics.registerFont(TTFont('InterItalic',my_local_location_of_TTF+'Inter-Italic.ttf'))
 pdfmetrics.registerFont(TTFont('InterThin',my_local_location_of_TTF+'Inter-Thin-BETA.ttf'))
-pdfmetrics.registerFont(TTFont('Arial Unicode',my_location_of_TTF+'Arial Unicode.ttf'))
+pdfmetrics.registerFont(TTFont('Arial Unicode',my_local_location_of_TTF+'Arial Unicode.ttf'))
 
 IMG_PATH = pkg_resources.resource_filename('label', 'images/')
 CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
