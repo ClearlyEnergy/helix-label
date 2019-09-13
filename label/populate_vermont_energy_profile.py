@@ -58,11 +58,7 @@ class flowable_triangle(Flowable):
         self.canv.setFont("Inter", 7)
         self.canv.setFillColor(colors.gray)
         self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
-        self.canv.setFont("FontAwesome", 30)
-        icon = u"\uf1e3" # fa-futbol-o
-        icon = u"\uf06d" #fire
-        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch,icon)
-        
+        self.canv.setFont("FontAwesome", 30)        
     
 def myFirstPage(canvas, doc):  
     canvas.saveState()  
