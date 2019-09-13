@@ -5,6 +5,7 @@
 #import time
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.charts.legends import Legend
+from reportlab.graphics.charts.textlabels import Label
 from reportlab.graphics.shapes import Drawing, Rect
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
 from reportlab.lib import colors
@@ -23,13 +24,12 @@ import datetime
 #Adding Arial Unicode for checkboxes
 FONT_PATH = pkg_resources.resource_filename('label', '.fonts/')
 
-#my_local_location_of_TTF = './.fonts/'
-
 pdfmetrics.registerFont(TTFont('Inter',FONT_PATH+'Inter-Regular.ttf'))
 pdfmetrics.registerFont(TTFont('InterBold',FONT_PATH+'Inter-Bold.ttf'))
 pdfmetrics.registerFont(TTFont('InterItalic',FONT_PATH+'Inter-Italic.ttf'))
 pdfmetrics.registerFont(TTFont('InterThin',FONT_PATH+'Inter-Thin-BETA.ttf'))
-pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'Arial Unicode.ttf'))
+#pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'Arial Unicode.ttf'))
+pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"FontAwesome.ttf"))
 
 IMG_PATH = pkg_resources.resource_filename('label', 'images/')
 CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
@@ -38,6 +38,7 @@ CUSTOM_MGREEN = colors.Color(red=(146.0/255),green=(200.0/255),blue=(74.0/255))
 CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255))
 CUSTOM_YELLOW = colors.Color(red=(254.0/255),green=(230.0/255),blue=(153.0/255))
 FUELS = ['elec', 'ng', 'ho', 'propane', 'wood_pellet', 'wood_cord']
+FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
 FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood Pellet', 'Wood Cord']
 FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'cord', 'lb']
 COLORLIST = [CUSTOM_LGREEN, CUSTOM_DGREEN, CUSTOM_MGREEN]
@@ -57,6 +58,11 @@ class flowable_triangle(Flowable):
         self.canv.setFont("Inter", 7)
         self.canv.setFillColor(colors.gray)
         self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
+        self.canv.setFont("FontAwesome", 30)
+        icon = u"\uf1e3" # fa-futbol-o
+        icon = u"\uf06d" #fire
+        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch,icon)
+        
     
 def myFirstPage(canvas, doc):  
     canvas.saveState()  
@@ -79,26 +85,29 @@ def myLaterPages(canvas, doc):
 #    draw_obj.add(legend)
 
 def pie_chart(data_dict):
-#    unchecked = u"\u2752"
+    drawing = Drawing(width=1.25*inch, height=1.25*inch)
     data = []
     labels = []
+        
     for num, fuel in enumerate(FUELS):
         if data_dict[fuel+'_score'] > 0:
             data.append(int(data_dict[fuel+'_score']))
-            labels.append(FUELLABEL[num])
-    drawing = Drawing(width=1.25*inch, height=1.25*inch)
+#            txt += FUELLABEL[num]
+            labels.append(FUELICONS[num])
     pie = Pie()
     pie.sideLabels = False
     pie.x = 10
     pie.y = -10
     pie.data = data
-#    pie.labels = [unchecked.encode('UTF8'),'b']
     pie.labels = labels
     pie.slices.strokeColor = colors.white
     pie.slices.strokeWidth = 0.25
+    pie.simpleLabels = 0
     for i in range(len(data)):
         pie.slices[i].labelRadius = 0.5
         pie.slices[i].fillColor = COLORLIST[i]
+        pie.slices[i].fontName = 'FontAwesome'
+        pie.slices[i].fontSize = 16
     drawing.add(pie)
     return drawing
 
@@ -119,17 +128,16 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     font_italic = 'InterItalic'
     checked = u"\u2713"
     unchecked = u"\u2752"
-    leq = u"<font name='Arial Unicode'>\u2264</font>"
-    geq = u"<font name='Arial Unicode'>\u2265</font>"
-    registered = u"<font name='Arial Unicode'>\u00AE</font>"
-#    unchecked = u"\u2610"
+    leq = u"\u2264"
+    geq = u"\u2265"
+    registered = u"\u00AE"
     space = u"\u0009"
     
     colors_lgreen = ''
 
     Story=[]
     Story.append(Spacer(1, 12))
-
+    
     ### HEADER
     vthep_logo = IMG_PATH+"VHESLogoV4.jpg"
     im = Image(vthep_logo, 1.63*inch, 1.65*inch)
@@ -228,10 +236,10 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
     for num, fuel in enumerate(FUELS):
         if data_dict[fuel+'_score'] != 0:
-            tct.append([[Paragraph(FUELLABEL[num], p14), Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num], p16), Paragraph('{0:.2f}'.format(data_dict['rate_'+fuel]) + ' $/'+FUELUNIT[num], p16)]])
+            tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[num]+"</font> " + FUELLABEL[num], p14), Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num], p16), Paragraph('{0:.2f}'.format(data_dict['rate_'+fuel]) + ' $/'+FUELUNIT[num], p16)]])
 
     if data_dict['solar_score'] > 0:
-        tct.append([[Paragraph('Solar', p14), Paragraph('$'+"{:,}".format(int(data_dict['solar_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_solar'])) + ' kwh', p16)]])
+        tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", p14), Paragraph('$'+"{:,}".format(int(data_dict['solar_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_solar'])) + ' kwh', p16)]])
         
     cost_subTable = Table(tct, colWidths = [1.93*inch])
     cost_subTable.setStyle(TableStyle([
