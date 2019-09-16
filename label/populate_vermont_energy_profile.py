@@ -150,12 +150,12 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
     text_cost_1 = Paragraph("THIS HOME'S ANNUAL EXPECTED ENERGY COST", p1_1)
     text_cost_2 = Paragraph('$'+"{:,}".format(int(data_dict['score'])), p1_2)
-    text_cost_3 = Paragraph('*Third-Party Verified', p1_5)
+#    text_cost_3 = Paragraph('*Third-Party Verified', p1_5)
 
     text_use_1 = Paragraph(str(int(data_dict['cons_mmbtu']))+' MMBtu', p1_3)
     text_use_2 = Paragraph(str(int(data_dict['cons_mmbtu_max'])), p1_4)
 
-    header_table = Table([['','','','',''],['', im, '',[text_cost_1, text_cost_2, text_cost_3], [im2, text_use_1, text_use_2], ''],['','','','','']],
+    header_table = Table([['','','','',''],['', im, '',[text_cost_1, text_cost_2], [im2, text_use_1, text_use_2], ''],['','','','','']],
         colWidths=[0.3*inch, 1.63 * inch, 0.1*inch, 1.93 * inch, 3.67 * inch,0.1*inch],
         rowHeights=[0.1*inch, 1.65 * inch, 0.1*inch], spaceBefore=0, spaceAfter=20)
     header_table.setStyle(TableStyle([
@@ -246,11 +246,13 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
             ('INNERGRID', (-1,-2), (-1, -1), 1, CUSTOM_DGREEN),
          ]))    
     pie = pie_chart(data_dict)
-    if data_dict['evt'] or data_dict['estar_wh'] or data_dict['hers_score'] or data_dict['hes_score']:
+    if data_dict['hers_score'] or data_dict['hes_score']:
         if data_dict['hers_score']:
             t_source = Paragraph("Source: RESNET HERS Index", p8b)
         if data_dict['hes_score']:
             t_source = Paragraph("Source: DOE Home Energy Score", p8b)
+    else:
+        t_source = Paragraph("The Energy Estimate <font name='InterItalic'>powered by</font> HELIX and ClearlyEnergy",p8b)
     
     
     cost_table = Table([[[tct1], cost_subTable, [pie]],[t_source]], colWidths = [1.94*inch, 1.93*inch, 1.93*inch], spaceBefore=-10)
