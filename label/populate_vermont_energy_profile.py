@@ -39,7 +39,7 @@ CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255)
 CUSTOM_YELLOW = colors.Color(red=(254.0/255),green=(230.0/255),blue=(153.0/255))
 FUELS = ['elec', 'ng', 'ho', 'propane', 'wood_pellet', 'wood_cord']
 FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
-FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood Pellet', 'Wood Cord']
+FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood-Pellet', 'Wood-Cord']
 FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'lb', 'cord']
 COLORLIST = [CUSTOM_LGREEN, CUSTOM_DGREEN, CUSTOM_MGREEN]
 
