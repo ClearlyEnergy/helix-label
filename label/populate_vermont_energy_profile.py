@@ -40,7 +40,7 @@ CUSTOM_YELLOW = colors.Color(red=(254.0/255),green=(230.0/255),blue=(153.0/255))
 FUELS = ['elec', 'ng', 'ho', 'propane', 'wood_pellet', 'wood_cord']
 FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
 FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood-Pellet', 'Wood-Cord']
-FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'lb', 'cord']
+FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'ton', 'cord']
 COLORLIST = [CUSTOM_LGREEN, CUSTOM_DGREEN, CUSTOM_MGREEN]
 
 class flowable_triangle(Flowable):
@@ -248,27 +248,29 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     pie = pie_chart(data_dict)
     if data_dict['hers_score'] or data_dict['hes_score']:
         if data_dict['hers_score']:
-            t_source = Paragraph("Source: RESNET HERS Index", p8b)
+            t_source = Paragraph("Source: RESNET HERS Index. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
         if data_dict['hes_score']:
-            t_source = Paragraph("Source: DOE Home Energy Score", p8b)
+            t_source = Paragraph("Source: DOE Home Energy Score. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
     else:
-        t_source = Paragraph("The Energy Estimate <font name='InterItalic'>powered by</font> HELIX and ClearlyEnergy",p8b)
+        t_source = Paragraph("The Energy Estimate <font name='InterItalic'>powered by</font> HELIX and ClearlyEnergy. Utility and fuel rates: Department of Energy & Energy Information Agency",p8b)
     
     
     cost_table = Table([[[tct1], cost_subTable, [pie]],[t_source]], colWidths = [1.94*inch, 1.93*inch, 1.93*inch], spaceBefore=-10)
     cost_table.setStyle(TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ('BACKGROUND',(0,0),(-1,-1),colors.white),
+        ('SPAN', (0, -1), (2, -1)),
 #        ('INNERGRID', (-2, -3), (-1, -1), 1, CUSTOM_LGREEN),
      ]))
     
     # TAKE ACTION
     p9 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_h, fontName = font_bold, spaceBefore = -30, leftIndent = 10, textColor=colors.white)
     p10 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_l, fontName = font_bold, spaceBefore = -14, leftIndent = 120, spaceAfter = 30, backColor = 'white')
-    p10b = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_h, fontName = font_bold, spaceBefore = -14, leftIndent = 120, spaceAfter =17, backColor = 'white')
+    p10b = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_h, fontName = font_bold, spaceBefore = -14, leftIndent = 120, spaceAfter = 8, backColor = 'white')
 
     p11 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal,  spaceBefore = -8, spaceAfter = 0, leading=20, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 12, borderPadding = (0, 12, 0, 12))
-    p12 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=20, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 12, borderPadding = (0, 12, 0, 12))
+    p12 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=16, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 12, borderPadding = (0, 12, 0, 12))
+    p12b = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 12)
     p13 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_italic,  spaceBefore = -1, spaceAfter = 0, leading=20, backColor = 'white', firstLineIndent = 0, leftIndent = 12, rightIndent = 12, borderPadding = (0, 12, 0, 12))
     p14 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 20, leading=20, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 12, borderPadding = (0, 12, 0, 12))
     
@@ -287,24 +289,70 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
     tc5 = Paragraph('ACHIEVEMENTS', p9)
     tc6 = Paragraph("Completed Actions, Home Energy Certifications and Improvement Measures", p10b)
+
     t_achieve = []
-    t_achieve.append(Paragraph(" ",p11))
-    
+#    t_achieve.append(Paragraph(" ",p11))    
     if data_dict['evt'] or data_dict['estar_wh'] or data_dict['hers_score'] or data_dict['hes_score']:
         if data_dict['evt']:
-            t_achieve.append(Paragraph(data_dict['evt'], p12, bulletText=checked.encode('UTF8')))
+            t_achieve.append(Paragraph(data_dict['evt'], p12b, bulletText=checked.encode('UTF8')))
         if data_dict['estar_wh']:
-            t_achieve.append(Paragraph('EPA ENERGYSTAR® Home', p12, bulletText=checked.encode('UTF8')))
+            t_achieve.append(Paragraph('EPA ENERGYSTAR® Home', p12b, bulletText=checked.encode('UTF8')))
         if data_dict['hers_score']:
-            t_achieve.append(Paragraph('HERS Index Score: ' + str(data_dict['hers_score']), p12, bulletText=checked.encode('UTF8')))
+            t_achieve.append(Paragraph('HERS Index Score: ' + str(data_dict['hers_score']), p12b, bulletText=checked.encode('UTF8')))
         if data_dict['hes_score']:
-            t_achieve.append(Paragraph('Home Energy Score: ' + str(data_dict['hes_score']) + '/10', p12, bulletText=checked.encode('UTF8')))
+            t_achieve.append(Paragraph('Home Energy Score: ' + str(data_dict['hes_score']) + '/10', p12b, bulletText=checked.encode('UTF8')))
+        if len(t_achieve) > 2:
+            t_achieve = [t_achieve[0:2], t_achieve[2:]]
+        else:
+            t_achieve = [t_achieve]
+
+        achieve_table = Table(t_achieve, colWidths = [2.9*inch, 2.9*inch])
+        achieve_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+         ]))
     else:
-        t_achieve.append(Paragraph("Generated a Vermont Home Energy Profile.", p12, bulletText=checked.encode('UTF8')))
-        t_achieve.append(Paragraph("Congratulations! You've taken the first step to understanding your home's energy use… ", p13))  
+        t_achieve.append([Paragraph("Generated a Vermont Home Energy Profile.", p12, bulletText=checked.encode('UTF8'))])
+        t_achieve.append([Paragraph("Congratulations! You've taken the first step to understanding your home's energy use… ", p13)])  
+        achieve_table = Table(t_achieve, colWidths = [5.8*inch])
+        achieve_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+         ]))
+    
+    estarr = []
+    if data_dict['heater_estar']:
+        estarr.append(Paragraph('ENERGYSTAR® Heating System', p12b, bulletText=checked.encode('UTF8')))
+    if data_dict['water_estar']:
+        estarr.append(Paragraph('ENERGYSTAR® Water Heater', p12b, bulletText=checked.encode('UTF8')))
+    if data_dict['ac_estar']:
+        estarr.append(Paragraph('ENERGYSTAR® Air Conditioning', p12b, bulletText=checked.encode('UTF8')))
+    if data_dict['fridge_estar']:
+        estarr.append(Paragraph('ENERGYSTAR® Refrigerator', p12b, bulletText=checked.encode('UTF8')))
+    if data_dict['washer_estar']:
+        estarr.append(Paragraph('ENERGYSTAR® Clothes Washer', p12b, bulletText=checked.encode('UTF8')))
+    if data_dict['dishwasher_estar']:
+        estarr.append(Paragraph('ENERGYSTAR® Dishwasher', p12b, bulletText=checked.encode('UTF8')))
+    if len(estarr) > 4:
+        estarr = [estarr[0:2],estarr[2:4],estarr[4:]]
+    elif len(estarr) > 2:
+        estarr = [estarr[0:2], estarr[2:]]
+    elif len(estarr) > 0:
+        estarr = [estarr]
+    else:
+        estarr = None 
+
+    if estarr is not None:
+        estar_table = Table(estarr, colWidths = [2.9*inch, 2.9*inch])
+        estar_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+         ]))   
+    else:
+        estar_table = Spacer(1,12) 
     
     body_table = Table([[left_table, 
-        [im2, tc1, tc2, cost_table, Spacer(1, 12), im2, tc5, tc6, t_achieve, Spacer(1, 12), im2, tc3, tc4, tb]]], 
+        [im2, tc1, tc2, cost_table, Spacer(1, 12), im2, tc5, tc6, achieve_table, estar_table, Spacer(1, 12), im2, tc3, tc4, tb]]], 
         colWidths = [1.73 * inch, 5.97 * inch])
     body_table.setStyle(TableStyle([
 #        ('BACKGROUND',(1,0),(-1,0),colors.HexColor('#41ad49')), 
@@ -496,11 +544,13 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
 
 if __name__ == '__main__':
-    data_dict = {'street': '123 Main St', 'city': 'Montpelier', 'state': 'VT', 'zipcode': '05000', 
-        'yearbuilt': 2005, 'finishedsqft': 2200, 'score': 3137.0, 'cons_mmbtu': 93.0, 'cons_mmbtu_max': 231.0, 'cons_mmbtu_min': 25.0,
-        'heatingfuel': 'Natural Gas', 'ng_score': 1531, 'elec_score': 1600, 'ho_score': 251, 'propane_score': 0, 'wood_cord_score': 0, 'wood_pellet_score': 0, 'solar_score': 1450,
-        'cons_elec': 15000,'cons_ng': 150, 'cons_ho': 50, 'cons_propane': 0, 'cons_wood_cord': 0, 'cons_wood_pellet': 0, 'cons_solar': 1500,
-        'rate_ho': 2.5,  'rate_propane': 3.0, 'rate_ng': 1.4, 'rate_elec': 0.2, 'rate_wood_cord': 200, 'rate_wood_pellet': 0.1,
-        'evt': '', 'hers_score': None, 'hes_score': 10, 'estar_wh': False, 'author_name': 'John Doe'}
+    data_dict = {'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
+        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 4656.0, 'cons_mmbtu': 192.035812, 'cons_mmbtu_max': 491.99764, 'cons_mmbtu_min': 90.566712,
+        'heatingfuel': 'Heating Oil', 'ng_score': 0.0, 'elec_score': 1251.0, 'ho_score': 3405.0, 'propane_score': 0.0, 'wood_cord_score': 0, 'wood_pellet_score': 0, 'solar_score': 872.0,
+        'cons_elec': 12129.0,'cons_ng': 0.0, 'cons_ho': 1213.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 164.0, 'cons_solar': -4978.0,
+        'rate_ho': 2.807,  'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
+        'evt': None, 'hers_score':None, 'hes_score':None, 'estar_wh': False, 'author_name': 'John Doe', 'heater_estar': False,
+        'water_estar': False,'ac_estar': False,'fridge_estar': False,'washer_estar': False,'dishwasher_estar': False}
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
+    
