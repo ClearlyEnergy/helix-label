@@ -31,7 +31,6 @@ class Label:
         
     def vermont_energy_profile(self, data_dict):
         out_file = self.out_path + 'VTLabel.pdf'
-        print(out_file)
         write_vermont_energy_profile_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file)
         return out_filename
@@ -39,6 +38,11 @@ class Label:
     def _write_S3(self, file_name):
         bucket = os.environ.get('S3_BUCKET','')
         filename = 'labels/' + str(uuid.uuid4())+'.pdf'
-        self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs={'ACL':'public-read'})
+        self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs={'ContentType': 'application/pdf', 'ACL':'public-read'})
         os.remove(file_name)
         return filename
+        
+    def remove_label(self, filename):
+        bucket = os.environ.get('S3_BUCKET','')
+        self.s3_resource.Object(bucket,filename).delete()
+        return True
