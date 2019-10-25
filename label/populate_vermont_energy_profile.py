@@ -292,6 +292,9 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
     t_achieve = []
 #    t_achieve.append(Paragraph(" ",p11))    
+    if data_dict['has_audit']:
+        t_achieve.append([Paragraph("This home has gone through an Efficiency Excellence Network audit", p12b, bulletText=checked.encode('UTF8'))])
+
     if data_dict['evt'] or data_dict['estar_wh'] or data_dict['hers_score'] or data_dict['hes_score']:
         if data_dict['evt']:
             t_achieve.append(Paragraph(data_dict['evt'], p12b, bulletText=checked.encode('UTF8')))
@@ -312,7 +315,8 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
     else:
-        t_achieve.append([Paragraph("Generated a Vermont Home Energy Profile.", p12, bulletText=checked.encode('UTF8'))])
+        if not data_dict['has_audit']:
+            t_achieve.append([Paragraph("Generated a Vermont Home Energy Profile.", p12, bulletText=checked.encode('UTF8'))])
         t_achieve.append([Paragraph("Congratulations! You've taken the first step to understanding your home's energy use… ", p13)])  
         achieve_table = Table(t_achieve, colWidths = [5.8*inch])
         achieve_table.setStyle(TableStyle([
@@ -549,8 +553,8 @@ if __name__ == '__main__':
         'heatingfuel': 'Heating Oil', 'ng_score': 0.0, 'elec_score': 1251.0, 'ho_score': 3405.0, 'propane_score': 0.0, 'wood_cord_score': 0, 'wood_pellet_score': 0, 'solar_score': 872.0,
         'cons_elec': 12129.0,'cons_ng': 0.0, 'cons_ho': 1213.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 164.0, 'cons_solar': -4978.0,
         'rate_ho': 2.807,  'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
-        'evt': None, 'hers_score':None, 'hes_score':None, 'estar_wh': False, 'author_name': 'John Doe', 'heater_estar': False,
-        'water_estar': False,'ac_estar': False,'fridge_estar': False,'washer_estar': False,'dishwasher_estar': False}
+        'evt': None, 'hers_score':None, 'hes_score':None, 'estar_wh': False, 'author_name': 'John Doe', 'heater_estar': True,
+        'water_estar': True,'ac_estar': False,'fridge_estar': False,'washer_estar': False,'dishwasher_estar': False, 'has_audit': True, 'auditor': 'Joe'}
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
     
