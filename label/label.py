@@ -44,5 +44,8 @@ class Label:
         
     def remove_label(self, filename):
         bucket = os.environ.get('S3_BUCKET','')
-        self.s3_resource.Object(bucket,filename).delete()
-        return True
+        ret = self.s3_resource.Object(bucket,'labels/' + filename).delete()
+        if ret['ResponseMetadata']['HTTPStatusCode'] == 204:
+            return True
+        else:
+            return False
