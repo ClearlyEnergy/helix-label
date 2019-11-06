@@ -12,6 +12,7 @@ import pkg_resources
 from reportlab.lib import colors
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
+from reportlab.lib.enums import TA_CENTER
 
 PAGE_HEIGHT=defaultPageSize[1]
 PAGE_WIDTH=defaultPageSize[0]
@@ -96,7 +97,7 @@ def create_pdf():
     frameWidth = document.width/3
     frameHeight = document.height-header_frame.height+(0.2*inch)
     column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
-    f1_header1 = "<font color=black>ABOUT</font>"
+    f1_header1 = "<font name=Helvetica color=#4c4f52 size=12>ABOUT</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
     f1_text1 = '<font color=black>Address</font>'
     f1_text1_p = Paragraph(f1_text1,styles['Normal'])
@@ -153,7 +154,7 @@ def create_pdf():
 
     Story.append(Story.append(Spacer(1, 12)))
 
-    f1_header_2 = "<font color=black>YEARLY ENERGY USE</font>"
+    f1_header_2 = "<font name=Helvetica color=#4c4f52 size=12>YEARLY ENERGY USE</font>"
     f1_header2_p = Paragraph(f1_header_2,styles['Heading2'])
     Story.append(f1_header2_p)
     
@@ -174,7 +175,7 @@ def create_pdf():
 
     Story.append(Story.append(Spacer(1, 12)))
    
-    f1_header_3 = "<font color=black>YEARLY COSTS & SAVINGS<super >*</super> </font>"#add prefix
+    f1_header_3 = "<font name=Helvetica color=#4c4f52 size=12>YEARLY COSTS & SAVINGS<super >*</super> </font>"#add prefix
     f1_header3_p = Paragraph(f1_header_3,styles['Heading2'])
     Story.append(f1_header3_p)
 
@@ -241,43 +242,106 @@ def create_pdf():
     frameHeight_2 = document.height-header_frame.height+(0.2*inch)
     column_2 = Frame(document.leftMargin+frameWidth_2,document.bottomMargin,frameWidth_2+inch,frameHeight_2, showBoundary=0)
 
-    f2_header1 = "<font color=black>HOME ENERGY USE</font>"
+    f2_header1 = "<font name=Helvetica color=#4c4f52 size=12>HOME ENERGY USE</font>"
     f2_header1_p = Paragraph(f2_header1,styles['Heading2'])
     Story.append(f2_header1_p)
     f2_text_p = Paragraph('<font size=8.5 color=#736d5e>This shows the estimated total energy use (electricity and heating fuel) of your home for one year. The lower the energy use, the better!</font>',styles['Normal'])
     Story.append(f2_text_p)
 
     
+    scorecard_btu = IMG_PATH+"scorecard_btu.png"
+    img_sc_btu = Image(scorecard_btu,width=5*cm,height=12*cm)
+    total_energy_usage_base = 205
+    total_energy_usage_base_p = Paragraph('<font name=FontAwesome>{}</font>'.format(total_energy_usage_base),styles['Title'])
+    f2_text1_p = Paragraph('<font name=Helvetica size=7.5  color=#4c4f52>Energy Use before improvements</font>',styles['Normal'])
+    total_energy_usage_improved = 122
+    total_energy_usage_improved_p = Paragraph('<font name=FontAwesome>{}</font>'.format(total_energy_usage_improved),styles['Title'])
 
-    # page1_frames =[]
-    # page1_frameCount =3
-    # frameWidth = document.width/page1_frameCount
-    # frameHeight = document.height-inch
-    # bottom_margin =document.bottomMargin+0.5*inch
+    f2_text2_p = Paragraph('<font name=Helvetica  size=7.5  color=#4c4f52>Energy Use after recommended improvements</font>',styles['Normal'])
 
+    data_table4 = [[img_sc_btu,total_energy_usage_base_p,f2_text1_p],['','',''],['',total_energy_usage_improved_p,f2_text2_p ]]
 
+    tbl_frame_2 = Table(data_table4)
     
-    # for frame in range(page1_frameCount):
-    #     leftMargin = document.leftMargin + frame*frameWidth
-    #     column =Frame(leftMargin, bottom_margin,frameWidth,frameHeight)
-    #     page1_frames.append(column)
-    
+    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,2),-4*cm),('LEFTPADDING',(2,0),(2,2),-2.5*cm),('TOPPADDING',(0,0),(0,0),cm),('SPAN', (0, 0), (0, -1)),('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),('VALIGN',(1,0),(2,0),'MIDDLE'),('VALIGN',(1,2),(2,2),'TOP')])
+    tbl_frame_2.setStyle(tblStyle)
+    Story.append(tbl_frame_2)
+    styles.add(ParagraphStyle(name='Centre', alignment=TA_CENTER))
+    f2_text3_p = Paragraph('<font size=8.5 color=#736d5e>Estimated percentage of energy use by fuel type:</font>',styles['Centre'])
+    Story.append(f2_text3_p)
+    propane_percentage=4
+    fuel_oil_percentage = 90
+    electricity_percentage = 6
+    data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
+    tbl1_frame_2 = Table(data_f2,rowHeights=cm)
+    tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#c8cacc')),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('ALIGN',(0,0),(-1,-1),'CENTER')])
+    tbl1_frame_2.setStyle(tblStyle1_frame_2)
+    Story.append(tbl1_frame_2)
 
-    # page2_frames =[]
-    # page2_frameCount =2
-    # frameWidth2 = document.width/page2_frameCount
-    # frameHeight = document.height-.5*inch
+    # creating and populating frame3
+    Story.append(FrameBreak)
+    frameWidth_3 = document.width/3
+    frameHeight_3 = document.height-header_frame.height+(0.2*inch)
+    column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=0)
+    f3_header1 = "<font name=Helvetica color=#4c4f52 size=12>HOME CARBON FOOTPRINT</font>"
+    f3_header1_p = Paragraph(f3_header1,styles['Heading2'])
+    Story.append(f3_header1_p)
+    f3_text_p = Paragraph('<font  size=8.5 color=#736d5e>This score shows the'+
+                            'estimated carbon missions based on the annual amounts,'+
+                             'types,and sources of fuels used in your home. The lower'+
+                             'the score, the less carbon is released into the atmosphere to power your home.</font>'
+                                ,styles['Normal'])
+    Story.append(f3_text_p)
 
-    # for frame in range(page2_frameCount):
-    #     leftMargin = document.leftMargin + frame*frameWidth2
-    #     column =Frame(leftMargin, document.bottomMargin,frameWidth2,frameHeight)
-    #     page2_frames.append(column)
+    co2_production_base =16.4
+    co2_production_base_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(co2_production_base),styles['Normal'])
 
-    # templates= []
-    # templates.append(PageTemplate(frames=page1_frames,id='firstPage',onPage=footer))
-    # templates.append(PageTemplate(frames=page2_frames,id='secondPage',onPage=footer))
+    co2_text_p = Paragraph('<font name=Helvetica size=7.5 color=#4c4f52>Footprint before improvement</font>',styles['Normal'])
+    co2_production_improved = 10.2
+    co2_production_improved_p = Paragraph('<font name=Helvetica-Bold >{}</font>'.format(co2_production_improved),styles['Normal'])
+    co2_improved_text_p = Paragraph('<font name=Helvetica size=7.5 color=#4c4f52 >Footprint after recommended improvements</font>',styles['Normal'])
+    scorecard_ton =IMG_PATH+'scorecard_ton.png'
+    img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=10*cm)
 
-    page_1_frames = [header_frame, column_1,column_2]
+    data_tbl1_f3 = [[img_sc_ton,co2_production_base_p,co2_text_p],['','',''],['',co2_production_improved_p,co2_improved_text_p ]]
+
+    tblStyle_f3 = TableStyle([('LEFTPADDING',(1,0),(1,2),-2.5*cm),
+    ('LEFTPADDING',(2,0),(2,2),-1.3*cm),('TOPPADDING',(0,0),(0,0),1*cm),
+    ('SPAN', (0, 0), (0, -1)),('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),
+    ('VALIGN',(1,0),(2,0),'MIDDLE'),
+    ('TOPPADDING',(2,0),(2,0),1.7*cm),('TOPPADDING',(1,0),(1,0),1.2*cm),
+    ('VALIGN',(1,2),(2,2),'TOP')])
+
+    tbl1_f3 = Table(data_tbl1_f3)
+    tbl1_f3.setStyle(tblStyle_f3)
+    Story.append(tbl1_f3)
+
+    f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
+    Story.append(Spacer(1,8.8))
+    Story.append(f3_text3_p)
+
+    fuel_oil_percentage_f3 = 93
+    electricity_percentage_f3 = 7
+    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
+    Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(electricity_percentage_f3)),styles['Normal'])]]
+
+    tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
+    tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
+    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#c8cacc')),
+    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+    ('ALIGN',(0,0),(-1,-1),'CENTER')])
+
+    tbl2_frame_3.setStyle(tblStyle2_frame_3)
+  
+    Story.append(tbl2_frame_3)
+
+
+
+
+
+
+    # SETTING UP PAGE TEMPLATES
+    page_1_frames = [header_frame, column_1,column_2,column_3]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     document.addPageTemplates(templates)
