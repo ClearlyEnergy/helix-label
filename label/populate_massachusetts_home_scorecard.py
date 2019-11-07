@@ -69,7 +69,7 @@ def create_pdf():
     header_text2="<font name=helvetica size=8.2 color=#505752>This scorecard compares home energy use and carbon footprint to an average home in MA, and shows improvements based on recommended technology.</font>"
     hp1 = Paragraph(header_text,styles['Heading1'])
     hp2 = Paragraph(header_text2,styles['BodyText'])
-    header_text3 = "<font name=courier size=7.2 color=gray> HOME ENERGY USE </font>"
+    header_text3 = "<font name=helvetica size=6.5 color=#514C45> HOME ENERGY USE </font>"
     header_text4 = " <font color=white> 205</font>"
     hp4 = Paragraph(header_text4,styles['Title'])
     hp3 = Paragraph(header_text3,styles['Normal'])
