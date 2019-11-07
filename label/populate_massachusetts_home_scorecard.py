@@ -83,7 +83,124 @@ def create_pdf():
     tbl = Table(data)
     tbl.setStyle(tblStyle)
     Story.append(tbl)
-    ##creating frames
+    header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.12*document.height, showBoundary=1)
+    Story.append(FrameBreak)
+    osme = header_frame.height
+    print(osme, document.bottomMargin)
+
+    ##CREATING FRAMES FOR PAGE1
+    # creating and populating frame1
+    
+    frameWidth = document.width/3
+    frameHeight = document.height-header_frame.height+(0.2*inch)
+    column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=1)
+    f1_header1 = "<font color=black>ABOUT</font>"
+    f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
+    f1_text1 = '<font color=black>Address</font>'
+    f1_text1_p = Paragraph(f1_text1,styles['Normal'])
+    address_line_1 = "123 Main St."
+    address_line_2 = ''
+    city='Whately'
+    state = 'MA'
+    postal_code= '01903'
+    address = '<font color=black>{}, {}, {}, {}, {}</font>'.format(address_line_1,address_line_2,city,state,postal_code)
+    address_p = Paragraph(address,styles['Normal'])
+    Story.append(f1_header1_p)
+    
+    Story.append(f1_text1_p)
+    Story.append(Spacer(1, 5))
+    Story.append(address_p)
+    Story.append(Spacer(1, 5))
+    #create style for pragraphs in frame_1
+    styles.add(ParagraphStyle(name='f1_leading',leading=16))
+    year_built ='1850'
+    year_built_header_p = Paragraph('Year Built',styles['f1_leading'])
+    year_built_p=Paragraph('<font name=Helvetica-Bold>{}</font>'.format(year_built),styles['f1_leading'])
+    
+    conditioned_floor_area = 2735
+    conditioned_floor_area_header_p = Paragraph('Sq. Footage',styles['f1_leading'])
+    conditioned_floor_area_p  = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(conditioned_floor_area)),styles['f1_leading'])
+   
+    number_of_bedrooms =3
+    number_of_bedrooms_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(number_of_bedrooms)),styles['f1_leading'])
+    number_of_bedrooms_header_p = Paragraph('# of Bedrooms',styles['f1_leading'])
+
+    primary_heating_fuel_type_header_p = Paragraph('Primary Heating Fuel',styles['f1_leading'])
+    primary_heating_fuel_type = 'Fuel Oil'
+    primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
+
+
+    assessment_date = 'N/A'
+    assessment_date_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
+    assessment_date_header_p = Paragraph('Assessment Date',styles['f1_leading'])
+
+    company_header_p =Paragraph('Energy Specialist',styles['f1_leading'])
+    company ='Dave Saves'
+    company_p =Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(company)),styles['f1_leading'])
+
+
+
+    data1_f1=[[[year_built_header_p,year_built_p],[conditioned_floor_area_header_p,conditioned_floor_area_p]],
+              [[number_of_bedrooms_header_p,number_of_bedrooms_p],[primary_heating_fuel_type_header_p,primary_heating_fuel_type_p]],
+              [[assessment_date_header_p,assessment_date_p],[company_header_p,company_p]]
+              ]
+    tbl_frame_1 = Table(data1_f1)
+    tbl_frame_1_tableStyle = TableStyle([('ALIGN', (0, 0), (0, -1),'LEFT'),('LEFTPADDING',(0,0),(0,-1),0)])
+    tbl_frame_1.setStyle(tbl_frame_1_tableStyle)
+    Story.append(tbl_frame_1)
+
+    Story.append(Story.append(Spacer(1, 12)))
+
+    f1_header_2 = "<font color=black>YEARLY ENERGY USE</font>"
+    f1_header2_p = Paragraph(f1_header_2,styles['Heading2'])
+    Story.append(f1_header2_p)
+    
+
+    electric_energy_usage_base_header_p =Paragraph('electricity',styles['f1_leading'])
+    electric_energy_usage_base = 3.613
+    electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold>{} kWh</font>'.format(str(electric_energy_usage_base)),styles['f1_leading'])
+
+    fuel_energy_base_header_p = Paragraph('Fuel Oil',styles['f1_leading'])
+    fuel_energy_base = 1.324
+    fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold>{} gallons</font>'.format(str(fuel_energy_base)),styles['f1_leading'])
+
+    data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
+    tbl1_frame_1 = Table(data2_f1)
+    tbl1_frame_1_tableStyle = TableStyle([('ALIGN', (0, 0), (0, -1),'LEFT'),('LEFTPADDING',(0,0),(0,-1),0)])
+    tbl1_frame_1.setStyle(tbl1_frame_1_tableStyle)
+    Story.append(tbl1_frame_1)
+
+    Story.append(Story.append(Spacer(1, 12)))
+   
+    f1_header_3 = "<font color=black>YEARLY COSTS & SAVINGS<super >*</super> </font>"#add prefix
+    f1_header3_p = Paragraph(f1_header_3,styles['Heading2'])
+    Story.append(f1_header3_p)
+
+
+    total_energy_cost_base=4343
+    total_energy_cost_base_text_p= Paragraph('<font size=8>Pre-upgrade Energy cost per yr</font>',styles['Normal'])
+
+
+
+    total_energy_cost_improved=2798
+    total_energy_cost_improved_text_p= Paragraph('<font size=8>Post-upgrade Energy Cost per yr</font>',styles['Normal'])
+
+    save = total_energy_cost_base-total_energy_cost_improved
+    save_text_p= Paragraph('<font size=8>Estimated Energy Savings per yr</font>',styles['Normal'])
+
+    total_energy_cost_base_p = Paragraph('<font name=Helvetica-Bold>${}</font>'.format(str(total_energy_cost_base)),styles['f1_leading'])
+    total_energy_cost_improved_p =  Paragraph('<font name=Helvetica-Bold>${}</font>'.format(str(total_energy_cost_improved)),styles['f1_leading'])
+    save_p =  Paragraph('<font name=Helvetica-Bold>${}</font>'.format(str(save)),styles['f1_leading'])
+
+    data3_f1 = [[[total_energy_cost_base_p,total_energy_cost_base_text_p],
+                 [total_energy_cost_improved_p,total_energy_cost_improved_text_p],
+                 [save_p,save_text_p]
+                    ]]
+
+    tbl3_frame_1 = Table(data3_f1)
+    tbl3_frame_1_tableStyle = TableStyle([('ALIGN', (0, 0), (-1, 0),'CENTRE')])
+    tbl3_frame_1.setStyle(tbl3_frame_1_tableStyle)
+    Story.append(tbl3_frame_1)
     # page1_frames =[]
     # page1_frameCount =3
     # frameWidth = document.width/page1_frameCount
@@ -112,7 +229,10 @@ def create_pdf():
     # templates.append(PageTemplate(frames=page1_frames,id='firstPage',onPage=footer))
     # templates.append(PageTemplate(frames=page2_frames,id='secondPage',onPage=footer))
 
-    document.addPageTemplates([])
+    page_1_frames = [header_frame, column_1]
+    templates =[]
+    templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
+    document.addPageTemplates(templates)
 
  
     style = styles["Normal"]
