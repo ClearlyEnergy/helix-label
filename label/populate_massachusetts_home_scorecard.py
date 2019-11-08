@@ -10,6 +10,8 @@ from reportlab.lib.units import inch, cm
 from reportlab.lib.pagesizes import letter, landscape
 import pkg_resources
 from reportlab.lib import colors
+from reportlab.graphics.charts.piecharts import Pie
+from reportlab.graphics.shapes import Drawing, String
 
 PAGE_HEIGHT=defaultPageSize[1]
 PAGE_WIDTH=defaultPageSize[0]
@@ -83,17 +85,17 @@ def create_pdf():
     tbl = Table(data)
     tbl.setStyle(tblStyle)
     Story.append(tbl)
-    header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.12*document.height, showBoundary=1)
+    header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.12*document.height, showBoundary=0)
     Story.append(FrameBreak)
     osme = header_frame.height
-    print(osme, document.bottomMargin)
+    # print(osme, document.bottomMargin)
 
     ##CREATING FRAMES FOR PAGE1
     # creating and populating frame1
     
     frameWidth = document.width/3
     frameHeight = document.height-header_frame.height+(0.2*inch)
-    column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=1)
+    column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
     f1_header1 = "<font color=black>ABOUT</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
     f1_text1 = '<font color=black>Address</font>'
@@ -194,13 +196,59 @@ def create_pdf():
 
     data3_f1 = [[[total_energy_cost_base_p,total_energy_cost_base_text_p],
                  [total_energy_cost_improved_p,total_energy_cost_improved_text_p],
-                 [save_p,save_text_p]
+                 [Paragraph('SAVE',styles['Normal']),save_p,save_text_p]
                     ]]
 
     tbl3_frame_1 = Table(data3_f1)
     tbl3_frame_1_tableStyle = TableStyle([('ALIGN', (0, 0), (-1, 0),'CENTRE')])
     tbl3_frame_1.setStyle(tbl3_frame_1_tableStyle)
     Story.append(tbl3_frame_1)
+
+
+    #drawing piecharts
+    #first pie
+    pie_data_1 =[total_energy_cost_base]
+    pie_1= Pie()
+    pie_1.width=2.3*cm
+    pie_1.height=2.3*cm
+    pie_1.data=pie_data_1
+    # pie_title_1 = String("Before")
+    drawing =Drawing()
+    drawing.add(pie_1)
+    
+    
+    # Story.append(drawing)
+    #second pie
+    pie_data_2 =[total_energy_cost_base,total_energy_cost_improved]
+    pie_2= Pie()
+    pie_2.width=2.3*cm
+    pie_2.height=2.3*cm
+    pie_2.data=pie_data_2
+    # pie_title_1 = String("Before")
+    drawing1 =Drawing()
+    # pie_2.x = 150
+    # pie_2.y = 65
+    drawing1.add(pie_2)
+    data_table3 = [[drawing,drawing1]]
+    tbl_pie = Table(data_table3)#figure out how to get the piecharts in the column in order
+    # Story.append(tbl_pie)
+
+
+
+    # creating and populating frame2
+    Story.append(FrameBreak)
+    frameWidth_2 = document.width/3
+    frameHeight_2 = document.height-header_frame.height+(0.2*inch)
+    column_2 = Frame(document.leftMargin+frameWidth_2,document.bottomMargin,frameWidth_2+inch,frameHeight_2, showBoundary=0)
+
+    f2_header1 = "<font color=black>HOME ENERGY USE</font>"
+    f2_header1_p = Paragraph(f2_header1,styles['Heading2'])
+    Story.append(f2_header1_p)
+    f2_text_p = Paragraph('<font size=8.5 color=#736d5e>This shows the estimated total energy use (electricity and heating fuel) of your home for one year. The lower the energy use, the better!</font>',styles['Normal'])
+    Story.append(f2_text_p)
+
+    
+
     # page1_frames =[]
     # page1_frameCount =3
     # frameWidth = document.width/page1_frameCount
@@ -229,7 +277,7 @@ def create_pdf():
     # templates.append(PageTemplate(frames=page1_frames,id='firstPage',onPage=footer))
     # templates.append(PageTemplate(frames=page2_frames,id='secondPage',onPage=footer))
 
-    page_1_frames = [header_frame, column_1]
+    page_1_frames = [header_frame, column_1,column_2]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     document.addPageTemplates(templates)
