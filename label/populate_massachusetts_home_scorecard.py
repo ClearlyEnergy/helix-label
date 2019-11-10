@@ -76,7 +76,6 @@ def create_pdf():
     header_text4 = " <font color=white> 205</font>"
     hp4 = Paragraph(header_text4,styles['Title'])
     hp3 = Paragraph(header_text3,styles['Normal'])
-    # data = [[img_logo,[hp1,hp2],'','','','','',[hp3,hp4]]]
     sm_data = [[hp3],[hp4]]
     sm_table= Table(sm_data,rowHeights=0.7*cm)
     sm_tableStyle = TableStyle([('ALIGN', (0, 0), (0, 0), 'LEFT'),('LEFTPADDING',(0,0),(0,0),0.5),('BOTTOMPADDING',(0,1),(0,1),0),('BACKGROUND',(0,1),(0,1),colors.gray),('RIGHTPADDING',(0,0),(0,0),0.5),('INNERGRID', (0,0), (-1,-1), 0.1, colors.gray),('BOX', (0,0), (-1,-1), 0.1, colors.gray)])
@@ -95,7 +94,7 @@ def create_pdf():
     # creating and populating frame1
     
     frameWidth = document.width/3
-    frameHeight = document.height-header_frame.height+(0.2*inch)
+    frameHeight = document.height-header_frame.height+(0.25*inch)
     column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
     f1_header1 = "<font name=Helvetica color=#4c4f52 size=12>ABOUT</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
@@ -239,7 +238,7 @@ def create_pdf():
     # creating and populating frame2
     Story.append(FrameBreak)
     frameWidth_2 = document.width/3
-    frameHeight_2 = document.height-header_frame.height+(0.2*inch)
+    frameHeight_2 = document.height-header_frame.height+(0.25*inch)
     column_2 = Frame(document.leftMargin+frameWidth_2,document.bottomMargin,frameWidth_2+inch,frameHeight_2, showBoundary=0)
 
     f2_header1 = "<font name=Helvetica color=#4c4f52 size=12>HOME ENERGY USE</font>"
@@ -281,7 +280,7 @@ def create_pdf():
     # creating and populating frame3
     Story.append(FrameBreak)
     frameWidth_3 = document.width/3
-    frameHeight_3 = document.height-header_frame.height+(0.2*inch)
+    frameHeight_3 = document.height-header_frame.height+(0.25*inch)
     column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=0)
     f3_header1 = "<font name=Helvetica color=#4c4f52 size=12>HOME CARBON FOOTPRINT</font>"
     f3_header1_p = Paragraph(f3_header1,styles['Heading2'])
@@ -334,14 +333,36 @@ def create_pdf():
     tbl2_frame_3.setStyle(tblStyle2_frame_3)
   
     Story.append(tbl2_frame_3)
+    
 
+    #  FOOTER FRAME
+    Story.append(FrameBreak)
+    footer_frame = Frame(document.leftMargin,document.height-0.98*document.height,document.width,0.13*document.height, showBoundary=0)
+    foot_text_p1 = Paragraph("<font  size=8 color=#736d5e>* Estimated costs and savings. Actual energy costs may"+
+                  "vary and are based on many factors such as occupant behavior,"+ 
+                  "weather and utility rates. Please see next page for more on the EPS calculation</font>",styles['Normal'])
 
+    foot_text_p2 = Paragraph("<font  size=8 color=#736d5e>Projections for score improvements and energy"+
+                             "savings are estimates based on implementing all of the recommended energy effciency improvements. Ref# 91997."+
+                              "</font>",styles['Normal'])
 
+    Story.append(Spacer(1,12))
+    Story.append(foot_text_p1)
+    Story.append(foot_text_p2)
+    footer_address_p = Paragraph('''<font size=9 color=#736d5e>Home Owner |{},{},{},{},{}</font>'''.format(address_line_1,address_line_2,city,state,postal_code),styles['Normal'])
+    logo_footer = IMG_PATH+"logo.jpg"
+    img_logo_footer = Image(logo,cm,cm)
+    footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
 
-
+    footer_data = [[footer_address_p,'','','',footer_text_img_p]]
+    footer_table = Table(footer_data)
+    footer_table_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),('SPAN',(0,0),(3,0)),('ALIGN',(0,0),(0,0),'LEFT'),('VALIGN',(-1,-1),(-1,-1),'MIDDLE'),('ALIGN',(-1,-1),(-1,-1),'RIGHT'),('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+    footer_table.setStyle(footer_table_style)
+    Story.append(Spacer(1,8))
+    Story.append(footer_table)
 
     # SETTING UP PAGE TEMPLATES
-    page_1_frames = [header_frame, column_1,column_2,column_3]
+    page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     document.addPageTemplates(templates)
