@@ -56,6 +56,10 @@ def footer(canvas,doc):
     # Release the canvas
     canvas.restoreState()   
 
+def format_numbers(amount):
+    if amount<1000:
+        return str(amount)
+    return str(amount/1000)+","+str(amount%1000)
 
 def create_pdf():
   
@@ -366,30 +370,141 @@ def create_pdf():
     
     ## SETTING UP FRAME HEADER FOR PAGE 2
     Story.append(NextPageTemplate('secondPage'))
-    page2_header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.11*document.height, showBoundary=1)
+    page2_header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.11*document.height, showBoundary=0)
     page2_head_text_img_p = Paragraph('''<img valign="middle" src="{}logo.jpg" width="60" height="40"/><font size=28 color=black > More Information</font> '''.format(IMG_PATH),styles['Normal'])
     Story.append(page2_head_text_img_p)
-    print(document.height)
+    # print(document.height)
 
     ##SETTIGN UP COLUMN 1 FOR PAGE2
     Story.append(FrameBreak)
     frameWidth = document.width*0.45
     frameHeight = document.height-page2_header_frame.height+(0.25*inch)
-    page2_column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=1)
+    page2_column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
     page2_title_1_p= Paragraph("<font name=helvetica color=#4c4f52 size=12> ABOUT YOUR MASSACHUSETTS HOME SCORECARD </font>",styles['Normal'])
+    styles.add(ParagraphStyle(name='line-height',leading=13))
     Story.append(page2_title_1_p)
+    page2_column_1_p1 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The Massachusetts Home Scorecard (MAHS) is a tool to assess a home's "+
+                                    "expected energy consumption, cost, and carbon footprint. A low energy "+
+                                    "use identies a home as energy ecient with a smaller carbon footprint "+
+                                    "and lower energy costs. The MAHS also allows for comparisons of one "+
+                                    "home's energy use to another, without the inuence of varying occupant behavior.</font>",styles['line-height'])
+    Story.append(Spacer(1,9))
+    Story.append(page2_column_1_p1)
+    Story.append(Spacer(1,10))
 
+    page2_column_1_p2 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The Home Energy Use (HEU) calculation is based on a home's size, design, "+
+                                  "insulation levels, air leakage, heating and cooling systems, major "+
+                                  "appliances, lighting, hot water heating, and any electricity produced by "+
+                                  "onsite solar PV. A home’s actual energy use will vary with occupancy, "+
+                                  "behavior, weather, and changes to the home.</font>",styles['line-height'])
+    
+    styles.add(ParagraphStyle(name='quote',leading=13, leftIndent=10,rightIndent=12))
+
+    page2_column_1_p3 = Paragraph("<font name=helvetica  color=#4c4f52 size=9><i><strong>For additional details on the recommended energy improvements and "+
+                                  "savings estimates for your home, please refer to your Home Energy "+
+                                   "Assessment Report</strong></i></font>",styles['quote'])
+
+    Story.append(page2_column_1_p2)  
+    Story.append(Spacer(1,10))
+    Story.append(page2_column_1_p3) 
+
+    page2_title_2_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>USEFUL TERMINOLOGY </font>",styles['line-height'])
+    Story.append(Spacer(1,10))
+    Story.append(page2_title_2_p)
+    Story.append(Spacer(1,6))
+    page2_mini_header_1 = Paragraph("<font name=helvetica  color=#4c4f52 size=10><strong>Btu</strong></font>",styles['line-height'])
+    Story.append(page2_mini_header_1)
+    page2_column_1_p4 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>A Btu, or British Thermal Unit, is a measurement of the heat content of "+
+                                 "fuel. mmBtu stands for one million Btus. One Btu ≈ the energy produced "+
+                                 "by a single wooden match. One million Btus ≈ 7 gallons of gasoline.</font>",styles['line-height'])
+    Story.append(page2_column_1_p4)  
+    Story.append(Spacer(1,10))
+
+    page2_mini_header_2 = Paragraph("<font name=helvetica  color=#4c4f52 size=10><strong>Carbon Footprint</strong></font>",styles['line-height'])
+
+    page2_column_1_p5 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>A home’s energy consumption aects carbon emissions and impacts the "+
+                                    "environment. The Carbon Footprint calculation is based on the "+
+                                    "greenhouse gas emissions for the annual amounts, types, and sources of "+
+                                    "fuels used in your home at the time of this report. For electricity, carbon "+
+                                    "emissions are based on electricity consumed and the mix of fuel sources "+
+                                    "used in the region to generate that electricity. For heating fuel, carbon "+
+                                    "emissions are based on the therms or gallons used in the home. "+
+                                    " Measurement is in tons of carbon dioxide per year (tons/yr). One ton ≈ 2,000 miles "+
+                                    "driven by one car (typical 21 mpg car).</font>",styles['line-height'])
+    Story.append(page2_mini_header_2)
+    
+    Story.append(page2_column_1_p5) 
+    Story.append(Spacer(1,10))
+ 
+    page2_mini_header_3 = Paragraph("<font name=helvetica  color=#4c4f52 size=10><strong>Average Home in Your Area</strong></font>",styles['line-height'])
+
+    page2_column_1_p6 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The 'Average Home in Your Area' is dened as the average of all the "+
+                                  "homes in Massachusetts. This is the average of all those homes before "+
+                                  "any energy improvements were implemented. The average may vary "+
+                                "sightly over time as homes become more ecient due to improvements.</font>",styles['line-height'])
+    Story.append(page2_mini_header_3)
+    
+    Story.append(page2_column_1_p6) 
+    
     ##SETTIGN UP COLUMN 2 FOR PAGE2
     Story.append(FrameBreak)
     frameWidth = document.width*0.55
-    print(document.width)
+  
     frameHeight = document.height-page2_header_frame.height+(0.25*inch)
-    page2_column_2 = Frame(document.leftMargin+page2_column_1.width,document.bottomMargin,frameWidth,frameHeight, showBoundary=1)
-    Story.append(page2_title_1_p)
+    page2_column_2 = Frame(document.leftMargin+page2_column_1.width,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
+    page2_title_4_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>CONTRACTOR INCENTIVE</font>",styles['line-height'])
+    Story.append(page2_title_4_p)
+    Story.append(Spacer(1,10))
+    incentive_1 = 11435
+    page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4c4f52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
+                                        'for an estimated incentive of</font>',styles['Normal'])
+    
+    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=14><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
+    data = [[page2_column_2_text_p,'','','',incentive_1_p]]
+    page2_tbl_col3 = Table(data)
+    page2_tbl_col3_style = TableStyle([('SPAN',(0,0),(3,0)),('VALIGN',(0,0),(3,0),'MIDDLE'),('ALIGN',(-1,-1),(-1,-1),'RIGHT'),('VALIGN',(-1,-1),(-1,-1),'BOTTOM'),('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+    page2_tbl_col3.setStyle(page2_tbl_col3_style)
+    Story.append(page2_tbl_col3)
+    Story.append(Spacer(1,12))
+
+
+
+    # FIRST TABLE ON PAGE 2 COLUMN 2
+    # will give variables some names but could be changed as agreed
+
+    table_titles_1 = ['','','','NOW','GOAL','SAVED','SAVED %']
+    now_mmbtu =205
+    now_mmbtu_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(now_mmbtu)),styles['Normal'])
+    goal_mmbtu =122
+    goal_mmbtu_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(goal_mmbtu)),styles['Normal'])
+    saved_mmbtu = 83
+    saved_mmbtu_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(saved_mmbtu)),styles['Normal'])
+    saved_mmbtu_pect = 83
+    saved_mmbtu_pect_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(saved_mmbtu_pect)),styles['Normal'])
+    descrip_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>Whole House MMBTU (excluding new PV) </font>',styles['Normal'])
+    values = [descrip_p,'','',now_mmbtu_p,goal_mmbtu_p,saved_mmbtu_p,saved_mmbtu_pect_p]
+    mmbtu_data = [table_titles_1,values]
+    mmbtu_table = Table(mmbtu_data)
+    mmbtu_tbl_styles = TableStyle([('LEFTPADDING',(0,1),(0,1),0),
+                                ('LINEBELOW',(0,0),(-1,1),0.01,colors.HexColor('#666666')),
+                                ('LINEABOVE',(0,0),(-1,0),0.01,colors.HexColor('#666666')),
+                                ('SPAN',(0,1),(2,1)),
+                                ('BACKGROUND',(0,0),(-1,0),colors.HexColor('#f2f1ef')),
+                                ('FONTSIZE',(0,0),(-1,0),8),
+                                ('FONT',(0,0),(-1,0),'Helvetica-Bold'),
+                                ('TEXTCOLOR',(0,0),(-1,0),colors.HexColor('#666666')),
+                                ('ALIGN',(3,1),(3,1),'RIGHT')                                                     
+                                ])
+
+    mmbtu_table.setStyle(mmbtu_tbl_styles)
+    Story.append(mmbtu_table)
 
     # SETTING UP PAGE TEMPLATES
+    #deep copy footer frame to avid data races with frames
+    import copy
+    footer_frame_2 = copy.copy(footer_frame)
     page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame]
-    page_2_frames = [page2_header_frame,page2_column_1,page2_column_2]
+    page_2_frames = [page2_header_frame,page2_column_1,page2_column_2,footer_frame]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     templates.append(PageTemplate(frames=page_2_frames,id='secondPage'))
