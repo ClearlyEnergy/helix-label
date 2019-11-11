@@ -63,6 +63,7 @@ def create_pdf():
     # Story.append(Spacer(1,0.005*cm))
     document = SimpleDocTemplate('test.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()
+   
     ##HEADER
     logo = IMG_PATH+"logo.jpg"
     home_energy_use =IMG_PATH+'home_energy_use.png'
@@ -87,7 +88,7 @@ def create_pdf():
     Story.append(tbl)
     header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.12*document.height, showBoundary=0)
     Story.append(FrameBreak)
-    osme = header_frame.height
+    # osme = header_frame.height
     # print(osme, document.bottomMargin)
 
     ##CREATING FRAMES FOR PAGE1
@@ -361,10 +362,37 @@ def create_pdf():
     Story.append(Spacer(1,8))
     Story.append(footer_table)
 
+    #### SETTING UP FRAMES FOR PAGE 2
+    
+    ## SETTING UP FRAME HEADER FOR PAGE 2
+    Story.append(NextPageTemplate('secondPage'))
+    page2_header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.11*document.height, showBoundary=1)
+    page2_head_text_img_p = Paragraph('''<img valign="middle" src="{}logo.jpg" width="60" height="40"/><font size=28 color=black > More Information</font> '''.format(IMG_PATH),styles['Normal'])
+    Story.append(page2_head_text_img_p)
+    print(document.height)
+
+    ##SETTIGN UP COLUMN 1 FOR PAGE2
+    Story.append(FrameBreak)
+    frameWidth = document.width*0.45
+    frameHeight = document.height-page2_header_frame.height+(0.25*inch)
+    page2_column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=1)
+    page2_title_1_p= Paragraph("<font name=helvetica color=#4c4f52 size=12> ABOUT YOUR MASSACHUSETTS HOME SCORECARD </font>",styles['Normal'])
+    Story.append(page2_title_1_p)
+
+    ##SETTIGN UP COLUMN 2 FOR PAGE2
+    Story.append(FrameBreak)
+    frameWidth = document.width*0.55
+    print(document.width)
+    frameHeight = document.height-page2_header_frame.height+(0.25*inch)
+    page2_column_2 = Frame(document.leftMargin+page2_column_1.width,document.bottomMargin,frameWidth,frameHeight, showBoundary=1)
+    Story.append(page2_title_1_p)
+
     # SETTING UP PAGE TEMPLATES
     page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame]
+    page_2_frames = [page2_header_frame,page2_column_1,page2_column_2]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
+    templates.append(PageTemplate(frames=page_2_frames,id='secondPage'))
     document.addPageTemplates(templates)
 
  
