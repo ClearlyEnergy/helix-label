@@ -468,41 +468,150 @@ def create_pdf():
     Story.append(Spacer(1,12))
 
 
-
     # FIRST TABLE ON PAGE 2 COLUMN 2
     # will give variables some names but could be changed as agreed
 
     table_titles_1 = ['','','','NOW','GOAL','SAVED','SAVED %']
     now_mmbtu =205
-    now_mmbtu_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(now_mmbtu)),styles['Normal'])
+    now_mmbtu_p = format_numbers(now_mmbtu)
     goal_mmbtu =122
-    goal_mmbtu_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(goal_mmbtu)),styles['Normal'])
+    goal_mmbtu_p = format_numbers(goal_mmbtu)
     saved_mmbtu = 83
-    saved_mmbtu_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(saved_mmbtu)),styles['Normal'])
+    saved_mmbtu_p = format_numbers(saved_mmbtu)
     saved_mmbtu_pect = 83
-    saved_mmbtu_pect_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>{}</font>'.format(format_numbers(saved_mmbtu_pect)),styles['Normal'])
-    descrip_p = Paragraph('<font name=helvetica  color=#4c4f52 size=8.5>Whole House MMBTU (excluding new PV) </font>',styles['Normal'])
+    saved_mmbtu_pect_p = format_numbers(saved_mmbtu_pect)
+    descrip_p = Paragraph('<font name=helvetica  color=#666666 size=8>Whole House MMBTU (excluding new PV) </font>',styles['Normal'])
     values = [descrip_p,'','',now_mmbtu_p,goal_mmbtu_p,saved_mmbtu_p,saved_mmbtu_pect_p]
     mmbtu_data = [table_titles_1,values]
     mmbtu_table = Table(mmbtu_data)
     mmbtu_tbl_styles = TableStyle([('LEFTPADDING',(0,1),(0,1),0),
-                                ('LINEBELOW',(0,0),(-1,1),0.01,colors.HexColor('#666666')),
-                                ('LINEABOVE',(0,0),(-1,0),0.01,colors.HexColor('#666666')),
+                                ('LINEBELOW',(0,0),(-1,1),0.01,colors.HexColor('#c4c4c4')),
+                                ('LINEABOVE',(0,0),(-1,0),0.01,colors.HexColor('#c4c4c4')),
                                 ('SPAN',(0,1),(2,1)),
                                 ('BACKGROUND',(0,0),(-1,0),colors.HexColor('#f2f1ef')),
-                                ('FONTSIZE',(0,0),(-1,0),8),
+                                ('FONTSIZE',(0,0),(-1,-1),8),
                                 ('FONT',(0,0),(-1,0),'Helvetica-Bold'),
-                                ('TEXTCOLOR',(0,0),(-1,0),colors.HexColor('#666666')),
-                                ('ALIGN',(3,1),(3,1),'RIGHT')                                                     
+                                ('TEXTCOLOR',(0,0),(-1,-1),colors.HexColor('#666666')),
+                                ('ALIGN',(3,0),(-1,-1),'CENTER'),
+                                                                                
                                 ])
 
     mmbtu_table.setStyle(mmbtu_tbl_styles)
     Story.append(mmbtu_table)
 
+    # SECOND TABLE ON PAGE 2 COLUMN 2
+    # will give variables some names but could be changed as agreed
+
+    mmbtu_saved_1st = 41
+    mmbtu_saved_2nd = 41
+    mmbtu_saved_3rd = 1
+    mmbtu_saved_solar = 0
+
+    mmbtu_1st = 125
+    mmbtu_2nd=150
+    mmbtu_3rd=160
+    mmbtu_solar = 15
+
+    total_1st =5125
+    total_2nd = 6150
+    total_3rd = 160
+    total_solar = 0
+    
+
+    table_titles_2 = ['','','','MMBTU SAVED BY TIER','$/MMBTU','TOTAL']
+    col2_row1 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>1st Tier - % Savings of Base (5% - 20%)</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_1st),format_numbers(mmbtu_1st),'$ '+format_numbers(total_1st)]
+    col2_row2 = [Paragraph('<font size=7.5  name=helvetica  color=#4c4f52>2nd Tier - % Savings of Base (20% - 40%)</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_2nd),format_numbers(mmbtu_2nd),'$ '+format_numbers(total_2nd)]
+    col2_row3 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>3rd Tier - % Savings of Base (>40%)</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_3rd),format_numbers(mmbtu_3rd),'$ '+format_numbers(total_3rd)]
+    col2_row4 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>New Solar PV Install</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_solar),format_numbers(mmbtu_solar),'$ '+format_numbers(total_solar)]
+
+    col2_row5 = ['','','','','Grand Total Incentive','$ '+format_numbers(total_1st+total_2nd+total_3rd+total_solar)]
+  
+    col2_tbl2_data=[table_titles_2,col2_row1,col2_row2,col2_row3,col2_row4,col2_row5]
+    
+    
+    
+    col2_tbl2 = Table(col2_tbl2_data)
+    col2_tbl2_styles = TableStyle([
+                                ('FONTSIZE',(0,0),(-1,-1),8),
+                                ('LINEBELOW',(0,0),(-1,-1),0.05,colors.HexColor('#c4c4c4')) ,
+                                ('SPAN',(0,1),(2,1)),
+                                ('SPAN',(0,2),(2,2)),
+                                ('SPAN',(0,3),(2,3)),
+                                ('SPAN',(0,4),(2,4)),
+                                ('BACKGROUND',(0,0),(-1,0),colors.HexColor('#f2f1ef')),
+                                ('FONTSIZE',(0,0),(-1,0),8),
+                                ('FONT',(0,0),(-1,0),'Helvetica-Bold'),
+                                ('TEXTCOLOR',(0,0),(-1,-1),colors.HexColor('#666666')), 
+                                ('ALIGN',(3,0),(-1,0),'CENTER'),
+                                ('ALIGN',(3,1),(-1,1),'CENTER'),
+                                ('ALIGN',(3,2),(-1,2),'CENTER'),
+                                ('ALIGN',(3,3),(-1,3),'CENTER'),
+                                ('ALIGN',(3,4),(-1,4),'CENTER'),
+                                ('LEFTPADDING',(0,0),(0,-1),0),
+                                ('FONT',(4,5),(-1,5),'Helvetica-Bold',8.5)                          
+                                ])
+    col2_tbl2.setStyle(col2_tbl2_styles)
+    Story.append(col2_tbl2)
+
+
+    page2_column_1_p1 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The Contractor Incentive is based on anticipated reductions "+
+                                  "in energy use resulting from recommended improvements made to the home. "+
+                                  "The amount is subject to review and approval by the Program "+
+                                  "Administrator and may change if the nal scope of work diers from the proposal or if measured "+
+                                  "improvements (like air leakage) following installation dier from the estimate. Incentives are paid to "+
+                                  "participating Contractors, who may share them with customers at their discretion.</font>",styles['line-height'])
+    Story.append(Spacer(1,9))
+    Story.append(page2_column_1_p1)
+    Story.append(Spacer(1,12))
+    page2_title_6_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>POTENTIAL CUSTOMER REBATES</font>",styles['line-height'])
+    Story.append(page2_title_6_p)
+    Story.append(Spacer(1,10))
+
+    page2_column_2_text_p3 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>Customers might be eligible for rebates "+
+                            "through the Mass Save program for installing equipment that meets "+
+                            "the criteria listed in the table below. For more details and "+
+                            "information on how to access those rebates, visit <a color=blue href='https://www.masssave.com/en/saving/residential-rebates/'>bit.ly/ma-mvp-1</a>. </font>",styles['Normal'])
+    
+   
+
+    Story.append(page2_column_2_text_p3)
+
+    page2_column_2_text_p4 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>Also you could be eligible for a $300 Mass "+
+                                            "Clean Energy Center rebate for a SEER 18 Mini Split Heat Pump.\n"+
+                                             "Visit <a color=blue href='https://www.masssave.com/residential/clean-heating-and-cooling'>bit.ly/ma-mvp-2</a>. for more details </font>",styles['Normal'])
+    
+    
+   
+    
+     # last table of page 2 col 2
+    tbl4_titles =['MASS SAVE CUSTOMER REBATES','AMOUNT']
+    tbl4_row1 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>Central Air SEER 16.0 EER 13</font>',styles['Normal']),'$250']
+    tbl4_row2 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>Heat Pump SEER 16.0 EER 12 HSPF 8.5 </font>',styles['Normal']),'$250']
+    tbl4_row3 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>Heat Pump SEER 18.0 HSPF 9.6 </font>',styles['Normal']),'$500']
+    tbl4_row4 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>HPWH >55 Gallon 3.0 EF</font>',styles['Normal']),'$500']
+    tbl4_row5 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>HPWH <55 Gallon 2.3. EF</font>',styles['Normal']),'$750']
+    tbl4_row6 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>Mini Split HP SEER 18.0 HSPF 10 (per indoor head) </font>',styles['Normal']),'$100']
+    tbl4_row7 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>Mini Split HP SEER 20.0 HSPF 12 (per indoor head) </font>',styles['Normal']),'$300']
+
+    tbl4_data = [tbl4_titles,tbl4_row1,tbl4_row2,tbl4_row3,tbl4_row4,tbl4_row5,tbl4_row6,tbl4_row7]
+    
+    tbl4 = Table(tbl4_data)
+    tbl4_styles = TableStyle([
+                ('LEFTPADDING',(0,1),(-1,-1),0),
+                ('LEFTPADDING',(0,0),(0,0),0),
+                ('ALIGN',(0,0),(0,0),'LEFT'),
+                ('ALIGN',(1,0),(1,0),'RIGHT'),
+                ('ALIGN',(-1,1),(-1,-1),'RIGHT')
+    ])
+    tbl4.setStyle(tbl4_styles)
+    Story.append(tbl4)
+    # Story.append(page2_column_2_text_p4)
+
+
+
     # SETTING UP PAGE TEMPLATES
     #deep copy footer frame to avid data races with frames
-    import copy
-    footer_frame_2 = copy.copy(footer_frame)
+    
     page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame]
     page_2_frames = [page2_header_frame,page2_column_1,page2_column_2,footer_frame]
     templates =[]
@@ -515,7 +624,7 @@ def create_pdf():
     #populate story with paragraphs
     
     # print(Story)
-    document.build(Story)#, onFirstPage=myFirstPage, onLaterPages=myLaterPages
+    document.build(Story)
 
 
 if __name__ == '__main__':
