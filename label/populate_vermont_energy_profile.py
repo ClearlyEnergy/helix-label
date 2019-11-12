@@ -2,7 +2,7 @@
 #! /usr/bin/python
 # run with python label/populate_vermont_energy_profile.py
 
-#import time
+import time
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.charts.legends import Legend
 from reportlab.graphics.charts.textlabels import Label
