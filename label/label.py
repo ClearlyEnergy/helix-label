@@ -1,5 +1,6 @@
 from populate_residential_green_addendum import write_green_addendum_pdf
 from populate_vermont_energy_profile import write_vermont_energy_profile_pdf
+from populate_massachusetts_home_scorecard import create_pdf
 from pdfrw import PdfWriter
 import os
 import os.path
@@ -33,6 +34,12 @@ class Label:
         out_file = self.out_path + 'VTLabel.pdf'
         print(out_file)
         write_vermont_energy_profile_pdf(data_dict, out_file)
+        out_filename = self._write_S3(out_file)
+        return out_filename
+
+    def massachusetts_energy_scorecard(self, data_dict):
+        out_file = self.out_path + 'MAScorecard.pdf'
+        create_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file)
         return out_filename
         
