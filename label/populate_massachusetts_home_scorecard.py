@@ -359,9 +359,15 @@ def create_pdf():
     img_logo_footer = Image(logo,cm,cm)
     footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
 
-    footer_data = [[footer_address_p,'','','',footer_text_img_p]]
+    footer_data = [[footer_address_p,'','','','',footer_text_img_p]]
     footer_table = Table(footer_data)
-    footer_table_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),('SPAN',(0,0),(3,0)),('ALIGN',(0,0),(0,0),'LEFT'),('VALIGN',(-1,-1),(-1,-1),'MIDDLE'),('ALIGN',(-1,-1),(-1,-1),'RIGHT'),('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+    footer_table_style = TableStyle([('RIGHTPADDING',(5,0),(5,0),0),
+                                    ('LEFTPADDING',(0,0),(0,0),0),
+                                    ('SPAN',(0,0),(4,0)),
+                                    ('ALIGN',(0,0),(0,0),'LEFT'),
+                                    ('VALIGN',(-1,-1),(-1,-1),'MIDDLE'),
+                                    ('ALIGN',(-1,-1),(-1,-1),'RIGHT'),
+                                    ('RIGHTPADDING',(-1,-1),(-1,-1),0)])
     footer_table.setStyle(footer_table_style)
     Story.append(Spacer(1,8))
     Story.append(footer_table)
@@ -454,7 +460,7 @@ def create_pdf():
     page2_column_2 = Frame(document.leftMargin+page2_column_1.width,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
     page2_title_4_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>CONTRACTOR INCENTIVE</font>",styles['line-height'])
     Story.append(page2_title_4_p)
-    Story.append(Spacer(1,10))
+    Story.append(Spacer(1,2))
     incentive_1 = 11435
     page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4c4f52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
                                         'for an estimated incentive of</font>',styles['Normal'])
@@ -462,10 +468,10 @@ def create_pdf():
     incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=14><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
     data = [[page2_column_2_text_p,'','','',incentive_1_p]]
     page2_tbl_col3 = Table(data)
-    page2_tbl_col3_style = TableStyle([('SPAN',(0,0),(3,0)),('VALIGN',(0,0),(3,0),'MIDDLE'),('ALIGN',(-1,-1),(-1,-1),'RIGHT'),('VALIGN',(-1,-1),(-1,-1),'BOTTOM'),('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+    page2_tbl_col3_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),('SPAN',(0,0),(3,0)),('VALIGN',(0,0),(3,0),'MIDDLE'),('ALIGN',(-1,-1),(-1,-1),'RIGHT'),('VALIGN',(-1,-1),(-1,-1),'BOTTOM'),('RIGHTPADDING',(-1,-1),(-1,-1),0)])
     page2_tbl_col3.setStyle(page2_tbl_col3_style)
     Story.append(page2_tbl_col3)
-    Story.append(Spacer(1,12))
+    Story.append(Spacer(1,5))
 
 
     # FIRST TABLE ON PAGE 2 COLUMN 2
@@ -560,12 +566,12 @@ def create_pdf():
                                   "Administrator and may change if the nal scope of work diers from the proposal or if measured "+
                                   "improvements (like air leakage) following installation dier from the estimate. Incentives are paid to "+
                                   "participating Contractors, who may share them with customers at their discretion.</font>",styles['line-height'])
-    Story.append(Spacer(1,9))
+    Story.append(Spacer(1,5))
     Story.append(page2_column_1_p1)
-    Story.append(Spacer(1,12))
+    Story.append(Spacer(1,5))
     page2_title_6_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>POTENTIAL CUSTOMER REBATES</font>",styles['line-height'])
     Story.append(page2_title_6_p)
-    Story.append(Spacer(1,10))
+    Story.append(Spacer(1,5))
 
     page2_column_2_text_p3 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>Customers might be eligible for rebates "+
                             "through the Mass Save program for installing equipment that meets "+
@@ -601,19 +607,29 @@ def create_pdf():
                 ('LEFTPADDING',(0,0),(0,0),0),
                 ('ALIGN',(0,0),(0,0),'LEFT'),
                 ('ALIGN',(1,0),(1,0),'RIGHT'),
-                ('ALIGN',(-1,1),(-1,-1),'RIGHT')
+                ('ALIGN',(-1,1),(-1,-1),'RIGHT'),
+                ('TEXTCOLOR',(1,1),(1,-1),colors.HexColor('#666666')),
+                ('FONTSIZE',(1,1),(1,-1),7.7),
+                ('BACKGROUND',(0,0),(1,0),colors.HexColor('#f2f1ef')),
+                ('LINEBELOW',(0,0),(-1,-1),0.05,colors.HexColor('#c4c4c4')) ,
+
     ])
     tbl4.setStyle(tbl4_styles)
     Story.append(tbl4)
-    # Story.append(page2_column_2_text_p4)
+    Story.append(Spacer(1,3))
+    Story.append(page2_column_2_text_p4)
 
-
+    #FOOTER FRAME FOR PAGE 2
+    Story.append(FrameBreak)
+    page2_footer_frame = Frame(document.leftMargin,document.height-document.height,document.width,0.10*document.height, showBoundary=0)
+    Story.append(Spacer(1,12))
+    Story.append(footer_table)
 
     # SETTING UP PAGE TEMPLATES
     #deep copy footer frame to avid data races with frames
     
     page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame]
-    page_2_frames = [page2_header_frame,page2_column_1,page2_column_2,footer_frame]
+    page_2_frames = [page2_header_frame,page2_column_1,page2_column_2,page2_footer_frame]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     templates.append(PageTemplate(frames=page_2_frames,id='secondPage'))
