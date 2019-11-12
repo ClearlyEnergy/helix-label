@@ -14,6 +14,7 @@ from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
 from reportlab.lib.enums import TA_CENTER
 import sys
+# from reportlab.lib.fonts import 
 sys.path.insert(0,'./utils')
 
 PAGE_HEIGHT=defaultPageSize[1]
@@ -34,6 +35,7 @@ CUSTOM_YELLOW = colors.Color(red=(254.0/255),green=(230.0/255),blue=(153.0/255))
 
 
 def format_numbers(amount):
+    ''' formats numbers above a 1000 to make them readable '''
     if amount<1000:
         return str(amount)
     return str(amount/1000)+","+str(amount%1000)
@@ -60,17 +62,27 @@ def create_pdf():
     hp3 = Paragraph(header_text3,styles['Normal'])
     sm_data = [[hp3],[hp4]]
     sm_table= Table(sm_data,rowHeights=0.7*cm)
-    sm_tableStyle = TableStyle([('ALIGN', (0, 0), (0, 0), 'LEFT'),('LEFTPADDING',(0,0),(0,0),0.5),('BOTTOMPADDING',(0,1),(0,1),0),('BACKGROUND',(0,1),(0,1),colors.gray),('RIGHTPADDING',(0,0),(0,0),0.5),('INNERGRID', (0,0), (-1,-1), 0.1, colors.gray),('BOX', (0,0), (-1,-1), 0.1, colors.gray)])
+    sm_tableStyle = TableStyle([('ALIGN', (0, 0), (0, 0), 'LEFT'),
+                                ('LEFTPADDING',(0,0),(0,0),0.5),
+                                ('BOTTOMPADDING',(0,1),(0,1),0),
+                                ('BACKGROUND',(0,1),(0,1),colors.HexColor('#666666')),
+                                ('RIGHTPADDING',(0,0),(0,0),0.5),
+                                ('INNERGRID', (0,0), (-1,-1), 0.1, colors.gray),
+                                ('BOX', (0,0), (-1,-1), 0.1, colors.HexColor('#666666'))])
+
     sm_table.setStyle(sm_tableStyle)
     data = [[img_logo,[hp1,hp2],'','','','','',sm_table]]
-    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),0),('VALIGN', (0, 0), (0, 0), 'MIDDLE'),('ALIGN', (0, 0), (0, 0), 'LEFT'),('ALIGN', (-1, 0), (-1, 0), 'LEFT'),('SPAN', (1, 0), (6, 0))])
+    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),0),
+                            ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
+                            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+                            ('ALIGN', (-1, 0), (-1, 0), 'LEFT'),
+                            ('SPAN', (1, 0), (6, 0))])
     tbl = Table(data)
     tbl.setStyle(tblStyle)
     Story.append(tbl)
     header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.12*document.height, showBoundary=0)
     Story.append(FrameBreak)
-    # osme = header_frame.height
-    # print(osme, document.bottomMargin)
+ 
 
     ##CREATING FRAMES FOR PAGE1
     # creating and populating frame1
@@ -78,16 +90,16 @@ def create_pdf():
     frameWidth = document.width/3
     frameHeight = document.height-(header_frame.height*1.5)
     column_1 = ColorFrame(document.leftMargin,document.bottomMargin+(0.8*header_frame.height),frameWidth,frameHeight, showBoundary=0,background='#f2f1ef',topPadding=10)
-    f1_header1 = "<font name=Helvetica color=#4c4f52 size=12>ABOUT</font>"
+    f1_header1 = "<font name=Helvetica color=#666666 size=11>ABOUT</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
-    f1_text1 = '<font color=black>Address</font>'
+    f1_text1 = '<font color=#4e4e52 size=8>Address</font>'
     f1_text1_p = Paragraph(f1_text1,styles['Normal'])
     address_line_1 = "123 Main St."
     address_line_2 = ''
     city='Whately'
     state = 'MA'
     postal_code= '01903'
-    address = '<font color=black>{}, {}, {}, {}, {}</font>'.format(address_line_1,address_line_2,city,state,postal_code)
+    address = '<font name=Times-Roman size=9 color=#4e4e52>{}, {}, {}, {}, {}</font>'.format(address_line_1,address_line_2,city,state,postal_code)
     address_p = Paragraph(address,styles['Normal'])
     Story.append(f1_header1_p)
     
@@ -98,27 +110,27 @@ def create_pdf():
     #create style for pragraphs in frame_1
     styles.add(ParagraphStyle(name='f1_leading',leading=16))
     year_built ='1850'
-    year_built_header_p = Paragraph('Year Built',styles['f1_leading'])
+    year_built_header_p = Paragraph('<font color=#4e4e52 size=8>Year Built</font>',styles['f1_leading'])
     year_built_p=Paragraph('<font name=Helvetica-Bold>{}</font>'.format(year_built),styles['f1_leading'])
     
     conditioned_floor_area = 2735
-    conditioned_floor_area_header_p = Paragraph('Sq. Footage',styles['f1_leading'])
+    conditioned_floor_area_header_p = Paragraph('<font color=#4e4e52 size=8>Sq. Footage</font>',styles['f1_leading'])
     conditioned_floor_area_p  = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(conditioned_floor_area)),styles['f1_leading'])
    
     number_of_bedrooms =3
     number_of_bedrooms_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(number_of_bedrooms)),styles['f1_leading'])
-    number_of_bedrooms_header_p = Paragraph('# of Bedrooms',styles['f1_leading'])
+    number_of_bedrooms_header_p = Paragraph('<font color=#4e4e52 size=8># of Bedrooms</font>',styles['f1_leading'])
 
-    primary_heating_fuel_type_header_p = Paragraph('Primary Heating Fuel',styles['f1_leading'])
+    primary_heating_fuel_type_header_p = Paragraph('<font color=#4e4e52 size=8>Primary Heating Fuel</font>',styles['f1_leading'])
     primary_heating_fuel_type = 'Fuel Oil'
     primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
 
 
     assessment_date = 'N/A'
     assessment_date_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
-    assessment_date_header_p = Paragraph('Assessment Date',styles['f1_leading'])
+    assessment_date_header_p = Paragraph('<font color=#4e4e52 size=8>Assessment Date</font>',styles['f1_leading'])
 
-    company_header_p =Paragraph('Energy Specialist',styles['f1_leading'])
+    company_header_p =Paragraph('<font color=#4e4e52 size=8>Energy Specialist</font>',styles['f1_leading'])
     company ='Dave Saves'
     company_p =Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(company)),styles['f1_leading'])
 
@@ -140,7 +152,7 @@ def create_pdf():
     Story.append(f1_header2_p)
     
 
-    electric_energy_usage_base_header_p =Paragraph('electricity',styles['f1_leading'])
+    electric_energy_usage_base_header_p =Paragraph("<font color=#4e4e52 size=8> electricity </font>",styles['f1_leading'])
     electric_energy_usage_base = 3.613
     electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold>{} kWh</font>'.format(str(electric_energy_usage_base)),styles['f1_leading'])
 
@@ -255,7 +267,7 @@ def create_pdf():
     electricity_percentage = 6
     data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
-    tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#c8cacc')),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('ALIGN',(0,0),(-1,-1),'CENTER')])
+    tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('ALIGN',(0,0),(-1,-1),'CENTER')])
     tbl1_frame_2.setStyle(tblStyle1_frame_2)
     Story.append(tbl1_frame_2)
 
@@ -308,7 +320,7 @@ def create_pdf():
 
     tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
     tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
-    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#c8cacc')),
+    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
     ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
     ('ALIGN',(0,0),(-1,-1),'CENTER')])
 

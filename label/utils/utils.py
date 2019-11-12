@@ -1,4 +1,5 @@
-# implemented this class so that we can colour our frames
+# implemented this class so that we can colour our frames, for this particular project we wanted to colour the first frame
+
 from reportlab.platypus import SimpleDocTemplate, Frame 
 from reportlab.lib.colors import toColor
 
@@ -9,7 +10,7 @@ class ColorFrameSimpleDocTemplate(SimpleDocTemplate,object):
         if hasattr(self.frame, 'background'):
             self.frame.drawBackground(self.canv)
 
-# From http://blog.stacktrace.ch/post/27830893647
+
 class ColorFrame(Frame,object):
     """ Extends the reportlab Frame with the ability to draw a background color. """
     
