@@ -2,7 +2,7 @@
 #! /usr/bin/python
 # run with python label/populate_massachusetts_home_scorecard.py
 
-
+from utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
@@ -13,6 +13,8 @@ from reportlab.lib import colors
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
 from reportlab.lib.enums import TA_CENTER
+import sys
+sys.path.insert(0,'./utils')
 
 PAGE_HEIGHT=defaultPageSize[1]
 PAGE_WIDTH=defaultPageSize[0]
@@ -27,34 +29,9 @@ CUSTOM_MGREEN = colors.Color(red=(146.0/255),green=(200.0/255),blue=(74.0/255))
 CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255))
 CUSTOM_YELLOW = colors.Color(red=(254.0/255),green=(230.0/255),blue=(153.0/255))
 
-def myFirstPage(canvas, doc):
- canvas.saveState()
- canvas.setFont('Times-Bold',16)
-
- canvas.setFont('Times-Roman',9)
-
- canvas.restoreState()
 
 
 
-
-def myLaterPages(canvas,doc):
-    canvas.saveState()
-    canvas.setFont('Times-Roman',9)
-
-    canvas.restoreState()
-
-def footer(canvas,doc):
-    canvas.saveState()
-   
-    styles = getSampleStyleSheet()
- 
-    # Header
-    footer = Paragraph('Home Owner | 123 Main Street , Whatley, MA 01093 Brought to you by', styles['Normal'])
-    w, h = footer.wrap(doc.width, doc.bottomMargin)
-    footer.drawOn(canvas, doc.leftMargin, h)
-    # Release the canvas
-    canvas.restoreState()   
 
 def format_numbers(amount):
     if amount<1000:
@@ -65,7 +42,7 @@ def create_pdf():
   
     Story = []
     # Story.append(Spacer(1,0.005*cm))
-    document = SimpleDocTemplate('test.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
+    document = ColorFrameSimpleDocTemplate('test.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()
    
     ##HEADER
@@ -86,7 +63,7 @@ def create_pdf():
     sm_tableStyle = TableStyle([('ALIGN', (0, 0), (0, 0), 'LEFT'),('LEFTPADDING',(0,0),(0,0),0.5),('BOTTOMPADDING',(0,1),(0,1),0),('BACKGROUND',(0,1),(0,1),colors.gray),('RIGHTPADDING',(0,0),(0,0),0.5),('INNERGRID', (0,0), (-1,-1), 0.1, colors.gray),('BOX', (0,0), (-1,-1), 0.1, colors.gray)])
     sm_table.setStyle(sm_tableStyle)
     data = [[img_logo,[hp1,hp2],'','','','','',sm_table]]
-    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),0),('VALIGN', (0, 0), (0, 0), 'MIDDLE'),('ALIGN', (0, 0), (0, 0), 'RIGHT'),('ALIGN', (-1, 0), (-1, 0), 'LEFT'),('SPAN', (1, 0), (6, 0))])
+    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),0),('VALIGN', (0, 0), (0, 0), 'MIDDLE'),('ALIGN', (0, 0), (0, 0), 'LEFT'),('ALIGN', (-1, 0), (-1, 0), 'LEFT'),('SPAN', (1, 0), (6, 0))])
     tbl = Table(data)
     tbl.setStyle(tblStyle)
     Story.append(tbl)
@@ -99,8 +76,8 @@ def create_pdf():
     # creating and populating frame1
     
     frameWidth = document.width/3
-    frameHeight = document.height-header_frame.height+(0.25*inch)
-    column_1 = Frame(document.leftMargin,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
+    frameHeight = document.height-(header_frame.height*1.5)
+    column_1 = ColorFrame(document.leftMargin,document.bottomMargin+(0.8*header_frame.height),frameWidth,frameHeight, showBoundary=0,background='#f2f1ef',topPadding=10)
     f1_header1 = "<font name=Helvetica color=#4c4f52 size=12>ABOUT</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
     f1_text1 = '<font color=black>Address</font>'
@@ -240,7 +217,7 @@ def create_pdf():
 
 
 
-    # creating and populating frame2
+    # creating and populating frame2( COLUMN 2)
     Story.append(FrameBreak)
     frameWidth_2 = document.width/3
     frameHeight_2 = document.height-header_frame.height+(0.25*inch)
