@@ -11,7 +11,7 @@ from reportlab.lib.pagesizes import letter, landscape
 import pkg_resources
 from reportlab.lib import colors
 from reportlab.graphics.charts.piecharts import Pie
-from reportlab.graphics.shapes import Drawing, String
+from reportlab.graphics.shapes import Drawing
 from reportlab.lib.enums import TA_CENTER
 
 PAGE_HEIGHT=defaultPageSize[1]
