@@ -12,7 +12,7 @@ import pkg_resources
 from reportlab.lib import colors
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
-from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 import sys
 # from reportlab.lib.fonts import 
 sys.path.insert(0,'./utils')
@@ -30,7 +30,26 @@ CUSTOM_MGREEN = colors.Color(red=(146.0/255),green=(200.0/255),blue=(74.0/255))
 CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255))
 CUSTOM_YELLOW = colors.Color(red=(254.0/255),green=(230.0/255),blue=(153.0/255))
 
-
+def pie_chart(data_dict):
+    drawing = Drawing(width=1.2*inch, height=1.2*inch)
+    data = []
+    labels = []
+    pie = Pie()
+    pie.sideLabels = False
+    pie.x = 10
+    pie.y = -10
+    pie.data = data
+    pie.labels = labels
+    pie.slices.strokeColor = colors.white
+    pie.slices.strokeWidth = 0.25
+    pie.simpleLabels = 0
+    for i in range(len(data)):
+        pie.slices[i].labelRadius = 0.5
+        pie.slices[i].fillColor = COLORLIST[i]
+        pie.slices[i].fontName = 'FontAwesome'
+        pie.slices[i].fontSize = 16
+    drawing.add(pie)
+    return drawing
 
 
 
@@ -44,7 +63,7 @@ def create_pdf(data_dict, out_file):
   
     Story = []
     # Story.append(Spacer(1,0.005*cm))
-    document = ColorFrameSimpleDocTemplate('test.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
+    document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()
    
     ##HEADER
@@ -73,6 +92,7 @@ def create_pdf(data_dict, out_file):
     sm_table.setStyle(sm_tableStyle)
     data = [[img_logo,[hp1,hp2],'','','','','',sm_table]]
     tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),0),
+                            ('LEFTPADDING',(0,0),(0,0),0),
                             ('VALIGN', (0, 0), (0, 0), 'MIDDLE'),
                             ('ALIGN', (0, 0), (0, 0), 'LEFT'),
                             ('ALIGN', (-1, 0), (-1, 0), 'LEFT'),
@@ -90,7 +110,7 @@ def create_pdf(data_dict, out_file):
     frameWidth = document.width/3
     frameHeight = document.height-(header_frame.height*1.5)
     column_1 = ColorFrame(document.leftMargin,document.bottomMargin+(0.8*header_frame.height),frameWidth,frameHeight, showBoundary=0,background='#f2f1ef',topPadding=10)
-    f1_header1 = "<font name=Helvetica color=#666666 size=11>ABOUT</font>"
+    f1_header1 = "<font name=Helvetica-Bold color=#666666 size=11>ABOUT</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
     f1_text1 = '<font color=#4e4e52 size=8>Address</font>'
     f1_text1_p = Paragraph(f1_text1,styles['Normal'])
@@ -114,28 +134,28 @@ def create_pdf(data_dict, out_file):
     
     
     year_built = data_dict['year_built']
-    year_built_header_p = Paragraph('<font color=#4e4e52 size=8>Year Built</font>',styles['f1_leading'])
-    year_built_p=Paragraph('<font name=Helvetica-Bold>{}</font>'.format(year_built),styles['f1_leading'])
+    year_built_header_p = Paragraph('<font color=#474646 size=8>Year Built</font>',styles['f1_leading'])
+    year_built_p=Paragraph('<font name=Helvetica-Bold color=#4a4848>{}</font>'.format(year_built),styles['f1_leading'])
     
     conditioned_floor_area = data_dict['conditioned_area']
     conditioned_floor_area_header_p = Paragraph('<font color=#4e4e52 size=8>Sq. Footage</font>',styles['f1_leading'])
-    conditioned_floor_area_p  = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(conditioned_floor_area)),styles['f1_leading'])
+    conditioned_floor_area_p  = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(conditioned_floor_area)),styles['f1_leading'])
    
     number_of_bedrooms = data_dict['number_of_bedrooms']
-    number_of_bedrooms_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(number_of_bedrooms)),styles['f1_leading'])
+    number_of_bedrooms_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(number_of_bedrooms)),styles['f1_leading'])
     number_of_bedrooms_header_p = Paragraph('<font color=#4e4e52 size=8># of Bedrooms</font>',styles['f1_leading'])
 
     primary_heating_fuel_type_header_p = Paragraph('<font color=#4e4e52 size=8>Primary Heating Fuel</font>',styles['f1_leading'])
     primary_heating_fuel_type = data_dict['primary_heating_fuel_type']
-    primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
+    primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
 
     assessment_date = data_dict['green_assessment_property_date']
-    assessment_date_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
+    assessment_date_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
     assessment_date_header_p = Paragraph('<font color=#4e4e52 size=8>Assessment Date</font>',styles['f1_leading'])
 
     company_header_p =Paragraph('<font color=#4e4e52 size=8>Energy Specialist</font>',styles['f1_leading'])
     company = data_dict['name']
-    company_p =Paragraph('<font name=Helvetica-Bold>{}</font>'.format(str(company)),styles['f1_leading'])
+    company_p =Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(company)),styles['f1_leading'])
 
 
 
@@ -148,20 +168,20 @@ def create_pdf(data_dict, out_file):
     tbl_frame_1.setStyle(tbl_frame_1_tableStyle)
     Story.append(tbl_frame_1)
 
-    Story.append(Story.append(Spacer(1, 12)))
+    # Story.append(Story.append(Spacer(1, 6)))
 
-    f1_header_2 = "<font name=Helvetica color=#4c4f52 size=12>YEARLY ENERGY USE</font>"
+    f1_header_2 = "<font  name=Helvetica-Bold color=#666666 size=11>YEARLY ENERGY USE</font>"
     f1_header2_p = Paragraph(f1_header_2,styles['Heading2'])
     Story.append(f1_header2_p)
     
 
-    electric_energy_usage_base_header_p =Paragraph('<font color=#4e4e52 size=8> electricity </font>',styles['f1_leading'])
+    electric_energy_usage_base_header_p =Paragraph('<font color=#4e4e52 size=8> Electricity </font>',styles['f1_leading'])
     electric_energy_usage_base = data_dict['electric_energy_usage_base']
-    electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold>{} kWh</font>'.format(str(electric_energy_usage_base)),styles['f1_leading'])
+    electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(electric_energy_usage_base))),styles['f1_leading'])
 
-    fuel_energy_base_header_p = Paragraph('Fuel Oil',styles['f1_leading'])
+    fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> Fuel Oil </font>',styles['f1_leading'])
     fuel_energy_base = data_dict['fuel_energy_usage_base']
-    fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold>{} gallons</font>'.format(str(fuel_energy_base)),styles['f1_leading'])
+    fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
 
     data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
     tbl1_frame_1 = Table(data2_f1)
@@ -169,31 +189,31 @@ def create_pdf(data_dict, out_file):
     tbl1_frame_1.setStyle(tbl1_frame_1_tableStyle)
     Story.append(tbl1_frame_1)
 
-    Story.append(Story.append(Spacer(1, 12)))
+    # Story.append(Story.append(Spacer(1, 12)))
    
-    f1_header_3 = "<font name=Helvetica color=#4c4f52 size=12>YEARLY COSTS & SAVINGS<super >*</super> </font>"#add prefix
+    f1_header_3 = "<font  name=Helvetica-Bold color=#666666 size=11>YEARLY COSTS & SAVINGS<super >*</super> </font>"#add prefix
     f1_header3_p = Paragraph(f1_header_3,styles['Heading2'])
     Story.append(f1_header3_p)
 
 
     total_energy_cost_base=data_dict['total_energy_cost_base']
-    total_energy_cost_base_text_p= Paragraph('<font size=8>Pre-upgrade Energy cost per yr</font>',styles['Normal'])
+    total_energy_cost_base_text_p= Paragraph('<font color=#4e4e52 size=8>Pre-upgrade Energy cost per yr</font>',styles['Normal'])
 
 
 
     total_energy_cost_improved=data_dict['total_energy_cost_improved']
-    total_energy_cost_improved_text_p= Paragraph('<font size=8>Post-upgrade Energy Cost per yr</font>',styles['Normal'])
+    total_energy_cost_improved_text_p= Paragraph('<font color=#4e4e52 size=8>Post-upgrade Energy Cost per yr</font>',styles['Normal'])
 
     save = total_energy_cost_base-total_energy_cost_improved
-    save_text_p= Paragraph('<font size=8>Estimated Energy Savings per yr</font>',styles['Normal'])
+    save_text_p= Paragraph('<font color=#4e4e52 size=8>Estimated Energy Savings per yr</font>',styles['Normal'])
 
-    total_energy_cost_base_p = Paragraph('<font name=Helvetica-Bold>${}</font>'.format(str(total_energy_cost_base)),styles['f1_leading'])
-    total_energy_cost_improved_p =  Paragraph('<font name=Helvetica-Bold>${}</font>'.format(str(total_energy_cost_improved)),styles['f1_leading'])
-    save_p =  Paragraph('<font name=Helvetica-Bold>${}</font>'.format(str(save)),styles['f1_leading'])
+    total_energy_cost_base_p = Paragraph('<font name=Helvetica-Bold color=#212020>$ {}</font>'.format(format_numbers(total_energy_cost_base)),styles['f1_leading'])
+    total_energy_cost_improved_p =  Paragraph('<font name=Helvetica-Bold color=#212020>$ {}</font>'.format(format_numbers(total_energy_cost_improved)),styles['f1_leading'])
+    save_p =  Paragraph('<font name=Helvetica-Bold color=#60963d>$ {}</font>'.format(format_numbers(save)),styles['f1_leading'])
 
     data3_f1 = [[[total_energy_cost_base_p,total_energy_cost_base_text_p],
                  [total_energy_cost_improved_p,total_energy_cost_improved_text_p],
-                 [Paragraph('SAVE',styles['Normal']),save_p,save_text_p]
+                 [Paragraph('<font name=Helvetica-Bold color=#60963d size=8>SAVE</font>',styles['Normal']),save_p,save_text_p]
                     ]]
 
     tbl3_frame_1 = Table(data3_f1)
@@ -206,31 +226,61 @@ def create_pdf(data_dict, out_file):
     #first pie
     pie_data_1 =[total_energy_cost_base]
     pie_1= Pie()
-    pie_1.width=2.3*cm
-    pie_1.height=2.3*cm
+    pie_1.width=2*cm
+    pie_1.height=2*cm
+    pie_1.slices[0].fillColor=colors.HexColor('#444d4a')
     pie_1.data=pie_data_1
+    pie_1.slices.strokeColor = colors.HexColor('#f2f1ef')
+    pie_1.slices.strokeWidth = 0.0001*cm
     # pie_title_1 = String("Before")
-    drawing =Drawing()
+    drawing =Drawing(width=cm, height=cm)
     drawing.add(pie_1)
-    
+   
     
     # Story.append(drawing)
-    #second pie
-    pie_data_2 =[total_energy_cost_base,total_energy_cost_improved]
+    #second pie chart
+    pie_data_2 =[total_energy_cost_improved,total_energy_cost_base]
     pie_2= Pie()
-    pie_2.width=2.3*cm
-    pie_2.height=2.3*cm
+    pie_2.slices[0].fillColor=colors.HexColor('#97cc74')
+    pie_2.slices[1].fillColor=colors.HexColor('#444d4a')
+    pie_2.width=2*cm
+    pie_2.height=2*cm
+    
     pie_2.data=pie_data_2
-    # pie_title_1 = String("Before")
-    drawing1 =Drawing()
-    # pie_2.x = 150
-    # pie_2.y = 65
+    pie_2.slices.strokeColor = colors.HexColor('#f2f1ef')
+    pie_2.slices.strokeWidth = 0.0001*cm
+    drawing1 =Drawing(width=cm, height=cm)
+  
     drawing1.add(pie_2)
-    data_table3 = [[drawing,drawing1]]
+    before_p = Paragraph('<font > <strong>{}Before</strong></font>'.format('\t'),styles['Normal'])
+
+
+    after_p = Paragraph('<font> <strong>{}After</strong></font>'.format('\t'),styles['Normal'])
+ 
+    data_table3 = [[drawing,drawing1],[before_p,after_p]]
     tbl_pie = Table(data_table3)#figure out how to get the piecharts in the column in order
-    # Story.append(tbl_pie)
+    tbl_pie_tableStyle = TableStyle([('ALIGN', (0, 0), (0, 0),'LEFT'),
+                                     ('LEFTPADDING', (0, 0), (0, 0),0.2*cm),
+                                     ('LEFTPADDING', (0, 1), (0, 1),0.5*cm),
+                                     ('LEFTPADDING', (1, 1), (1, 1),0.8*cm),
+                                    ('ALIGN', (1, 0), (1, 0),'CENTER'),
+                                     ('RIGHTPADDING', (1, 0), (1, 0),2.4*cm),
+                                     ('VALIGN', (0, 0), (-1, 0),'MIDDLE'),
+                                    ('TOPPADDING', (0, 0), (1, 0),1.2*cm),
+ 
+                                     ])
 
+    tbl_pie.setStyle(tbl_pie_tableStyle)
+    Story.append(tbl_pie)
 
+   
+    electricity =0.19
+    propane = 2.98
+    fuel_oil=2.57
+    styles.add(ParagraphStyle(name='CENTERED',alignment=TA_CENTER))
+    last_paragraph = Paragraph('<font color=#4e4e52 size=8>Electricity: $ {}/kWh, Propane: $ {}/gallon, Oil: $ {}/gallon</font>'.format(electricity,propane,fuel_oil),styles['CENTERED'])
+    Story.append(Spacer(1,8))
+    Story.append(last_paragraph)
 
     # creating and populating frame2( COLUMN 2)
     Story.append(FrameBreak)
@@ -238,10 +288,10 @@ def create_pdf(data_dict, out_file):
     frameHeight_2 = document.height-header_frame.height+(0.25*inch)
     column_2 = Frame(document.leftMargin+frameWidth_2,document.bottomMargin,frameWidth_2+inch,frameHeight_2, showBoundary=0)
 
-    f2_header1 = "<font name=Helvetica color=#4c4f52 size=12>HOME ENERGY USE</font>"
+    f2_header1 = "<font name=Helvetica-Bold color=#666666 size=11>HOME ENERGY USE</font>"
     f2_header1_p = Paragraph(f2_header1,styles['Heading2'])
     Story.append(f2_header1_p)
-    f2_text_p = Paragraph('<font size=8.5 color=#736d5e>This shows the estimated total energy use (electricity and heating fuel) of your home for one year. The lower the energy use, the better!</font>',styles['Normal'])
+    f2_text_p = Paragraph('<font color=#4e4e52 size=8>This shows the estimated total energy use (electricity and heating fuel) of your home for one year. The lower the energy use, the better!</font>',styles['Normal'])
     Story.append(f2_text_p)
 
     
@@ -251,11 +301,11 @@ def create_pdf(data_dict, out_file):
     img_sc_btu = Image(scorecard_btu,width=6.17*cm,height=10.5*cm)
     total_energy_usage_base = data_dict['total_energy_usage_base']    
     total_energy_usage_base_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(total_energy_usage_base),styles['Title'])
-    f2_text1_p = Paragraph('<font name=Helvetica size=7.5  color=#4c4f52>Energy Use before improvements</font>',styles['Normal'])
+    f2_text1_p = Paragraph('<font name=Helvetica size=7.5 color=#4e4e52>Energy Use before improvements</font>',styles['Normal'])
     total_energy_usage_improved = data_dict['total_energy_usage_improved']
     total_energy_usage_improved_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(total_energy_usage_improved),styles['Title'])
 
-    f2_text2_p = Paragraph('<font name=Helvetica  size=7.5  color=#4c4f52>Energy Use after recommended improvements</font>',styles['Normal'])
+    f2_text2_p = Paragraph('<font name=Helvetica  size=7.5 color=#4e4e52>Energy Use after recommended improvements</font>',styles['Normal'])
 
     data_table4 = [[img_sc_btu,total_energy_usage_base_p,f2_text1_p],['','',''],['',total_energy_usage_improved_p,f2_text2_p ]]
 
@@ -266,13 +316,22 @@ def create_pdf(data_dict, out_file):
     Story.append(tbl_frame_2)
     styles.add(ParagraphStyle(name='Centre', alignment=TA_CENTER))
     f2_text3_p = Paragraph('<font size=8.5 color=#736d5e>Estimated percentage of energy use by fuel type:</font>',styles['Centre'])
+    Story.append(Spacer(1,30))
     Story.append(f2_text3_p)
+    Story.append(Spacer(1,4))
     propane_percentage=data_dict['propane_percentage']
     fuel_oil_percentage = data_dict['fuel_oil_percentage']
     electricity_percentage = data_dict['electricity_percentage']
-    data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
+    data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),
+            Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),
+            Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
+
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
-    tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('ALIGN',(0,0),(-1,-1),'CENTER')])
+    tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
+                                    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
+                                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                    ('ALIGN',(0,0),(-1,-1),'CENTER')])
+
     tbl1_frame_2.setStyle(tblStyle1_frame_2)
     Story.append(tbl1_frame_2)
 
@@ -281,10 +340,10 @@ def create_pdf(data_dict, out_file):
     frameWidth_3 = document.width/3
     frameHeight_3 = document.height-header_frame.height+(0.25*inch)
     column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=0)
-    f3_header1 = "<font name=Helvetica color=#4c4f52 size=12>HOME CARBON FOOTPRINT</font>"
+    f3_header1 = "<font name=Helvetica-Bold color=#666666 size=11>HOME CARBON FOOTPRINT</font>"
     f3_header1_p = Paragraph(f3_header1,styles['Heading2'])
     Story.append(f3_header1_p)
-    f3_text_p = Paragraph('<font  size=8.5 color=#736d5e>This score shows the'+
+    f3_text_p = Paragraph('<font  color=#4e4e52 size=8>This score shows the'+
                             'estimated carbon missions based on the annual amounts,'+
                              'types,and sources of fuels used in your home. The lower'+
                              'the score, the less carbon is released into the atmosphere to power your home.</font>'
@@ -316,19 +375,20 @@ def create_pdf(data_dict, out_file):
     Story.append(tbl1_f3)
 
     f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
-    Story.append(Spacer(1,8.8))
+    Story.append(Spacer(1,38))
     Story.append(f3_text3_p)
-
+    Story.append(Spacer(1,4))
     fuel_oil_percentage_f3 = data_dict['fuel_oil_percentage_co2']
     electricity_percentage_f3 = data_dict['electricity_percentage_co2']
     data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
     Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(electricity_percentage_f3)),styles['Normal'])]]
 
     tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
-    tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
-    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
-    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-    ('ALIGN',(0,0),(-1,-1),'CENTER')])
+    tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(1,0),0.5*cm),
+                                    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
+                                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                    ('ALIGN',(0,0),(-1,-1),'CENTER')
+                                    ])
 
     tbl2_frame_3.setStyle(tblStyle2_frame_3)
   
@@ -384,7 +444,7 @@ def create_pdf(data_dict, out_file):
     page2_title_1_p= Paragraph("<font name=helvetica color=#4c4f52 size=12> ABOUT YOUR MASSACHUSETTS HOME SCORECARD </font>",styles['Normal'])
     styles.add(ParagraphStyle(name='line-height',leading=13))
     Story.append(page2_title_1_p)
-    page2_column_1_p1 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The Massachusetts Home Scorecard (MAHS) is a tool to assess a home's "+
+    page2_column_1_p1 = Paragraph("<font name=helvetica color=#4e4e52 size=9>The Massachusetts Home Scorecard (MAHS) is a tool to assess a home's "+
                                     "expected energy consumption, cost, and carbon footprint. A low energy "+
                                     "use identies a home as energy ecient with a smaller carbon footprint "+
                                     "and lower energy costs. The MAHS also allows for comparisons of one "+
@@ -393,7 +453,7 @@ def create_pdf(data_dict, out_file):
     Story.append(page2_column_1_p1)
     Story.append(Spacer(1,10))
 
-    page2_column_1_p2 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The Home Energy Use (HEU) calculation is based on a home's size, design, "+
+    page2_column_1_p2 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>The Home Energy Use (HEU) calculation is based on a home's size, design, "+
                                   "insulation levels, air leakage, heating and cooling systems, major "+
                                   "appliances, lighting, hot water heating, and any electricity produced by "+
                                   "onsite solar PV. A home’s actual energy use will vary with occupancy, "+
@@ -401,7 +461,7 @@ def create_pdf(data_dict, out_file):
     
     styles.add(ParagraphStyle(name='quote',leading=13, leftIndent=10,rightIndent=12))
 
-    page2_column_1_p3 = Paragraph("<font name=helvetica  color=#4c4f52 size=9><i><strong>For additional details on the recommended energy improvements and "+
+    page2_column_1_p3 = Paragraph("<font name=helvetica  color=#4e4e52 size=9><i><strong>For additional details on the recommended energy improvements and "+
                                   "savings estimates for your home, please refer to your Home Energy "+
                                    "Assessment Report</strong></i></font>",styles['quote'])
 
@@ -415,7 +475,7 @@ def create_pdf(data_dict, out_file):
     Story.append(Spacer(1,6))
     page2_mini_header_1 = Paragraph("<font name=helvetica  color=#4c4f52 size=10><strong>Btu</strong></font>",styles['line-height'])
     Story.append(page2_mini_header_1)
-    page2_column_1_p4 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>A Btu, or British Thermal Unit, is a measurement of the heat content of "+
+    page2_column_1_p4 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>A Btu, or British Thermal Unit, is a measurement of the heat content of "+
                                  "fuel. mmBtu stands for one million Btus. One Btu ≈ the energy produced "+
                                  "by a single wooden match. One million Btus ≈ 7 gallons of gasoline.</font>",styles['line-height'])
     Story.append(page2_column_1_p4)  
@@ -423,7 +483,7 @@ def create_pdf(data_dict, out_file):
 
     page2_mini_header_2 = Paragraph("<font name=helvetica  color=#4c4f52 size=10><strong>Carbon Footprint</strong></font>",styles['line-height'])
 
-    page2_column_1_p5 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>A home’s energy consumption aects carbon emissions and impacts the "+
+    page2_column_1_p5 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>A home’s energy consumption aects carbon emissions and impacts the "+
                                     "environment. The Carbon Footprint calculation is based on the "+
                                     "greenhouse gas emissions for the annual amounts, types, and sources of "+
                                     "fuels used in your home at the time of this report. For electricity, carbon "+
@@ -439,7 +499,7 @@ def create_pdf(data_dict, out_file):
  
     page2_mini_header_3 = Paragraph("<font name=helvetica  color=#4c4f52 size=10><strong>Average Home in Your Area</strong></font>",styles['line-height'])
 
-    page2_column_1_p6 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The 'Average Home in Your Area' is dened as the average of all the "+
+    page2_column_1_p6 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>The 'Average Home in Your Area' is dened as the average of all the "+
                                   "homes in Massachusetts. This is the average of all those homes before "+
                                   "any energy improvements were implemented. The average may vary "+
                                 "sightly over time as homes become more ecient due to improvements.</font>",styles['line-height'])
@@ -458,7 +518,7 @@ def create_pdf(data_dict, out_file):
     Story.append(Spacer(1,2))
   
     incentive_1 = data_dict['incentive_1']
-    page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4c4f52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
+    page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4e4e52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
                                         'for an estimated incentive of</font>',styles['Normal'])
     
     incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=14><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
@@ -556,7 +616,7 @@ def create_pdf(data_dict, out_file):
     Story.append(col2_tbl2)
 
 
-    page2_column_1_p1 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>The Contractor Incentive is based on anticipated reductions "+
+    page2_column_1_p1 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>The Contractor Incentive is based on anticipated reductions "+
                                   "in energy use resulting from recommended improvements made to the home. "+
                                   "The amount is subject to review and approval by the Program "+
                                   "Administrator and may change if the nal scope of work diers from the proposal or if measured "+
@@ -569,7 +629,7 @@ def create_pdf(data_dict, out_file):
     Story.append(page2_title_6_p)
     Story.append(Spacer(1,5))
 
-    page2_column_2_text_p3 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>Customers might be eligible for rebates "+
+    page2_column_2_text_p3 = Paragraph("<font name=helvetica  color=#4e4e52  size=9>Customers might be eligible for rebates "+
                             "through the Mass Save program for installing equipment that meets "+
                             "the criteria listed in the table below. For more details and "+
                             "information on how to access those rebates, visit <a color=blue href='https://www.masssave.com/en/saving/residential-rebates/'>bit.ly/ma-mvp-1</a>. </font>",styles['Normal'])
@@ -578,11 +638,11 @@ def create_pdf(data_dict, out_file):
 
     Story.append(page2_column_2_text_p3)
 
-    page2_column_2_text_p4 = Paragraph("<font name=helvetica  color=#4c4f52 size=9>Also you could be eligible for a $300 Mass "+
+    page2_column_2_text_p4 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>Also you could be eligible for a $300 Mass "+
                                             "Clean Energy Center rebate for a SEER 18 Mini Split Heat Pump.\n"+
                                              "Visit <a color=blue href='https://www.masssave.com/residential/clean-heating-and-cooling'>bit.ly/ma-mvp-2</a>. for more details </font>",styles['Normal'])
     
-    
+   
    
     
      # last table of page 2 col 2
