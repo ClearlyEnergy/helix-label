@@ -321,7 +321,7 @@ def create_pdf(data_dict, out_file):
     Story.append(Spacer(1,4))
     propane_percentage=data_dict['propane_percentage']
     fuel_oil_percentage = data_dict['fuel_oil_percentage']
-    electricity_percentage = data_dict['electricity_percentage']
+    electricity_percentage = data_dict['electric_percentage']
     data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
@@ -707,7 +707,7 @@ if __name__ == '__main__':
     'total_energy_cost_base': 4343, 'total_energy_cost_improved': 2798, 
     'propane_percentage':4, 'fuel_oil_percentage': 90, 'electricity_percentage': 6,
     'co2_production_base': 16.4, 'co2_production_improved': 10.2,
-    'fuel_oil_percentage_co2': 93, 'electricity_percentage_co2': 7.0,
+    'fuel_oil_percentage_co2': 93, 'electric_percentage_co2': 7.0,
     'incentive_1': 11435
 }
     out_file = 'MAScorecard.pdf'
