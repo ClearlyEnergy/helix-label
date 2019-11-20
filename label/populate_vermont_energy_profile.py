@@ -129,6 +129,8 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     registered = u"\u00AE"
     space = u"\u0009"
     
+    page2 = False
+    
     colors_lgreen = ''
 
     Story=[]
@@ -366,180 +368,181 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(body_table)
 
 ### Page 2
-    Story.append(PageBreak())
-    p15 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_ll, fontName = font_bold,  spaceBefore = 10, spaceAfter = 10, leading=0, firstLineIndent = 0, textColor=CUSTOM_DGREEN)
-    p16 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_s, fontName = font_normal,  spaceBefore = 12, spaceAfter = 2, leading=12, firstLineIndent = 0)
-    p17 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_s, fontName = font_normal,  spaceBefore = 12, spaceAfter = -11, leading=12, firstLineIndent = 0)
-    p18 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_bold,  spaceBefore = 10, spaceAfter = 10, leading=0, firstLineIndent = 0)
-    p19 = styles["BodyText"]
-    p19.fontSize = 7
-    p19.alignment = TA_CENTER
-    p19.leading = 8
+    if page2: 
+        Story.append(PageBreak())
+        p15 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_ll, fontName = font_bold,  spaceBefore = 10, spaceAfter = 10, leading=0, firstLineIndent = 0, textColor=CUSTOM_DGREEN)
+        p16 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_s, fontName = font_normal,  spaceBefore = 12, spaceAfter = 2, leading=12, firstLineIndent = 0)
+        p17 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_s, fontName = font_normal,  spaceBefore = 12, spaceAfter = -11, leading=12, firstLineIndent = 0)
+        p18 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_bold,  spaceBefore = 10, spaceAfter = 10, leading=0, firstLineIndent = 0)
+        p19 = styles["BodyText"]
+        p19.fontSize = 7
+        p19.alignment = TA_CENTER
+        p19.leading = 8
     
-    p2_h1 = Paragraph("How do a Home's Features Impact Expected Energy Costs?",p15)
-    Story.append(p2_h1)
+        p2_h1 = Paragraph("How do a Home's Features Impact Expected Energy Costs?",p15)
+        Story.append(p2_h1)
     
-    line_table = Table([''], colWidths = [7.8*inch])
-    line_table.setStyle(TableStyle([
-         ("LINEBELOW", (0,0), (-1,-1), 1, colors.grey),
-       ]))
-    Story.append(line_table)
-    Story.append(Spacer(1, 10))
+        line_table = Table([''], colWidths = [7.8*inch])
+        line_table.setStyle(TableStyle([
+             ("LINEBELOW", (0,0), (-1,-1), 1, colors.grey),
+           ]))
+        Story.append(line_table)
+        Story.append(Spacer(1, 10))
     
     
-    p2_t1_tt1 = Paragraph("LOW ENERGY USE",p19)
-    p2_t1_tt2 = Paragraph("VERMONT ENERGY CODE",p19)
-    p2_t1_tt3 = Paragraph("HIGH ENERGY USE",p19)
-    p2_t1_tt4 = Paragraph("<font name='InterItalic'>Efficiency Vermont Certified High Performance Home</font>",p19)
-    p2_t1_tt5 = Paragraph("<font name='InterItalic'>Vermont 2015 Residential Building Energy Standards (RBES)</font>",p19)
-    p2_t1_tt6 = Paragraph("<font name='InterItalic'>Typical Pre-Weatherized Existing Home</font>",p19)
-    p2_t1_t1 = Paragraph("Triple-Pane, LowE, High Solar Gain",p19)
-    p2_t1_t2 = Paragraph("Double-Pane (U-0.32), LowE", p19)
-    p2_t1_t3 = Paragraph("Single-Pane, Clear",p19)
-    p2_t1_t4 = Paragraph(geq.encode('UTF8') + "90 AFUE, ENERGYSTAR" + registered.encode('UTF8'),p19)
-    p2_t1_t5 = Paragraph("80 AFUE, Federal minimum", p19)
-    p2_t1_t6 = Paragraph(leq.encode('UTF8') + "70 AFUE",p19)
-    p2_t1_t4b = Paragraph(geq.encode('UTF8') + "9 HSPF, (NEEP ccASHP specification)",p19)
-    p2_t1_t5b = Paragraph("8.2 HSPF, Federal minimum", p19)
-    p2_t1_t6b = Paragraph(leq.encode('UTF8') + "7 HSPF",p19)
-    p2_t1_t4c = Paragraph(geq.encode('UTF8') + "0.74 UEF, ENERGYSTAR" + registered.encode('UTF8'),p19)
-    p2_t1_t5c = Paragraph("0.56 UEF, Federal minimum", p19)
-    p2_t1_t6c = Paragraph(leq.encode('UTF8') + "0.55 UEF",p19)
-    p2_t1_t4d = Paragraph(geq.encode('UTF8') + "2 UEF, ENERGYSTAR" + registered.encode('UTF8'),p19)
-    p2_t1_t5d = Paragraph("0.92 UEF, Federal minimum", p19)
-    p2_t1_t6d = Paragraph(leq.encode('UTF8') + "0.87 UEF",p19)
-    p2_t1_t7 = Paragraph("R-20 (cavity) or R-15 (continuous)",p19)
-    p2_t1_t8 = Paragraph(leq.encode('UTF8') + "1 ACH50", p19)
-    p2_t1_t9 = Paragraph(geq.encode('UTF8') + "7 ACH50", p19)
-    p2_t1_t10 = Paragraph(geq.encode('UTF8') + "R-60", p19)
-    p2_t1_t11 = Paragraph(leq.encode('UTF8') + "R-19", p19)
-    p2_t1_t12 = Paragraph(geq.encode('UTF8') + "R-25", p19)
-    p2_t1_t13 = Paragraph(leq.encode('UTF8') + "R-3", p19)
-    p2_t1_t14 = Paragraph('R-20 (cavity) or R-15 (continuous)', p19)
-    p2_t1_t15 = Paragraph(geq.encode('UTF8') + '15 SEER, ENERGYSTAR' + registered.encode('UTF8'), p19)
-    p2_t1_t16 = Paragraph("14 SEER (Federal Minimum)", p19)
-    p2_t1_t17 = Paragraph(leq.encode('UTF8') + "11 SEER", p19)
-    p2_t1_t18 = Paragraph('ENERGY STAR' + registered.encode('UTF8'), p19)
-    p2_t1_t19 = Paragraph(geq.encode('UTF8') + "75% 'high efficiency'", p19)    
+        p2_t1_tt1 = Paragraph("LOW ENERGY USE",p19)
+        p2_t1_tt2 = Paragraph("VERMONT ENERGY CODE",p19)
+        p2_t1_tt3 = Paragraph("HIGH ENERGY USE",p19)
+        p2_t1_tt4 = Paragraph("<font name='InterItalic'>Efficiency Vermont Certified High Performance Home</font>",p19)
+        p2_t1_tt5 = Paragraph("<font name='InterItalic'>Vermont 2015 Residential Building Energy Standards (RBES)</font>",p19)
+        p2_t1_tt6 = Paragraph("<font name='InterItalic'>Typical Pre-Weatherized Existing Home</font>",p19)
+        p2_t1_t1 = Paragraph("Triple-Pane, LowE, High Solar Gain",p19)
+        p2_t1_t2 = Paragraph("Double-Pane (U-0.32), LowE", p19)
+        p2_t1_t3 = Paragraph("Single-Pane, Clear",p19)
+        p2_t1_t4 = Paragraph(geq.encode('UTF8') + "90 AFUE, ENERGYSTAR" + registered.encode('UTF8'),p19)
+        p2_t1_t5 = Paragraph("80 AFUE, Federal minimum", p19)
+        p2_t1_t6 = Paragraph(leq.encode('UTF8') + "70 AFUE",p19)
+        p2_t1_t4b = Paragraph(geq.encode('UTF8') + "9 HSPF, (NEEP ccASHP specification)",p19)
+        p2_t1_t5b = Paragraph("8.2 HSPF, Federal minimum", p19)
+        p2_t1_t6b = Paragraph(leq.encode('UTF8') + "7 HSPF",p19)
+        p2_t1_t4c = Paragraph(geq.encode('UTF8') + "0.74 UEF, ENERGYSTAR" + registered.encode('UTF8'),p19)
+        p2_t1_t5c = Paragraph("0.56 UEF, Federal minimum", p19)
+        p2_t1_t6c = Paragraph(leq.encode('UTF8') + "0.55 UEF",p19)
+        p2_t1_t4d = Paragraph(geq.encode('UTF8') + "2 UEF, ENERGYSTAR" + registered.encode('UTF8'),p19)
+        p2_t1_t5d = Paragraph("0.92 UEF, Federal minimum", p19)
+        p2_t1_t6d = Paragraph(leq.encode('UTF8') + "0.87 UEF",p19)
+        p2_t1_t7 = Paragraph("R-20 (cavity) or R-15 (continuous)",p19)
+        p2_t1_t8 = Paragraph(leq.encode('UTF8') + "1 ACH50", p19)
+        p2_t1_t9 = Paragraph(geq.encode('UTF8') + "7 ACH50", p19)
+        p2_t1_t10 = Paragraph(geq.encode('UTF8') + "R-60", p19)
+        p2_t1_t11 = Paragraph(leq.encode('UTF8') + "R-19", p19)
+        p2_t1_t12 = Paragraph(geq.encode('UTF8') + "R-25", p19)
+        p2_t1_t13 = Paragraph(leq.encode('UTF8') + "R-3", p19)
+        p2_t1_t14 = Paragraph('R-20 (cavity) or R-15 (continuous)', p19)
+        p2_t1_t15 = Paragraph(geq.encode('UTF8') + '15 SEER, ENERGYSTAR' + registered.encode('UTF8'), p19)
+        p2_t1_t16 = Paragraph("14 SEER (Federal Minimum)", p19)
+        p2_t1_t17 = Paragraph(leq.encode('UTF8') + "11 SEER", p19)
+        p2_t1_t18 = Paragraph('ENERGY STAR' + registered.encode('UTF8'), p19)
+        p2_t1_t19 = Paragraph(geq.encode('UTF8') + "75% 'high efficiency'", p19)    
     
-    features_table_style = TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
-        ('ALIGN', (1,0), (-1,-1), 'CENTER'), 
-        ('ALIGN', (-3,-1), (-1,-1), 'RIGHT'), 
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('LINEABOVE',(0,2),(-1,-1), 0.15, colors.black),
-#        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-        ('FONTSIZE',(0,0),(-1,-1),7),
-        ('BACKGROUND',(1,0),(-3,-2),CUSTOM_LGREEN),
-        ('BACKGROUND',(2,0),(-2,-2),CUSTOM_YELLOW),
-        ('BACKGROUND',(3,0),(-1,-2),CUSTOM_LORANGE),
-        ('BACKGROUND',(1,14),(-1,-1),colors.lightgrey),
-    ])    
-    features_table = Table([
-        ['',p2_t1_tt1,p2_t1_tt2,p2_t1_tt3],
-        ['',p2_t1_tt4,p2_t1_tt5,p2_t1_tt6],
-        ['Building Tightness',p2_t1_t8,'3 ACH50',p2_t1_t9],
-        ['Attic Insulation',p2_t1_t10,'R-49',p2_t1_t11],
-        ['Wall Insulation',p2_t1_t12, p2_t1_t14, p2_t1_t13],
-        ['Basement Wall Insulation','R-40',p2_t1_t7,'R-0'],
-        ['Windows & Glass Doors',p2_t1_t1,p2_t1_t2,p2_t1_t3],
-        ['Heating System - Gas',p2_t1_t4,p2_t1_t5,p2_t1_t6],
-        ['Heating System - Electric',p2_t1_t4b,p2_t1_t5b,p2_t1_t6b],
-        ['Cooling System',p2_t1_t15,p2_t1_t16,p2_t1_t17],
-        ['Hot Water (50gal) - Gas',p2_t1_t4c,p2_t1_t5c,p2_t1_t6c],
-        ['Hot Water (50gal) - Electric',p2_t1_t4d,p2_t1_t5d,p2_t1_t6d],
-        ['Appliances & Electronics',p2_t1_t18,'n/a','conventional'],
-        ['Lighting',"100% LEDs & CFLs",p2_t1_t19,'Incadescent, Halogen'],
-        ['Solar PV Present?','','','Solar photovoltaics (PV) generate electricity from the sun with zero emissions'],
-    ], 
-        colWidths = [1.45*inch, 1.24*inch, 1.24*inch, 1.24*inch])
-    features_table.setStyle(features_table_style)
+        features_table_style = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
+            ('ALIGN', (1,0), (-1,-1), 'CENTER'), 
+            ('ALIGN', (-3,-1), (-1,-1), 'RIGHT'), 
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('LINEABOVE',(0,2),(-1,-1), 0.15, colors.black),
+    #        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+            ('FONTSIZE',(0,0),(-1,-1),7),
+            ('BACKGROUND',(1,0),(-3,-2),CUSTOM_LGREEN),
+            ('BACKGROUND',(2,0),(-2,-2),CUSTOM_YELLOW),
+            ('BACKGROUND',(3,0),(-1,-2),CUSTOM_LORANGE),
+            ('BACKGROUND',(1,14),(-1,-1),colors.lightgrey),
+        ])    
+        features_table = Table([
+            ['',p2_t1_tt1,p2_t1_tt2,p2_t1_tt3],
+            ['',p2_t1_tt4,p2_t1_tt5,p2_t1_tt6],
+            ['Building Tightness',p2_t1_t8,'3 ACH50',p2_t1_t9],
+            ['Attic Insulation',p2_t1_t10,'R-49',p2_t1_t11],
+            ['Wall Insulation',p2_t1_t12, p2_t1_t14, p2_t1_t13],
+            ['Basement Wall Insulation','R-40',p2_t1_t7,'R-0'],
+            ['Windows & Glass Doors',p2_t1_t1,p2_t1_t2,p2_t1_t3],
+            ['Heating System - Gas',p2_t1_t4,p2_t1_t5,p2_t1_t6],
+            ['Heating System - Electric',p2_t1_t4b,p2_t1_t5b,p2_t1_t6b],
+            ['Cooling System',p2_t1_t15,p2_t1_t16,p2_t1_t17],
+            ['Hot Water (50gal) - Gas',p2_t1_t4c,p2_t1_t5c,p2_t1_t6c],
+            ['Hot Water (50gal) - Electric',p2_t1_t4d,p2_t1_t5d,p2_t1_t6d],
+            ['Appliances & Electronics',p2_t1_t18,'n/a','conventional'],
+            ['Lighting',"100% LEDs & CFLs",p2_t1_t19,'Incadescent, Halogen'],
+            ['Solar PV Present?','','','Solar photovoltaics (PV) generate electricity from the sun with zero emissions'],
+        ], 
+            colWidths = [1.45*inch, 1.24*inch, 1.24*inch, 1.24*inch])
+        features_table.setStyle(features_table_style)
     
-    p2_s1_t1 = Paragraph("Mind your R's and U's!", p18)
-    p2_s1_t2 = Paragraph("Becoming familiar with the efficiency values of the various components of a home will help you understand why the home uses energy the way it does.  Energy features that contribute to a home’s Expected Annual Energy Use and  Costs are listed to the right.  Learn where this home falls on the energy spectrum and where opportunities are to reduce energy waste!",p16)
-    work_table_style = TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-#        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-#         ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-    ])
-    work_table = Table([[[p2_s1_t1, p2_s1_t2],[features_table]]], 
-        colWidths = [2.6 * inch, 5.2*inch])
-    work_table.setStyle(work_table_style)
-    Story.append(work_table)
+        p2_s1_t1 = Paragraph("Mind your R's and U's!", p18)
+        p2_s1_t2 = Paragraph("Becoming familiar with the efficiency values of the various components of a home will help you understand why the home uses energy the way it does.  Energy features that contribute to a home’s Expected Annual Energy Use and  Costs are listed to the right.  Learn where this home falls on the energy spectrum and where opportunities are to reduce energy waste!",p16)
+        work_table_style = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+    #        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+    #         ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+        ])
+        work_table = Table([[[p2_s1_t1, p2_s1_t2],[features_table]]], 
+            colWidths = [2.6 * inch, 5.2*inch])
+        work_table.setStyle(work_table_style)
+        Story.append(work_table)
     
-    p2_h2 = Paragraph('What are the components of the Vermont Home Energy Profile?',p15)
-    Story.append(p2_h2)    
-    Story.append(line_table)
-    Story.append(Spacer(1, 10))
+        p2_h2 = Paragraph('What are the components of the Vermont Home Energy Profile?',p15)
+        Story.append(p2_h2)    
+        Story.append(line_table)
+        Story.append(Spacer(1, 10))
     
-    p2_s2_i1 = Image(wedge, 2.4*inch, 0.99*inch) 
-    genericpie = IMG_PATH+"GenericExpectedEnergyChart.png"
-    p2_s2_i2 = Image(genericpie, 0.99*inch, 0.99*inch)
+        p2_s2_i1 = Image(wedge, 2.4*inch, 0.99*inch) 
+        genericpie = IMG_PATH+"GenericExpectedEnergyChart.png"
+        p2_s2_i2 = Image(genericpie, 0.99*inch, 0.99*inch)
      
 
-    p2_s2_t1 = Paragraph("EXPECTED ENERGY USE", p18)
-    p2_s2_t2 = Paragraph("This section converts the total energy used in this home (electricity and fossil fuels like oil or gas) to a common unit of energy (MMBtu). A low MMBtu identifies a home as energy efficient with a smaller carbon footprint and lower energy costs.",p16)
-    p2_s2_t3 = Paragraph("1MMBtu = ",p17)
-    p2_s2_t4 = Paragraph("7 gal fuel oil",p17,bulletText=u'\u2022')
-    p2_s2_t5 = Paragraph("710 therms of natural gas",p17,bulletText=u'\u2022')
-    p2_s2_t6 = Paragraph("11 gal of propane",p17,bulletText=u'\u2022')
-    p2_s2_t7 = Paragraph("293 kWh of electricity",p17,bulletText=u'\u2022')
-    p2_s2_t8 = Paragraph(".05 cords of wood",p17,bulletText=u'\u2022')
+        p2_s2_t1 = Paragraph("EXPECTED ENERGY USE", p18)
+        p2_s2_t2 = Paragraph("This section converts the total energy used in this home (electricity and fossil fuels like oil or gas) to a common unit of energy (MMBtu). A low MMBtu identifies a home as energy efficient with a smaller carbon footprint and lower energy costs.",p16)
+        p2_s2_t3 = Paragraph("1MMBtu = ",p17)
+        p2_s2_t4 = Paragraph("7 gal fuel oil",p17,bulletText=u'\u2022')
+        p2_s2_t5 = Paragraph("710 therms of natural gas",p17,bulletText=u'\u2022')
+        p2_s2_t6 = Paragraph("11 gal of propane",p17,bulletText=u'\u2022')
+        p2_s2_t7 = Paragraph("293 kWh of electricity",p17,bulletText=u'\u2022')
+        p2_s2_t8 = Paragraph(".05 cords of wood",p17,bulletText=u'\u2022')
     
-    p2_s2_t9 = Paragraph("EXPECTED ENERGY COSTS", p18)
-    p2_s2_t10 = Paragraph("When the source of Energy Costs is AEM, publicly available information about a home, such as its age, size, heating system type and fuel are used to provide an alogrithm-based estimate the home's likely annual energy costs.",p16)
-    p2_s2_t10b = Paragraph("When the source of Energy Costs is Third-Party Verified, an energy professional has visited the home and generated an energy model using detailed information about the home's actual energy features. Standard assumptions are used for variable factors such as weather and occupancy.", p16)
-    p2_s2_t10c = Paragraph('Average annual fuel prices are obtained from the <a href="https://www.eia.gov/petroleum/data.php">U.S. Energy Information Administration (EIA)</a> and the <a href="https://publicservice.vermont.gov/publications-resources/publications/fuel_report">Vermont Public Service Department</a>.', p16)
+        p2_s2_t9 = Paragraph("EXPECTED ENERGY COSTS", p18)
+        p2_s2_t10 = Paragraph("When the source of Energy Costs is AEM, publicly available information about a home, such as its age, size, heating system type and fuel are used to provide an alogrithm-based estimate the home's likely annual energy costs.",p16)
+        p2_s2_t10b = Paragraph("When the source of Energy Costs is Third-Party Verified, an energy professional has visited the home and generated an energy model using detailed information about the home's actual energy features. Standard assumptions are used for variable factors such as weather and occupancy.", p16)
+        p2_s2_t10c = Paragraph('Average annual fuel prices are obtained from the <a href="https://www.eia.gov/petroleum/data.php">U.S. Energy Information Administration (EIA)</a> and the <a href="https://publicservice.vermont.gov/publications-resources/publications/fuel_report">Vermont Public Service Department</a>.', p16)
 
-    p2_s2_t11 = Paragraph("USEFUL ENERGY TERMS & DEFINITIONS", p18)
-    p2_s2_t12 = Paragraph("<font name='InterBold'>R-Value:</font> Measures the resistance of heat flow through a material such as insulation.  Higher R-Values mean more heat stays inside your home and heating systems run less.", p17)
-    p2_s2_t12b = Paragraph("<font name='InterBold'>U-Value:</font> The performance rating for windows. A lower U-Value indicates a better performing window and a more comfortable home.", p17)
-    p2_s2_t12c = Paragraph("<font name='InterBold'>Low-E:</font> Low emissivity is a coating applied to windows that reflects heat back to its source so it helps your home stay cooler in the summer and warmer in the winter.", p17)
-    p2_s2_t12d = Paragraph("<font name='InterBold'>ACH50:</font> Air changes per hour at 50 pascals.  Lower values mean the home is properly-sealed and has fewer air leaks.", p17)
-    p2_s2_t12e = Paragraph("<font name='InterBold'>AFUE:</font> Annual Fuel Utilization Efficiency. Defines the efficiency of fossil fuel furnaces and boilers. Higher is better.", p17)
-    p2_s2_t12f = Paragraph("<font name='InterBold'>HSPF:</font> Heating Seasonal Performance Factor. Defines the efficiency of air source heat pumps in heating mode. Higher is better.", p17)
-    p2_s2_t12e = Paragraph("<font name='InterBold'>SEER:</font> Seasonal Energy Efficiency Ratio. Defines the efficiency of central air conditioners and air source heat pumps in cooling mode. Higher is better.", p17)
-    p2_s2_t12g = Paragraph("<font name='InterBold'>SEER:</font> Uniform Energy Factor measures water heaters performance. A higher UEF rating is more energy efficient. Higher is better.", p17)
-    cost_table = Table([[p2_s2_i2,p2_s2_i1, ''], [[p2_s2_t9, p2_s2_t10, p2_s2_t10b, p2_s2_t10c], [p2_s2_t1, p2_s2_t2, p2_s2_t3, p2_s2_t4, p2_s2_t5, p2_s2_t6, p2_s2_t7, p2_s2_t8],[p2_s2_t11, p2_s2_t12, p2_s2_t12b, p2_s2_t12c, p2_s2_t12d, p2_s2_t12e, p2_s2_t12f, p2_s2_t12g]]], 
-        colWidths = [2.6 * inch, 2.6 * inch, 2.6*inch])
-    cost_table_style = TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
-        ('ALIGN', (0,0), (-2,-2), 'CENTER'), 
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('BACKGROUND',(0,0),(-2,-2),colors.lightgrey),
-        ('INNERGRID', (0,0), (-2,-2), 5, colors.white),
-#         ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-    ])        
-    cost_table.setStyle(cost_table_style)
-    Story.append(cost_table)
+        p2_s2_t11 = Paragraph("USEFUL ENERGY TERMS & DEFINITIONS", p18)
+        p2_s2_t12 = Paragraph("<font name='InterBold'>R-Value:</font> Measures the resistance of heat flow through a material such as insulation.  Higher R-Values mean more heat stays inside your home and heating systems run less.", p17)
+        p2_s2_t12b = Paragraph("<font name='InterBold'>U-Value:</font> The performance rating for windows. A lower U-Value indicates a better performing window and a more comfortable home.", p17)
+        p2_s2_t12c = Paragraph("<font name='InterBold'>Low-E:</font> Low emissivity is a coating applied to windows that reflects heat back to its source so it helps your home stay cooler in the summer and warmer in the winter.", p17)
+        p2_s2_t12d = Paragraph("<font name='InterBold'>ACH50:</font> Air changes per hour at 50 pascals.  Lower values mean the home is properly-sealed and has fewer air leaks.", p17)
+        p2_s2_t12e = Paragraph("<font name='InterBold'>AFUE:</font> Annual Fuel Utilization Efficiency. Defines the efficiency of fossil fuel furnaces and boilers. Higher is better.", p17)
+        p2_s2_t12f = Paragraph("<font name='InterBold'>HSPF:</font> Heating Seasonal Performance Factor. Defines the efficiency of air source heat pumps in heating mode. Higher is better.", p17)
+        p2_s2_t12e = Paragraph("<font name='InterBold'>SEER:</font> Seasonal Energy Efficiency Ratio. Defines the efficiency of central air conditioners and air source heat pumps in cooling mode. Higher is better.", p17)
+        p2_s2_t12g = Paragraph("<font name='InterBold'>SEER:</font> Uniform Energy Factor measures water heaters performance. A higher UEF rating is more energy efficient. Higher is better.", p17)
+        cost_table = Table([[p2_s2_i2,p2_s2_i1, ''], [[p2_s2_t9, p2_s2_t10, p2_s2_t10b, p2_s2_t10c], [p2_s2_t1, p2_s2_t2, p2_s2_t3, p2_s2_t4, p2_s2_t5, p2_s2_t6, p2_s2_t7, p2_s2_t8],[p2_s2_t11, p2_s2_t12, p2_s2_t12b, p2_s2_t12c, p2_s2_t12d, p2_s2_t12e, p2_s2_t12f, p2_s2_t12g]]], 
+            colWidths = [2.6 * inch, 2.6 * inch, 2.6*inch])
+        cost_table_style = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
+            ('ALIGN', (0,0), (-2,-2), 'CENTER'), 
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('BACKGROUND',(0,0),(-2,-2),colors.lightgrey),
+            ('INNERGRID', (0,0), (-2,-2), 5, colors.white),
+    #         ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+        ])        
+        cost_table.setStyle(cost_table_style)
+        Story.append(cost_table)
     
 
-    p2_h3 = Paragraph('Take action!',p15)
-    Story.append(p2_h3)    
-    Story.append(line_table)
-    Story.append(Spacer(1, 10))
+        p2_h3 = Paragraph('Take action!',p15)
+        Story.append(p2_h3)    
+        Story.append(line_table)
+        Story.append(Spacer(1, 10))
     
-    p2_s3_t1 = Paragraph("<font name='InterBold'>Information is power!</font> The Vermont Home Energy Profile can inform the next steps to improve this home’s energy efficiency by indicating specific features that can be improved.", p16)
-    p2_s3_t2 = Paragraph("If you have questions about how to interpret this Profile please contact Efficiency Vermont at 888-921-5990.",p16)
-    p2_s3_t3 = Paragraph("For energy saving tips, links to qualified contractors, financing, and cash back rebates on energy saving equipment and services, contact the organizations listed here:",p16)
-    p2_s3_t4 = Paragraph("<font name='InterBold'>Efficiency Vermont •</font> 888-921-5990",p17)
-    p2_s3_t5 = Paragraph('<a href="www.efficiencyvermont.com">www.efficiencyvermont.com</a>',p17)
-    p2_s3_t6 = Paragraph("<font name='InterBold'>Vermont Gas Systems •</font> 888-921-5990",p17)
-    p2_s3_t7 = Paragraph('<a href="www.vermontgas.com">www.vermontgas.com</a>',p17)
-    p2_s3_t8 = Paragraph("<font name='InterBold'>Burlington Electric Department</font>",p17)
-    p2_s3_t9 = Paragraph('802-865-7342 • <a href="www.burlingtonelectric.com">www.burlingtonelectric.com</a>',p17)
-    p2_s3_t10 = Paragraph("<font name='InterBold'>Vermont’s Weatherization Program</font>",p17)
-    p2_s3_t11 = Paragraph('<a href="www.dcf.vermont.gov/oeo/weatherization">www.dcf.vermont.gov/oeo/weatherization</a>',p17)
+        p2_s3_t1 = Paragraph("<font name='InterBold'>Information is power!</font> The Vermont Home Energy Profile can inform the next steps to improve this home’s energy efficiency by indicating specific features that can be improved.", p16)
+        p2_s3_t2 = Paragraph("If you have questions about how to interpret this Profile please contact Efficiency Vermont at 888-921-5990.",p16)
+        p2_s3_t3 = Paragraph("For energy saving tips, links to qualified contractors, financing, and cash back rebates on energy saving equipment and services, contact the organizations listed here:",p16)
+        p2_s3_t4 = Paragraph("<font name='InterBold'>Efficiency Vermont •</font> 888-921-5990",p17)
+        p2_s3_t5 = Paragraph('<a href="www.efficiencyvermont.com">www.efficiencyvermont.com</a>',p17)
+        p2_s3_t6 = Paragraph("<font name='InterBold'>Vermont Gas Systems •</font> 888-921-5990",p17)
+        p2_s3_t7 = Paragraph('<a href="www.vermontgas.com">www.vermontgas.com</a>',p17)
+        p2_s3_t8 = Paragraph("<font name='InterBold'>Burlington Electric Department</font>",p17)
+        p2_s3_t9 = Paragraph('802-865-7342 • <a href="www.burlingtonelectric.com">www.burlingtonelectric.com</a>',p17)
+        p2_s3_t10 = Paragraph("<font name='InterBold'>Vermont’s Weatherization Program</font>",p17)
+        p2_s3_t11 = Paragraph('<a href="www.dcf.vermont.gov/oeo/weatherization">www.dcf.vermont.gov/oeo/weatherization</a>',p17)
     
-    action_table = Table([[[p2_s3_t1, p2_s3_t2],[p2_s3_t3],[p2_s3_t4, p2_s3_t5, p2_s3_t6, p2_s3_t7, p2_s3_t8, p2_s3_t9, p2_s3_t10, p2_s3_t11]]], 
-        colWidths = [2.6 * inch, 2.6 * inch, 2.6*inch])
-    action_table_style = TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-    ])        
-    action_table.setStyle(action_table_style)
-    Story.append(action_table)
+        action_table = Table([[[p2_s3_t1, p2_s3_t2],[p2_s3_t3],[p2_s3_t4, p2_s3_t5, p2_s3_t6, p2_s3_t7, p2_s3_t8, p2_s3_t9, p2_s3_t10, p2_s3_t11]]], 
+            colWidths = [2.6 * inch, 2.6 * inch, 2.6*inch])
+        action_table_style = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'), 
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ])        
+        action_table.setStyle(action_table_style)
+        Story.append(action_table)
     
     
     
