@@ -114,13 +114,13 @@ def create_pdf(data_dict, out_file):
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
     f1_text1 = '<font color=#4e4e52 size=8>Address</font>'
     f1_text1_p = Paragraph(f1_text1,styles['Normal'])
-   
+    
     address_line_1 = data_dict['address_line_1']
     address_line_2 = data_dict['address_line_2']
     city=data_dict['city']
     state = data_dict['state']
     postal_code= data_dict['postal_code']
-    address = '<font  name=Times-Roman size=9 color=#4e4e52>{} {}, {}, {}, {}</font>'.format(address_line_1,address_line_2,city,state,postal_code)
+    address = '<font  name=Times-Roman size=9 color=#4e4e52>{}{}, {}, {}, {}</font>'.format(address_line_1,address_line_2,city,state,postal_code)
     address_p = Paragraph(address,styles['Normal'])
     Story.append(f1_header1_p)
     
@@ -321,7 +321,7 @@ def create_pdf(data_dict, out_file):
     Story.append(Spacer(1,4))
     propane_percentage=data_dict['propane_percentage']
     fuel_oil_percentage = data_dict['fuel_oil_percentage']
-    electricity_percentage = data_dict['electric_percentage']
+    electricity_percentage = data_dict['electricity_percentage']
     data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
@@ -379,7 +379,7 @@ def create_pdf(data_dict, out_file):
     Story.append(f3_text3_p)
     Story.append(Spacer(1,4))
     fuel_oil_percentage_f3 = data_dict['fuel_oil_percentage_co2']
-    electricity_percentage_f3 = data_dict['electricity_percentage_co2']
+    electricity_percentage_f3 = data_dict['electric_percentage_co2']
     data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
     Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(electricity_percentage_f3)),styles['Normal'])]]
 
