@@ -63,7 +63,7 @@ def format_numbers(amount):
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
 
-    print(data_dict)
+
     Story = []
     # Story.append(Spacer(1,0.005*cm))
     document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
@@ -332,6 +332,10 @@ def create_pdf(data_dict, out_file):
 
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
     tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
+                                    ('LINEABOVE', (0, 0), (-1, -1), 3, colors.HexColor('#f2f1ef')),
+                                    ('LINEBELOW', (0, 0), (-1, -1), 3, colors.HexColor('#f2f1ef')),
+                                    ('LINEAFTER', (2, 0), (2, 0), 3, colors.HexColor('#f2f1ef')),
+                                    ('LINEBEFORE', (0, 0), (0, 0), 3, colors.HexColor('#f2f1ef')),
                                     ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
                                     ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
                                     ('ALIGN',(0,0),(-1,-1),'CENTER')])
@@ -389,6 +393,10 @@ def create_pdf(data_dict, out_file):
 
     tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
     tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(1,0),0.5*cm),
+                                    ('LINEABOVE', (0, 0), (-1, -1), 3, colors.HexColor('#f2f1ef')),
+                                    ('LINEBELOW', (0, 0), (-1, -1), 3, colors.HexColor('#f2f1ef')),
+                                    ('LINEAFTER', (-1, 0), (-1, 0), 3, colors.HexColor('#f2f1ef')),
+                                    ('LINEBEFORE', (0, 0), (0, 0), 3, colors.HexColor('#f2f1ef')),
                                     ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
                                     ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
                                     ('ALIGN',(0,0),(-1,-1),'CENTER')
