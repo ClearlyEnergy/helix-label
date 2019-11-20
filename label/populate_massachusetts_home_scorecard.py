@@ -14,6 +14,7 @@ from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 import sys
+from datetime import datetime
 # from reportlab.lib.fonts import 
 sys.path.insert(0,'./utils')
 
@@ -149,7 +150,8 @@ def create_pdf(data_dict, out_file):
     primary_heating_fuel_type = data_dict['primary_heating_fuel_type']
     primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
 
-    assessment_date = data_dict['green_assessment_property_date']
+    assessment_date = datetime.date(datetime.now())#data_dict['green_assessment_property_date']
+    
     assessment_date_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
     assessment_date_header_p = Paragraph('<font color=#4e4e52 size=8>Assessment Date</font>',styles['f1_leading'])
 
