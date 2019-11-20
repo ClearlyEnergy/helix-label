@@ -61,7 +61,9 @@ def format_numbers(amount):
     return str(amount/1000)+","+str(amount%1000)
 
 def create_pdf(data_dict, out_file):
-  
+    ''' creates the pdf using frames '''
+
+    print(data_dict)
     Story = []
     # Story.append(Spacer(1,0.005*cm))
     document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
@@ -181,7 +183,7 @@ def create_pdf(data_dict, out_file):
     electric_energy_usage_base = data_dict['electric_energy_usage_base']
     electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(electric_energy_usage_base))),styles['f1_leading'])
 
-    fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> Fuel Oil </font>',styles['f1_leading'])
+    fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format(data_dict['primary_heating_fuel_type']),styles['f1_leading'])
     fuel_energy_base = data_dict['fuel_energy_usage_base']
     fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
 
