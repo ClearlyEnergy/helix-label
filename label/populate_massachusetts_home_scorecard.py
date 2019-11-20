@@ -76,7 +76,7 @@ def create_pdf(data_dict, out_file):
     hp1 = Paragraph(header_text,styles['Heading1'])
     hp2 = Paragraph(header_text2,styles['BodyText'])
     header_text3 = "<font name=helvetica size=6.5 color=#514C45> HOME ENERGY USE </font>"
-    header_text4 = " <font color=white> " + str(round(data_dict['total_energy_usage_base'])) + "</font>"
+    header_text4 = " <font color=white> " + str(int(round(data_dict['total_energy_usage_base']))) + "</font>"
     hp4 = Paragraph(header_text4,styles['Title'])
     hp3 = Paragraph(header_text3,styles['Normal'])
     sm_data = [[hp3],[hp4]]
