@@ -63,7 +63,7 @@ def format_numbers(amount):
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
 
-
+    print(data_dict)
     Story = []
     # Story.append(Spacer(1,0.005*cm))
     document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
@@ -323,11 +323,11 @@ def create_pdf(data_dict, out_file):
     Story.append(Spacer(1,30))
     Story.append(f2_text3_p)
     Story.append(Spacer(1,4))
-    propane_percentage=data_dict['propane_percentage']
-    fuel_oil_percentage = data_dict['fuel_oil_percentage']
-    electricity_percentage = data_dict['electric_percentage']
-    data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),
+    propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(data_dict['propane_percentage'])
+    fuel_oil_entry ='' if ('fuel_oil_percentage' not in data_dict)  else '{}% Fuel Oil'.format(data_dict['fuel_oil_percentage']) 
+    electricity_percentage = data_dict['electricity_percentage']
+    data_f2=[[Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
+            Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
 
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
