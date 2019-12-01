@@ -6,7 +6,7 @@ from utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
-from reportlab.lib.units import inch, cm
+from reportlab.lib.units import inch, cm, mm
 from reportlab.lib.pagesizes import letter, landscape
 import pkg_resources
 from reportlab.lib import colors
@@ -15,6 +15,7 @@ from reportlab.graphics.shapes import Drawing, String
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 import sys
 from datetime import datetime
+
 # from reportlab.lib.fonts import 
 sys.path.insert(0,'./utils')
 
@@ -63,7 +64,7 @@ def format_numbers(amount):
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
 
-    print(data_dict)
+    # print(data_dict)
     Story = []
     # Story.append(Spacer(1,0.005*cm))
     document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
@@ -239,6 +240,7 @@ def create_pdf(data_dict, out_file):
     # pie_title_1 = String("Before")
     drawing =Drawing(width=cm, height=cm)
     drawing.add(pie_1)
+    
    
     
     # Story.append(drawing)
@@ -300,22 +302,42 @@ def create_pdf(data_dict, out_file):
 
     
     scorecard_btu = IMG_PATH+"scorecard_btu.png"
-#    img_sc_btu = Image(scorecard_btu,width=5*cm,height=12*cm)
-#    img_sc_btu = Image(scorecard_btu,width=5*cm,height=8.5*cm)
+    peg_xl = IMG_PATH+"peg_xl.png"
+    peg_sm = IMG_PATH+"peg_sm.png"
     img_sc_btu = Image(scorecard_btu,width=6.17*cm,height=10.5*cm)
-    total_energy_usage_base = data_dict['total_energy_usage_base']    
+    total_energy_usage_base =data_dict['total_energy_usage_base']    
     total_energy_usage_base_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(total_energy_usage_base),styles['Title'])
+    peg_xl_p = Paragraph('<font name=Helvetica-Bold><img valign="-30" src="{}" width="140" height="28"/></font>'.format(peg_xl),styles['Normal'])
+    peg_sm_p = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="20"/></font>'.format(peg_sm),styles['Normal'])
+
     f2_text1_p = Paragraph('<font name=Helvetica size=7.5 color=#4e4e52>Energy Use before improvements</font>',styles['Normal'])
     total_energy_usage_improved = data_dict['total_energy_usage_improved']
     total_energy_usage_improved_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(total_energy_usage_improved),styles['Title'])
 
     f2_text2_p = Paragraph('<font name=Helvetica  size=7.5 color=#4e4e52>Energy Use after recommended improvements</font>',styles['Normal'])
 
-    data_table4 = [[img_sc_btu,total_energy_usage_base_p,f2_text1_p],['','',''],['',total_energy_usage_improved_p,f2_text2_p ]]
+    data_table4 = [[img_sc_btu,peg_xl_p,total_energy_usage_base_p,f2_text1_p],['','','',''],['',peg_sm_p,total_energy_usage_improved_p,f2_text2_p ]]
+    #calculates dynamically the position of pegs on the scale
+    peg_xl_pos = -6.3 + (8.2 if total_energy_usage_base>300 else (0 if total_energy_usage_base<0 else ((total_energy_usage_base/300.0)*8.2)))
+    print(peg_xl_pos)
+    peg_sm_pos = 0.3+(8.2 if total_energy_usage_improved>300 else (0 if total_energy_usage_improved<0 else ((total_energy_usage_improved/300.0)*8.2)))
 
-    tbl_frame_2 = Table(data_table4)
-    
-    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,2),-4*cm),('LEFTPADDING',(2,0),(2,2),-2.5*cm),('TOPPADDING',(0,0),(0,0),cm),('SPAN', (0, 0), (0, -1)),('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),('VALIGN',(1,0),(2,0),'MIDDLE'),('VALIGN',(1,2),(2,2),'TOP')])
+    tbl_frame_2 = Table(data_table4,rowHeights=3.9*cm)
+    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),-4*cm),
+                          ('LEFTPADDING',(2,0),(2,0),-4.5*cm),
+                          ('LEFTPADDING',(3,0),(3,0),-2*cm),
+                          ('LEFTPADDING',(1,2),(1,2),-3.7*cm),
+                          ('LEFTPADDING',(2,2),(2,2),-8*cm),
+                          ('LEFTPADDING',(3,2),(3,2),-4*cm),
+                          ('BOTTOMPADDING',(1,0),(-1,0),peg_xl_pos*cm),#-6.3 goes to zero and 1.9cm goes to maximum
+                          ('BOTTOMPADDING',(1,2),(-1,2),peg_sm_pos*cm),#0.3 min 8.4 maximum
+                          ('TOPPADDING',(0,0),(0,0),cm),
+                          ('SPAN', (0, 0), (0, -1)),
+                        
+                          ('VALIGN',(1,0),(3,0),'BOTTOM'),
+                          ('VALIGN',(1,2),(3,2),'BOTTOM')
+                          ])
+                          
     tbl_frame_2.setStyle(tblStyle)
     Story.append(tbl_frame_2)
     styles.add(ParagraphStyle(name='Centre', alignment=TA_CENTER))
