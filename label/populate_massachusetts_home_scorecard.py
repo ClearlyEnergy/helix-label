@@ -319,7 +319,7 @@ def create_pdf(data_dict, out_file):
     data_table4 = [[img_sc_btu,peg_xl_p,total_energy_usage_base_p,f2_text1_p],['','','',''],['',peg_sm_p,total_energy_usage_improved_p,f2_text2_p ]]
     #calculates dynamically the position of pegs on the scale
     peg_xl_pos = -6.3 + (8.2 if total_energy_usage_base>300 else (0 if total_energy_usage_base<0 else ((total_energy_usage_base/300.0)*8.2)))
-    print(peg_xl_pos)
+    # print(peg_xl_pos)
     peg_sm_pos = 0.3+(8.2 if total_energy_usage_improved>300 else (0 if total_energy_usage_improved<0 else ((total_energy_usage_improved/300.0)*8.2)))
 
     tbl_frame_2 = Table(data_table4,rowHeights=3.9*cm)
@@ -390,22 +390,36 @@ def create_pdf(data_dict, out_file):
     scorecard_ton =IMG_PATH+'scorecard_ton.png'
 #    img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=10*cm)
     img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=8.525*cm)
+    peg_m_f3 = IMG_PATH+"peg_m.png"
+ 
+    peg_m_p = Paragraph('<font name=Helvetica-Bold><img valign="-27" src="{}" width="100" height="20"/></font>'.format(peg_m_f3),styles['Normal'])
+    peg_m_p1 = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="15"/></font>'.format(peg_m_f3),styles['Normal'])
 
-    data_tbl1_f3 = [[img_sc_ton,co2_production_base_p,co2_text_p],['','',''],['',co2_production_improved_p,co2_improved_text_p ]]
+    data_tbl1_f3 = [[img_sc_ton,peg_m_p,co2_production_base_p,co2_text_p],['','','',''],['',peg_m_p1,co2_production_improved_p,co2_improved_text_p ]]
+    peg_m_pos1 = -12 + (0.9 if co2_production_base>20 else (0 if co2_production_base <0 else ((co2_production_base/20.0)*12.9)))
+    peg_m_pos = -2.2 + (10.5 if co2_production_improved>20 else (0 if co2_production_improved <0 else ((co2_production_improved/20.0)*12.7)))
 
-    tblStyle_f3 = TableStyle([('LEFTPADDING',(1,0),(1,2),-2.5*cm),
-    ('LEFTPADDING',(2,0),(2,2),-1.3*cm),('TOPPADDING',(0,0),(0,0),1*cm),
-    ('SPAN', (0, 0), (0, -1)),('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),
-    ('VALIGN',(1,0),(2,0),'MIDDLE'),
-    ('TOPPADDING',(2,0),(2,0),1.7*cm),('TOPPADDING',(1,0),(1,0),1.2*cm),
-    ('VALIGN',(1,2),(2,2),'TOP')])
+    tblStyle_f3 = TableStyle([('LEFTPADDING',(1,0),(1,0),-3.5*cm),
+                              ('LEFTPADDING',(2,0),(2,0),-2*cm),
+                              ('LEFTPADDING',(3,0),(3,0),-1.5*cm),
+                              ('LEFTPADDING',(1,2),(1,2),-3.5*cm),#next peg starts here
+                              ('LEFTPADDING',(2,2),(2,2),-2.5*cm),
+                              ('LEFTPADDING',(3,2),(3,2),-2*cm),
+                              ('TOPPADDING',(0,0),(0,0),-5*cm),
+                              ('SPAN', (0, 0), (0, -1)),
+                              ('BOTTOMPADDING',(1,0),(-1,0),peg_m_pos1*cm),#-12 goes to zero and 0.9cm goes to maximum
+                              ('BOTTOMPADDING',(1,2),(-1,2), peg_m_pos*cm),#-2.2 min 10.5 maximum
+                              ('VALIGN',(1,0),(3,0),'MIDDLE'),
+                            #   ('TOPPADDING',(2,0),(2,0),1.7*cm),
+                            #   ('TOPPADDING',(1,0),(1,0),1.2*cm),
+                              ('VALIGN',(1,2),(3,2),'MIDDLE')])
 
-    tbl1_f3 = Table(data_tbl1_f3)
+    tbl1_f3 = Table(data_tbl1_f3,rowHeights=3.1*cm)
     tbl1_f3.setStyle(tblStyle_f3)
     Story.append(tbl1_f3)
-
+    Story.append(Spacer(1,40))
+    Story.append(Spacer(1,9))
     f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
-    Story.append(Spacer(1,38))
     Story.append(f3_text3_p)
     Story.append(Spacer(1,4))
     fuel_oil_percentage_f3 = data_dict['fuel_oil_percentage_co2']
