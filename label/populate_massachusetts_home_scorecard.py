@@ -683,9 +683,10 @@ def create_pdf(data_dict, out_file):
 
     ])
     tbl4.setStyle(tbl4_styles)
-    Story.append(tbl4)
-    Story.append(Spacer(1,3))
-    Story.append(page2_column_2_text_p4)
+    if 'hes' in data_dict:
+        Story.append(tbl4)
+        Story.append(Spacer(1,3))
+        Story.append(page2_column_2_text_p4)
 
     #FOOTER FRAME FOR PAGE 2
     Story.append(FrameBreak)
