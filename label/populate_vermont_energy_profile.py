@@ -189,7 +189,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     p4 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_bold, leading = 12, spaceBefore = 16, spaceAfter = 12)
     p5 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_s, fontName = font_bold, leading = 12)
     p6 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal, leading = 12, spaceBefore = 0)
-    text_left_1 = Paragraph("The Vermont Home Energy Profile is a report a home's expected annual energy costs and usage. The Profile also documents verified home energy upgrades completed by a professional contractror specializing in energy efficiency.  <font name='InterBold'> Energy usage and costs are estimates only.</font> Standardized assumptions are used for variable factors such as weather, occupancy, lights and appliance usage. See reverse side for details.", p3)
+    text_left_1 = Paragraph("The Vermont Home Energy Profile is a report of a home's expected annual energy costs and usage. The Profile also documents verified home energy upgrades completed by a professional contractror specializing in energy efficiency.  <font name='InterBold'> Energy usage and costs are estimates only.</font> Standardized assumptions are used for variable factors such as weather, occupancy, lights and appliance usage. See reverse side for details.", p3)
     text_left_4 = Paragraph("HOME INFORMATION", p4)
     text_left_5 = Paragraph("LOCATION:", p5)
     text_left_6 = Paragraph(data_dict['street'],p6)
@@ -229,7 +229,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     p14 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, fontName = font_bold,  spaceBefore = 0)
     p15 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = font_t, fontName = font_normal,  spaceBefore = -12)
     p16 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = font_t, fontName = font_normal,  spaceBefore = 0)
-    tct1 = Paragraph("<font name='InterBold'>The breakdown of fuel usage is an estimate </font><font name='Helvetica'>based on the fuels used in this home</font>", p14) 
+    tct1 = Paragraph("<font name='InterBold'>The breakdown of energy usage is an estimate </font><font name='Helvetica'>based on the energy sources used in this home</font>", p14) 
     tct = []
     data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
     for num, fuel in enumerate(FUELS):
@@ -283,7 +283,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         Paragraph('Turn it off. ALL the way off. When not in use, power down all electronics completely to avoid “phantom electricity loads" or invest in an advanced power strip to do it for you.', p12, bulletText=unchecked.encode('UTF8')), 
         Paragraph("Vacuum coils, vents, and ducts. Remove the dust buildup collecting on your refrigerator and heating systems by vacuuming the coils and condenser unit behind and underneath the refrigerator at least once a year.  If you have a forced-air system, you can vacuum the vents and ducts and change air filters.", p14, bulletText=unchecked.encode('UTF8'))]
     else:
-        tb = [Paragraph("Schedule regular maintenance with a professional for your heating and cooling (if applicable) equipment to ensure optimum performance.", p11, bulletText=unchecked.encode('UTF8')), 
+        tb = [Paragraph("Schedule regular maintenance with a professional for your heating and cooling equipment (if applicable) to ensure optimum performance.", p11, bulletText=unchecked.encode('UTF8')), 
         Paragraph("Ensure insulation levels meet Vermont Residential Building Energy Standards.", p12, bulletText=unchecked.encode('UTF8')), 
         Paragraph("Discover if unseen air leaks are contributing to heat loss and creating uncomfortable drafts in your home.", p12, bulletText=unchecked.encode('UTF8')),
         Paragraph("Verify all appliances and mechanical equipment are ENERGY STAR&reg; certified.", p14, bulletText=unchecked.encode('UTF8'))]
