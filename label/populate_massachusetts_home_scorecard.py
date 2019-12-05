@@ -6,7 +6,7 @@ from .utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
-from reportlab.lib.units import inch, cm
+from reportlab.lib.units import inch, cm, mm
 from reportlab.lib.pagesizes import letter, landscape
 import pkg_resources
 from reportlab.lib import colors
@@ -15,6 +15,7 @@ from reportlab.graphics.shapes import Drawing, String
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 import sys
 from datetime import datetime
+
 # from reportlab.lib.fonts import 
 sys.path.insert(0,'./utils')
 
@@ -63,7 +64,13 @@ def format_numbers(amount):
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
 
+    #adding values for testing
+    if 'hes' not in data_dict:
+        data_dict['hes']=6
+    if 'hes_improved' not in data_dict:
+        data_dict['hes_improved']=9
 
+    # print(data_dict)
     Story = []
     # Story.append(Spacer(1,0.005*cm))
     document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
@@ -239,6 +246,7 @@ def create_pdf(data_dict, out_file):
     # pie_title_1 = String("Before")
     drawing =Drawing(width=cm, height=cm)
     drawing.add(pie_1)
+    
    
     
     # Story.append(drawing)
@@ -300,34 +308,54 @@ def create_pdf(data_dict, out_file):
 
     
     scorecard_btu = IMG_PATH+"scorecard_btu.png"
-#    img_sc_btu = Image(scorecard_btu,width=5*cm,height=12*cm)
-#    img_sc_btu = Image(scorecard_btu,width=5*cm,height=8.5*cm)
+    peg_xl = IMG_PATH+"peg_xl.png"
+    peg_sm = IMG_PATH+"peg_sm.png"
     img_sc_btu = Image(scorecard_btu,width=6.17*cm,height=10.5*cm)
-    total_energy_usage_base = data_dict['total_energy_usage_base']    
-    total_energy_usage_base_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(total_energy_usage_base),styles['Title'])
+    total_energy_usage_base =data_dict['total_energy_usage_base']    
+    total_energy_usage_base_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(total_energy_usage_base),styles['Title'])
+    peg_xl_p = Paragraph('<font name=Helvetica-Bold><img valign="-30" src="{}" width="140" height="28"/></font>'.format(peg_xl),styles['Normal'])
+    peg_sm_p = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="20"/></font>'.format(peg_sm),styles['Normal'])
+
     f2_text1_p = Paragraph('<font name=Helvetica size=7.5 color=#4e4e52>Energy Use before improvements</font>',styles['Normal'])
     total_energy_usage_improved = data_dict['total_energy_usage_improved']
-    total_energy_usage_improved_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(total_energy_usage_improved),styles['Title'])
+    total_energy_usage_improved_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(total_energy_usage_improved),styles['Title'])
 
     f2_text2_p = Paragraph('<font name=Helvetica  size=7.5 color=#4e4e52>Energy Use after recommended improvements</font>',styles['Normal'])
 
-    data_table4 = [[img_sc_btu,total_energy_usage_base_p,f2_text1_p],['','',''],['',total_energy_usage_improved_p,f2_text2_p ]]
+    data_table4 = [[img_sc_btu,peg_xl_p,total_energy_usage_base_p,f2_text1_p],['','','',''],['',peg_sm_p,total_energy_usage_improved_p,f2_text2_p ]]
+    #calculates dynamically the position of pegs on the scale
+    peg_xl_pos = -6.3 + (8.2 if total_energy_usage_base>300 else (0 if total_energy_usage_base<0 else ((total_energy_usage_base/300.0)*8.2)))
+    # print(peg_xl_pos)
+    peg_sm_pos = 0.3+(8.2 if total_energy_usage_improved>300 else (0 if total_energy_usage_improved<0 else ((total_energy_usage_improved/300.0)*8.2)))
 
-    tbl_frame_2 = Table(data_table4)
-    
-    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,2),-4*cm),('LEFTPADDING',(2,0),(2,2),-2.5*cm),('TOPPADDING',(0,0),(0,0),cm),('SPAN', (0, 0), (0, -1)),('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),('VALIGN',(1,0),(2,0),'MIDDLE'),('VALIGN',(1,2),(2,2),'TOP')])
+    tbl_frame_2 = Table(data_table4,rowHeights=3.9*cm)
+    tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),-4*cm),
+                          ('LEFTPADDING',(2,0),(2,0),-4.5*cm),
+                          ('LEFTPADDING',(3,0),(3,0),-2*cm),
+                          ('LEFTPADDING',(1,2),(1,2),-3.7*cm),
+                          ('LEFTPADDING',(2,2),(2,2),-8*cm),
+                          ('LEFTPADDING',(3,2),(3,2),-4*cm),
+                          ('BOTTOMPADDING',(1,0),(-1,0),peg_xl_pos*cm),#-6.3 goes to zero and 1.9cm goes to maximum
+                          ('BOTTOMPADDING',(1,2),(-1,2),peg_sm_pos*cm),#0.3 min 8.4 maximum
+                          ('TOPPADDING',(0,0),(0,0),cm),
+                          ('SPAN', (0, 0), (0, -1)),
+                        
+                          ('VALIGN',(1,0),(3,0),'BOTTOM'),
+                          ('VALIGN',(1,2),(3,2),'BOTTOM')
+                          ])
+                          
     tbl_frame_2.setStyle(tblStyle)
     Story.append(tbl_frame_2)
     styles.add(ParagraphStyle(name='Centre', alignment=TA_CENTER))
     f2_text3_p = Paragraph('<font size=8.5 color=#736d5e>Estimated percentage of energy use by fuel type:</font>',styles['Centre'])
-    Story.append(Spacer(1,30))
-    Story.append(f2_text3_p)
-    Story.append(Spacer(1,4))
-    propane_percentage=data_dict['propane_percentage']
-    fuel_oil_percentage = data_dict['fuel_oil_percentage']
-    electricity_percentage = data_dict['electric_percentage']
-    data_f2=[[Paragraph('<font name=Helvetica size=8>{}% Propane</font>'.format(str(propane_percentage)),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}% Fuel Oil</font>'.format(str(fuel_oil_percentage)),styles['Normal']),
+    # Story.append(Spacer(1,30))
+    # Story.append(f2_text3_p)
+    # Story.append(Spacer(1,4))
+    propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(data_dict['propane_percentage'])
+    fuel_oil_entry ='' if ('fuel_oil_percentage' not in data_dict)  else '{}% Fuel Oil'.format(data_dict['fuel_oil_percentage']) 
+    electricity_percentage = data_dict['electricity_percentage']
+    data_f2=[[Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
+            Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
 
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
@@ -341,9 +369,14 @@ def create_pdf(data_dict, out_file):
                                     ('ALIGN',(0,0),(-1,-1),'CENTER')])
 
     tbl1_frame_2.setStyle(tblStyle1_frame_2)
-    Story.append(tbl1_frame_2)
+    if 'hes' not in data_dict:
+        Story.append(Spacer(1,30))
+        Story.append(f2_text3_p)
+        Story.append(Spacer(1,4))
+        Story.append(tbl1_frame_2)
 
     # creating and populating frame3
+
     Story.append(FrameBreak)
     frameWidth_3 = document.width/3
     frameHeight_3 = document.height-header_frame.height+(0.25*inch)
@@ -359,33 +392,46 @@ def create_pdf(data_dict, out_file):
     Story.append(f3_text_p)
 
     co2_production_base = data_dict['co2_production_base']
-    co2_production_base_p = Paragraph('<font name=Helvetica-Bold>{}</font>'.format(co2_production_base),styles['Normal'])
+    co2_production_base_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(co2_production_base),styles['Normal'])
 
     co2_text_p = Paragraph('<font name=Helvetica size=7.5 color=#4c4f52>Footprint before improvement</font>',styles['Normal'])
     co2_production_improved = data_dict['co2_production_improved']
-    co2_production_improved_p = Paragraph('<font name=Helvetica-Bold >{}</font>'.format(co2_production_improved),styles['Normal'])
+    co2_production_improved_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(co2_production_improved),styles['Normal'])
     co2_improved_text_p = Paragraph('<font name=Helvetica size=7.5 color=#4c4f52 >Footprint after recommended improvements</font>',styles['Normal'])
     scorecard_ton =IMG_PATH+'scorecard_ton.png'
 #    img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=10*cm)
     img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=8.525*cm)
+    peg_m_f3 = IMG_PATH+"peg_m.png"
+ 
+    peg_m_p = Paragraph('<font name=Helvetica-Bold><img valign="-27" src="{}" width="100" height="20"/></font>'.format(peg_m_f3),styles['Normal'])
+    peg_m_p1 = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="15"/></font>'.format(peg_m_f3),styles['Normal'])
 
-    data_tbl1_f3 = [[img_sc_ton,co2_production_base_p,co2_text_p],['','',''],['',co2_production_improved_p,co2_improved_text_p ]]
+    data_tbl1_f3 = [[img_sc_ton,peg_m_p,co2_production_base_p,co2_text_p],['','','',''],['',peg_m_p1,co2_production_improved_p,co2_improved_text_p ]]
+    peg_m_pos1 = -12 + (0.9 if co2_production_base>20 else (0 if co2_production_base <0 else ((co2_production_base/20.0)*12.9)))
+    peg_m_pos = -2.2 + (10.5 if co2_production_improved>20 else (0 if co2_production_improved <0 else ((co2_production_improved/20.0)*12.7)))
 
-    tblStyle_f3 = TableStyle([('LEFTPADDING',(1,0),(1,2),-2.5*cm),
-    ('LEFTPADDING',(2,0),(2,2),-1.3*cm),('TOPPADDING',(0,0),(0,0),1*cm),
-    ('SPAN', (0, 0), (0, -1)),('SPAN',(1,0),(1,1)),('SPAN',(2,0),(2,1)),
-    ('VALIGN',(1,0),(2,0),'MIDDLE'),
-    ('TOPPADDING',(2,0),(2,0),1.7*cm),('TOPPADDING',(1,0),(1,0),1.2*cm),
-    ('VALIGN',(1,2),(2,2),'TOP')])
+    tblStyle_f3 = TableStyle([('LEFTPADDING',(1,0),(1,0),-3.5*cm),
+                              ('LEFTPADDING',(2,0),(2,0),-2*cm),
+                              ('LEFTPADDING',(3,0),(3,0),-1.5*cm),
+                              ('LEFTPADDING',(1,2),(1,2),-3.5*cm),#next peg starts here
+                              ('LEFTPADDING',(2,2),(2,2),-2.5*cm),
+                              ('LEFTPADDING',(3,2),(3,2),-2*cm),
+                              ('TOPPADDING',(0,0),(0,0),-5*cm),
+                              ('SPAN', (0, 0), (0, -1)),
+                              ('BOTTOMPADDING',(1,0),(-1,0),peg_m_pos1*cm),#-12 goes to zero and 0.9cm goes to maximum
+                              ('BOTTOMPADDING',(1,2),(-1,2), peg_m_pos*cm),#-2.2 min 10.5 maximum
+                              ('VALIGN',(1,0),(3,0),'MIDDLE'),
+                            #   ('TOPPADDING',(2,0),(2,0),1.7*cm),
+                            #   ('TOPPADDING',(1,0),(1,0),1.2*cm),
+                              ('VALIGN',(1,2),(3,2),'MIDDLE')])
 
-    tbl1_f3 = Table(data_tbl1_f3)
+    tbl1_f3 = Table(data_tbl1_f3,rowHeights=3.1*cm)
     tbl1_f3.setStyle(tblStyle_f3)
     Story.append(tbl1_f3)
-
+    
     f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
-    Story.append(Spacer(1,38))
-    Story.append(f3_text3_p)
-    Story.append(Spacer(1,4))
+    # Story.append(f3_text3_p)
+    # Story.append(Spacer(1,4))
     fuel_oil_percentage_f3 = data_dict['fuel_oil_percentage_co2']
     electricity_percentage_f3 = data_dict['electric_percentage_co2']
     data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
@@ -403,25 +449,58 @@ def create_pdf(data_dict, out_file):
                                     ])
 
     tbl2_frame_3.setStyle(tblStyle2_frame_3)
-  
-    Story.append(tbl2_frame_3)
+    if 'hes' not in data_dict: 
+        Story.append(Spacer(1,40))
+        Story.append(Spacer(1,9)) 
+        Story.append(f3_text3_p)
+        Story.append(Spacer(1,4))
+        Story.append(tbl2_frame_3)
+
+    # THIS IS FOR COLUMN 3 IF HES IS NOT IN THE DATA DICTIONERY
+    col_head = lambda st: Paragraph('<font name=Helvetica size=8  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
+    row_data = lambda st: Paragraph('<font name=Helvetica size=10  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
+ 
+    data1=[[col_head('SCORE TODAY'),col_head('IMPROVED')],[row_data('3 out of 10'),row_data('5 out of 10')]]
+    inner_table = Table(data1)
+    inner_table_style = TableStyle([
+                                    ('BACKGROUND',(0,0),(0,1),colors.HexColor('#666666')),
+                                     ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                     ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                                    ('BACKGROUND',(1,0),(1,1),colors.HexColor('#3dab47')),
+                                    ('LINEBEFORE',(1,0),(1,1),0.1*cm,colors.HexColor('#f2f1ef')),
+                                    ('LINEAFTER',(0,0),(0,1),0.1*cm,colors.HexColor('#f2f1ef')),
+                                    ])
+    inner_table.setStyle(inner_table_style)
+    # outer_header = Paragraph('<font ')
+    data_table_box = [['U.S. DOE HOME ENERGY SCORE™'],[inner_table],['otherthis here']]
+    box_table = Table(data_table_box)
+    box_table_style = TableStyle([
+                                 ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
+                                 ('TEXTCOLOR',(0,0),(0,0),colors.HexColor('#666666')),
+                                 
     
+                                ])
+    box_table.setStyle(box_table_style)
+    Story.append(box_table)
 
     #  FOOTER FRAME
     Story.append(FrameBreak)
-    footer_frame = Frame(document.leftMargin,document.height-0.98*document.height,document.width,0.13*document.height, showBoundary=0)
+    footer_width = document.width
+    if 'hes' in data_dict:
+        footer_width = document.width-frameWidth_3
+  
+    footer_frame = Frame(document.leftMargin,document.height-0.98*document.height,footer_width,0.13*document.height, showBoundary=0)
     foot_text_p1 = Paragraph("<font  size=8 color=#736d5e>* Estimated costs and savings. Actual energy costs may"+
                   "vary and are based on many factors such as occupant behavior,"+ 
-                  "weather and utility rates. Please see next page for more on the EPS calculation</font>",styles['Normal'])
+                  "weather and utility rates. Please see next page for more on the EPS calculation Projections for score improvements and energy"+
+                             "savings are estimates based on implementing all of the recommended energy effciency improvements. Ref# 91997.</font>",styles['Normal'])
 
-    foot_text_p2 = Paragraph("<font  size=8 color=#736d5e>Projections for score improvements and energy"+
-                             "savings are estimates based on implementing all of the recommended energy effciency improvements. Ref# 91997."+
-                              "</font>",styles['Normal'])
+   
 
-    Story.append(Spacer(1,12))
+    Story.append(Spacer(1,8))
     Story.append(foot_text_p1)
-    Story.append(foot_text_p2)
-    footer_address_p = Paragraph('''<font size=9 color=#736d5e>Home Owner |{},{},{},{},{}</font>'''.format(address_line_1,address_line_2,city,state,postal_code),styles['Normal'])
+    # Story.append(foot_text_p2)
+    footer_address_p = Paragraph('''<font size=8 color=#736d5e>Home Owner |{},{},{},{},{}</font>'''.format(address_line_1,address_line_2,city,state,postal_code),styles['Normal'])
     logo_footer = IMG_PATH+"logo.jpg"
     img_logo_footer = Image(logo,cm,cm)
     footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
@@ -432,12 +511,20 @@ def create_pdf(data_dict, out_file):
                                     ('LEFTPADDING',(0,0),(0,0),0),
                                     ('SPAN',(0,0),(4,0)),
                                     ('ALIGN',(0,0),(0,0),'LEFT'),
-                                    ('VALIGN',(-1,-1),(-1,-1),'MIDDLE'),
+                                    ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
                                     ('ALIGN',(-1,-1),(-1,-1),'RIGHT'),
-                                    ('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+                                    ('RIGHTPADDING',(-1,-1),(-1,-1),0),
+                                    ('BOX',(0,0),(-1,-1),0.25,colors.black)
+                                    ])
     footer_table.setStyle(footer_table_style)
-    Story.append(Spacer(1,8))
+    
+    footer_frame1 = Frame(document.leftMargin,document.height-0.999*document.height,document.width,0.08*document.height, showBoundary=1)
+    # Story.append(Spacer(1,8))
     Story.append(footer_table)
+
+    
+
+
 
     #### SETTING UP FRAMES FOR PAGE 2
     
@@ -536,7 +623,13 @@ def create_pdf(data_dict, out_file):
     incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=14><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
     data = [[page2_column_2_text_p,'','','',incentive_1_p]]
     page2_tbl_col3 = Table(data)
-    page2_tbl_col3_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),('SPAN',(0,0),(3,0)),('VALIGN',(0,0),(3,0),'MIDDLE'),('ALIGN',(-1,-1),(-1,-1),'RIGHT'),('VALIGN',(-1,-1),(-1,-1),'BOTTOM'),('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+    page2_tbl_col3_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),
+                                        ('SPAN',(0,0),(3,0)),
+                                        ('VALIGN',(0,0),(3,0),'MIDDLE'),
+                                        ('ALIGN',(-1,-1),(-1,-1),'RIGHT'),
+                                        ('VALIGN',(-1,-1),(-1,-1),'BOTTOM'),
+                                        ('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+                                        
     page2_tbl_col3.setStyle(page2_tbl_col3_style)
     Story.append(page2_tbl_col3)
     Story.append(Spacer(1,5))
@@ -679,9 +772,9 @@ def create_pdf(data_dict, out_file):
                 ('TEXTCOLOR',(1,1),(1,-1),colors.HexColor('#666666')),
                 ('FONTSIZE',(1,1),(1,-1),7.7),
                 ('BACKGROUND',(0,0),(1,0),colors.HexColor('#f2f1ef')),
-                ('LINEBELOW',(0,0),(-1,-1),0.05,colors.HexColor('#c4c4c4')) ,
+                ('LINEBELOW',(0,0),(-1,-1),0.05,colors.HexColor('#c4c4c4'))
+                 ])
 
-    ])
     tbl4.setStyle(tbl4_styles)
     Story.append(tbl4)
     Story.append(Spacer(1,3))
@@ -689,14 +782,14 @@ def create_pdf(data_dict, out_file):
 
     #FOOTER FRAME FOR PAGE 2
     Story.append(FrameBreak)
-    page2_footer_frame = Frame(document.leftMargin,document.height-document.height,document.width,0.10*document.height, showBoundary=0)
+    page2_footer_frame = Frame(document.leftMargin,document.height-document.height,document.width,0.10*document.height, showBoundary=1)
     Story.append(Spacer(1,12))
     Story.append(footer_table)
 
     # SETTING UP PAGE TEMPLATES
     #deep copy footer frame to avid data races with frames
     
-    page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame]
+    page_1_frames = [header_frame, column_1,column_2,column_3,footer_frame,footer_frame1]
     page_2_frames = [page2_header_frame,page2_column_1,page2_column_2,page2_footer_frame]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
