@@ -403,9 +403,46 @@ def create_pdf(data_dict, out_file):
                                     ])
 
     tbl2_frame_3.setStyle(tblStyle2_frame_3)
-  
-    Story.append(tbl2_frame_3)
+    if 'hes' not in data_dict: 
+        Story.append(Spacer(1,40))
+        Story.append(Spacer(1,9)) 
+        Story.append(f3_text3_p)
+        Story.append(Spacer(1,4))
+        Story.append(tbl2_frame_3)
+
+    # THIS IS FOR COLUMN 3 IF HES IS IN THE DATA DICTIONERY
+    if 'hes' in data_dict:
+        col_head = lambda st: Paragraph('<font name=Helvetica size=8  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
+        row_data = lambda st: Paragraph('<font name=Helvetica size=10  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
     
+        data1=[[col_head('SCORE TODAY'),col_head('IMPROVED')],[row_data('{} out of 10'.format(data_dict['hes'])),row_data('{} out of 10'.format(data_dict['hes_improved']))]]
+        inner_table = Table(data1)
+        inner_table_style = TableStyle([
+                                        ('BACKGROUND',(0,0),(0,1),colors.HexColor('#666666')),
+                                        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                        ('ALIGN',(0,0),(-1,-1),'CENTER'),
+                                        ('BACKGROUND',(1,0),(1,1),colors.HexColor('#3dab47')),
+                                        ('LINEBEFORE',(1,0),(1,1),0.1*cm,colors.HexColor('#f2f1ef')),
+                                        ('LINEAFTER',(0,0),(0,1),0.1*cm,colors.HexColor('#f2f1ef')),
+                                        ])
+        inner_table.setStyle(inner_table_style)
+        # outer_header = Paragraph('<font ')
+        outer_header = Paragraph('<font size=9 color=#666666><strong>U.S. DOE HOME ENERGY SCORE™</strong></font>',styles['Normal'])
+        last_para = Paragraph('<font color=#666666 size=7>The Department of Energy’s Home Energy Score assesses the'+
+                        ' energy efficiency of a home based on its structure, heating & cooling'+
+                        ' and hot water systems. A score of ten represents most efficient homes. Learn more <a color=blue href=www.homeenergyscore.gov>here</a></font>',styles['Normal'])
+
+        data_table_box = [[outer_header],[inner_table],[last_para]]
+        box_table = Table(data_table_box)
+        box_table_style = TableStyle([
+                                    ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#f2f1ef')),
+                                    ('TEXTCOLOR',(0,0),(0,0),colors.HexColor('#666666')),
+                                    
+        
+                                    ])
+        box_table.setStyle(box_table_style)
+        
+        Story.append(box_table)
 
     #  FOOTER FRAME
     Story.append(FrameBreak)
@@ -434,8 +471,14 @@ def create_pdf(data_dict, out_file):
                                     ('ALIGN',(0,0),(0,0),'LEFT'),
                                     ('VALIGN',(-1,-1),(-1,-1),'MIDDLE'),
                                     ('ALIGN',(-1,-1),(-1,-1),'RIGHT'),
-                                    ('RIGHTPADDING',(-1,-1),(-1,-1),0)])
+                                    ('RIGHTPADDING',(-1,-1),(-1,-1),0),
+                                   
+                                    ])
     footer_table.setStyle(footer_table_style)
+    
+    footer_frame1 = Frame(document.leftMargin,document.height-0.999*document.height,document.width,0.07*document.height, showBoundary=0)
+    
+    Story.append(FrameBreak)
     Story.append(Spacer(1,8))
     Story.append(footer_table)
 
