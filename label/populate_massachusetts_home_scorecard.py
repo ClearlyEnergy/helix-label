@@ -796,7 +796,7 @@ def create_pdf(data_dict, out_file):
                  ])
 
     tbl4.setStyle(tbl4_styles)
-
+#conditionally rendering column2 on page2
     if 'hes' not in data_dict:
         Story.append(page2_title_4_p)
         Story.append(Spacer(1,2))
@@ -813,6 +813,12 @@ def create_pdf(data_dict, out_file):
         Story.append(tbl4)
         # Story.append(Spacer(1,3))
         Story.append(page2_column_2_text_p4)
+
+#setting HES background image
+    hes_background =  IMG_PATH+"hes_background.png"
+    if 'hes' in data_dict:
+        hes_image = Image(hes_background,page2_column_2.width,page2_column_2.height*0.3)
+        Story.append(hes_image)
 
 
     #FOOTER FRAME FOR PAGE 2
