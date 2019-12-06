@@ -1,6 +1,6 @@
-from .populate_residential_green_addendum import write_green_addendum_pdf
-from .populate_vermont_energy_profile import write_vermont_energy_profile_pdf
-from .populate_massachusetts_home_scorecard import create_pdf
+from populate_residential_green_addendum import write_green_addendum_pdf
+from populate_vermont_energy_profile import write_vermont_energy_profile_pdf
+from populate_massachusetts_home_scorecard import create_pdf
 from pdfrw import PdfWriter
 import os
 import os.path
