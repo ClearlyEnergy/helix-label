@@ -73,12 +73,12 @@ def create_pdf(data_dict, out_file):
     # print(data_dict)
     Story = []
     # Story.append(Spacer(1,0.005*cm))
-    document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
+    document = ColorFrameSimpleDocTemplate(out_file,pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()
    
     ##HEADER
     logo = IMG_PATH+"/logo.jpg"
-    home_energy_use =IMG_PATH+'home_energy_use.png'
+    home_energy_use =IMG_PATH+'/home_energy_use.png'
     img_logo = Image(logo,2*cm,1.3*cm)
     
     header_text ='''<font name=Helvetica size=28>Your Massachusetts Home Scorecard</font>'''
@@ -184,17 +184,19 @@ def create_pdf(data_dict, out_file):
     f1_header_2 = "<font  name=Helvetica-Bold color=#666666 size=11>YEARLY ENERGY USE</font>"
     f1_header2_p = Paragraph(f1_header_2,styles['Heading2'])
     Story.append(f1_header2_p)
-    
 
     electric_energy_usage_base_header_p =Paragraph('<font color=#4e4e52 size=8> Electricity </font>',styles['f1_leading'])
     electric_energy_usage_base = data_dict['electric_energy_usage_base']
     electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(electric_energy_usage_base))),styles['f1_leading'])
 
-    fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format(data_dict['primary_heating_fuel_type']),styles['f1_leading'])
-    fuel_energy_base = data_dict['fuel_energy_usage_base']
-    fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
+    if data_dict['fuel_energy_usage_base'] is not None:
+        fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format(data_dict['primary_heating_fuel_type']),styles['f1_leading'])
+        fuel_energy_base = data_dict['fuel_energy_usage_base']
+        fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
+        data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
+    else:
+        data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p]]]
 
-    data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
     tbl1_frame_1 = Table(data2_f1)
     tbl1_frame_1_tableStyle = TableStyle([('ALIGN', (0, 0), (0, -1),'LEFT'),('LEFTPADDING',(0,0),(0,-1),0)])
     tbl1_frame_1.setStyle(tbl1_frame_1_tableStyle)
@@ -209,8 +211,6 @@ def create_pdf(data_dict, out_file):
 
     total_energy_cost_base=data_dict['total_energy_cost_base']
     total_energy_cost_base_text_p= Paragraph('<font color=#4e4e52 size=8>Pre-upgrade Energy cost per yr</font>',styles['Normal'])
-
-
 
     total_energy_cost_improved=data_dict['total_energy_cost_improved']
     total_energy_cost_improved_text_p= Paragraph('<font color=#4e4e52 size=8>Post-upgrade Energy Cost per yr</font>',styles['Normal'])
@@ -353,7 +353,7 @@ def create_pdf(data_dict, out_file):
     # Story.append(Spacer(1,4))
     propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(data_dict['propane_percentage'])
     fuel_oil_entry ='' if ('fuel_oil_percentage' not in data_dict)  else '{}% Fuel Oil'.format(data_dict['fuel_oil_percentage']) 
-    electricity_percentage = data_dict['electricity_percentage']
+    electricity_percentage = data_dict['electric_percentage']
     data_f2=[[Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
@@ -432,9 +432,9 @@ def create_pdf(data_dict, out_file):
     f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
     # Story.append(f3_text3_p)
     # Story.append(Spacer(1,4))
-    fuel_oil_percentage_f3 = data_dict['fuel_oil_percentage_co2']
+    fuel_percentage_f3 = data_dict['fuel_percentage_co2']
     electricity_percentage_f3 = data_dict['electric_percentage_co2']
-    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
+    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_percentage_f3)),styles['Normal']),
     Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(electricity_percentage_f3)),styles['Normal'])]]
 
     tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
@@ -807,9 +807,8 @@ def create_pdf(data_dict, out_file):
 
  
     style = styles["Normal"]
-    #populate story with paragraphs
-    
-    # print(Story)
+
+    #populate story with paragraphs    
     document.build(Story)
 
 
@@ -819,9 +818,9 @@ if __name__ == '__main__':
     'green_assessment_property_date': 'N/A', 'name': 'Dave Saves', 'total_energy_usage_base': 205, 'total_energy_usage_improved': 122, 
     'electric_energy_usage_base': 3613, 'fuel_energy_usage_base': 1324,
     'total_energy_cost_base': 4343, 'total_energy_cost_improved': 2798, 
-    'propane_percentage':4, 'fuel_oil_percentage': 90, 'electricity_percentage': 6,
+    'fuel_percentage': 90, 'electric_percentage': 6,
     'co2_production_base': 16.4, 'co2_production_improved': 10.2,
-    'fuel_oil_percentage_co2': 93, 'electric_percentage_co2': 7.0,
+    'fuel_percentage_co2': 93, 'electric_percentage_co2': 7.0,
     'incentive_1': 11435
 }
     out_file = 'MAScorecard.pdf'
