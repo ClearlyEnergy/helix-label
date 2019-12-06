@@ -2,6 +2,7 @@
 #! /usr/bin/python
 # run with python label/populate_vermont_energy_profile.py
 
+import os
 import time
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.charts.legends import Legend
@@ -17,21 +18,20 @@ from reportlab.lib.validators import Auto
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, Flowable, PageBreak
-import pkg_resources
 import datetime
 
-
 #Adding Arial Unicode for checkboxes
-FONT_PATH = pkg_resources.resource_filename('label', '.fonts/')
+module_path = os.path.abspath(os.path.dirname(__file__))
+FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
+IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
 
-pdfmetrics.registerFont(TTFont('Inter',FONT_PATH+'Inter-Regular.ttf'))
-pdfmetrics.registerFont(TTFont('InterBold',FONT_PATH+'Inter-Bold.ttf'))
-pdfmetrics.registerFont(TTFont('InterItalic',FONT_PATH+'Inter-Italic.ttf'))
-pdfmetrics.registerFont(TTFont('InterThin',FONT_PATH+'Inter-Thin-BETA.ttf'))
-#pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'Arial Unicode.ttf'))
-pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"FontAwesome.ttf"))
+pdfmetrics.registerFont(TTFont('Inter',FONT_PATH+'/Inter-Regular.ttf'))
+pdfmetrics.registerFont(TTFont('InterBold',FONT_PATH+'/Inter-Bold.ttf'))
+pdfmetrics.registerFont(TTFont('InterItalic',FONT_PATH+'/Inter-Italic.ttf'))
+pdfmetrics.registerFont(TTFont('InterThin',FONT_PATH+'/Inter-Thin-BETA.ttf'))
+#pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
+pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-IMG_PATH = pkg_resources.resource_filename('label', 'images/')
 CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
 CUSTOM_DGREEN = colors.Color(red=(65.0/255),green=(173.0/255),blue=(73.0/255))
 CUSTOM_MGREEN = colors.Color(red=(146.0/255),green=(200.0/255),blue=(74.0/255))
@@ -137,10 +137,10 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(Spacer(1, 12))
     
     ### HEADER
-    vthep_logo = IMG_PATH+"VHESLogoV4.jpg"
+    vthep_logo = IMG_PATH+"/VHESLogoV4.jpg"
     im = Image(vthep_logo, 1.63*inch, 1.65*inch)
     
-    wedge = IMG_PATH+"wedge.png"
+    wedge = IMG_PATH+"/wedge.png"
     im2 = Image(wedge, 3.67*inch, 1.65*inch)
 
     styles = getSampleStyleSheet()
@@ -173,11 +173,11 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         ]))
     Story.append(header_table)
     # add moving triangles, start reference 4.29, end reference 7.42
-    triangle = IMG_PATH+"triangle.png"
+    triangle = IMG_PATH+"/triangle.png"
     offset_x = 4.35 + data_dict['cons_mmbtu']/data_dict['cons_mmbtu_max']*(7.45-4.35)
     pic = flowable_triangle(triangle,offset_x, 1.73, 0.1, 0.173,'')
     Story.append(pic)
-    triangle2 = IMG_PATH+"triangle2.png"
+    triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 4.35 + data_dict['cons_mmbtu_min']/data_dict['cons_mmbtu_max']*(7.45-4.35)
     pic = flowable_triangle(triangle2,offset_x, 0.7,0.08, 0.138,'High Performance Home')
     Story.append(pic)
@@ -218,7 +218,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
      
     ##BODY RIGHT
     # COSTS
-    chevron = IMG_PATH+"chevron_green.jpg"
+    chevron = IMG_PATH+"/chevron_green.jpg"
     im2 = Image(chevron, 5.80*inch, 0.6*inch)
     
     p7 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_xl, fontName = font_bold, spaceBefore = -38, leftIndent = 10, textColor=colors.white)
@@ -477,7 +477,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         Story.append(Spacer(1, 10))
     
         p2_s2_i1 = Image(wedge, 2.4*inch, 0.99*inch) 
-        genericpie = IMG_PATH+"GenericExpectedEnergyChart.png"
+        genericpie = IMG_PATH+"/GenericExpectedEnergyChart.png"
         p2_s2_i2 = Image(genericpie, 0.99*inch, 0.99*inch)
      
 

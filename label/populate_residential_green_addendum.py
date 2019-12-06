@@ -3,11 +3,6 @@
 
 import os
 from pdfrw import PdfWriter, PdfReader, IndirectPdfDict, PdfName, PdfDict
-import pkg_resources
-
-INVOICE_TEMPLATE_PATH = pkg_resources.resource_filename('label', 'templates/ResidentialGreenandEnergyEfficientAddendum.pdf')
-INVOICE_OUTPUT_PATH = pkg_resources.resource_filename('label','GA_out.pdf')
-
 
 ANNOT_KEY = '/Annots'
 ANNOT_FIELD_KEY = '/T'
@@ -119,4 +114,9 @@ data_dict = {
 
 
 if __name__ == '__main__':
-    write_green_addendum_pdf(INVOICE_TEMPLATE_PATH, INVOICE_OUTPUT_PATH, data_dict)
+    module_path = os.path.abspath(os.path.dirname(__file__))
+    in_path = os.path.normpath(os.path.join(module_path, "./templates/"))
+    out_path = os.path.normpath(os.path.join(module_path, "./tmp/"))    
+    in_file = in_path + '/ResidentialGreenandEnergyEfficientAddendum.pdf'
+    out_file = out_path +'/GA_out.pdf'
+    write_green_addendum_pdf(in_file, data_dict, out_file)

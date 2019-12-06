@@ -2,13 +2,13 @@
 #! /usr/bin/python
 # run with python label/populate_massachusetts_home_scorecard.py
 
-from .utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+import os
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch, cm, mm
 from reportlab.lib.pagesizes import letter, landscape
-import pkg_resources
 from reportlab.lib import colors
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
@@ -23,9 +23,9 @@ PAGE_HEIGHT=defaultPageSize[1]
 PAGE_WIDTH=defaultPageSize[0]
 styles = getSampleStyleSheet()
 
-
-IMG_PATH = pkg_resources.resource_filename('label', 'images/')
-FONT_PATH = pkg_resources.resource_filename('label', '.fonts/')
+module_path = os.path.abspath(os.path.dirname(__file__))
+FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
+IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
 CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
 CUSTOM_DGREEN = colors.Color(red=(65.0/255),green=(173.0/255),blue=(73.0/255))
 CUSTOM_MGREEN = colors.Color(red=(146.0/255),green=(200.0/255),blue=(74.0/255))
@@ -77,7 +77,7 @@ def create_pdf(data_dict, out_file):
     styles = getSampleStyleSheet()
    
     ##HEADER
-    logo = IMG_PATH+"logo.jpg"
+    logo = IMG_PATH+"/logo.jpg"
     home_energy_use =IMG_PATH+'home_energy_use.png'
     img_logo = Image(logo,2*cm,1.3*cm)
     
@@ -307,9 +307,9 @@ def create_pdf(data_dict, out_file):
     Story.append(f2_text_p)
 
     
-    scorecard_btu = IMG_PATH+"scorecard_btu.png"
-    peg_xl = IMG_PATH+"peg_xl.png"
-    peg_sm = IMG_PATH+"peg_sm.png"
+    scorecard_btu = IMG_PATH+"/scorecard_btu.png"
+    peg_xl = IMG_PATH+"/peg_xl.png"
+    peg_sm = IMG_PATH+"/peg_sm.png"
     img_sc_btu = Image(scorecard_btu,width=6.17*cm,height=10.5*cm)
     total_energy_usage_base =data_dict['total_energy_usage_base']    
     total_energy_usage_base_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(total_energy_usage_base),styles['Title'])
@@ -398,10 +398,10 @@ def create_pdf(data_dict, out_file):
     co2_production_improved = data_dict['co2_production_improved']
     co2_production_improved_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(co2_production_improved),styles['Normal'])
     co2_improved_text_p = Paragraph('<font name=Helvetica size=7.5 color=#4c4f52 >Footprint after recommended improvements</font>',styles['Normal'])
-    scorecard_ton =IMG_PATH+'scorecard_ton.png'
+    scorecard_ton =IMG_PATH+'/scorecard_ton.png'
 #    img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=10*cm)
     img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=8.525*cm)
-    peg_m_f3 = IMG_PATH+"peg_m.png"
+    peg_m_f3 = IMG_PATH+"/peg_m.png"
  
     peg_m_p = Paragraph('<font name=Helvetica-Bold><img valign="-27" src="{}" width="100" height="20"/></font>'.format(peg_m_f3),styles['Normal'])
     peg_m_p1 = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="15"/></font>'.format(peg_m_f3),styles['Normal'])
@@ -501,9 +501,9 @@ def create_pdf(data_dict, out_file):
     Story.append(foot_text_p1)
     # Story.append(foot_text_p2)
     footer_address_p = Paragraph('''<font size=8 color=#736d5e>Home Owner |{},{},{},{},{}</font>'''.format(address_line_1,address_line_2,city,state,postal_code),styles['Normal'])
-    logo_footer = IMG_PATH+"logo.jpg"
+    logo_footer = IMG_PATH+"/logo.jpg"
     img_logo_footer = Image(logo,cm,cm)
-    footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
+    footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}/logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
 
     footer_data = [[footer_address_p,'','','','',footer_text_img_p]]
     footer_table = Table(footer_data)
@@ -531,7 +531,7 @@ def create_pdf(data_dict, out_file):
     ## SETTING UP FRAME HEADER FOR PAGE 2
     Story.append(NextPageTemplate('secondPage'))
     page2_header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.11*document.height, showBoundary=0)
-    page2_head_text_img_p = Paragraph('''<img valign="middle" src="{}logo.jpg" width="60" height="40"/><font size=28 color=black > More Information</font> '''.format(IMG_PATH),styles['Normal'])
+    page2_head_text_img_p = Paragraph('''<img valign="middle" src="{}/logo.jpg" width="60" height="40"/><font size=28 color=black > More Information</font> '''.format(IMG_PATH),styles['Normal'])
     Story.append(page2_head_text_img_p)
     # print(document.height)
 
