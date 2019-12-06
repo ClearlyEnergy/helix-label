@@ -622,8 +622,7 @@ def create_pdf(data_dict, out_file):
     frameHeight = document.height-page2_header_frame.height+(0.25*inch)
     page2_column_2 = Frame(document.leftMargin+page2_column_1.width,document.bottomMargin,frameWidth,frameHeight, showBoundary=0)
     page2_title_4_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>CONTRACTOR INCENTIVE</font>",styles['line-height'])
-    Story.append(page2_title_4_p)
-    Story.append(Spacer(1,2))
+
   
     incentive_1 = data_dict['incentive_1']
     page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4e4e52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
@@ -639,13 +638,12 @@ def create_pdf(data_dict, out_file):
                                         ('VALIGN',(-1,-1),(-1,-1),'BOTTOM'),
                                         ('RIGHTPADDING',(-1,-1),(-1,-1),0)])
                                         
+    
     page2_tbl_col3.setStyle(page2_tbl_col3_style)
-    Story.append(page2_tbl_col3)
-    Story.append(Spacer(1,5))
 
 
-    # FIRST TABLE ON PAGE 2 COLUMN 2
-    # will give variables some names but could be changed as agreed
+
+
 
     table_titles_1 = ['','','','NOW','GOAL','SAVED','SAVED %']
     now_mmbtu = data_dict['total_energy_usage_base']
@@ -655,7 +653,7 @@ def create_pdf(data_dict, out_file):
     saved_mmbtu = now_mmbtu - goal_mmbtu
     saved_mmbtu_p = format_numbers(saved_mmbtu)
     saved_mmbtu_pect = 100*saved_mmbtu / now_mmbtu
-    saved_mmbtu_pect_p = format_numbers(saved_mmbtu_pect)
+    saved_mmbtu_pect_p = format_numbers(round(saved_mmbtu_pect,2))
     descrip_p = Paragraph('<font name=helvetica  color=#666666 size=8>Whole House MMBTU (excluding new PV) </font>',styles['Normal'])
     values = [descrip_p,'','',now_mmbtu_p,goal_mmbtu_p,saved_mmbtu_p,saved_mmbtu_pect_p]
     mmbtu_data = [table_titles_1,values]
@@ -673,7 +671,7 @@ def create_pdf(data_dict, out_file):
                                 ])
 
     mmbtu_table.setStyle(mmbtu_tbl_styles)
-    Story.append(mmbtu_table)
+   
 
     # SECOND TABLE ON PAGE 2 COLUMN 2
     # will give variables some names but could be changed as agreed
@@ -695,10 +693,23 @@ def create_pdf(data_dict, out_file):
     
 
     table_titles_2 = ['','','','MMBTU SAVED BY TIER','$/MMBTU','TOTAL']
-    col2_row1 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>1st Tier - % Savings of Base (5% - 20%)</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_1st),format_numbers(mmbtu_1st),'$ '+format_numbers(total_1st)]
-    col2_row2 = [Paragraph('<font size=7.5  name=helvetica  color=#4c4f52>2nd Tier - % Savings of Base (20% - 40%)</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_2nd),format_numbers(mmbtu_2nd),'$ '+format_numbers(total_2nd)]
-    col2_row3 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>3rd Tier - % Savings of Base (>40%)</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_3rd),format_numbers(mmbtu_3rd),'$ '+format_numbers(total_3rd)]
-    col2_row4 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>New Solar PV Install</font>',styles['Normal']),'','',format_numbers(mmbtu_saved_solar),format_numbers(mmbtu_solar),'$ '+format_numbers(total_solar)]
+
+    col2_row1 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>1st Tier - % Savings of Base (5% - 20%)</font>',styles['Normal']),'','',
+                format_numbers(mmbtu_saved_1st),
+                format_numbers(mmbtu_1st),
+                '$ '+format_numbers(total_1st)]
+    col2_row2 = [Paragraph('<font size=7.5  name=helvetica  color=#4c4f52>2nd Tier - % Savings of Base (20% - 40%)</font>',styles['Normal']),'','',
+                format_numbers(mmbtu_saved_2nd),
+                format_numbers(mmbtu_2nd),
+                '$ '+format_numbers(total_2nd)]
+    col2_row3 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>3rd Tier - % Savings of Base (>40%)</font>',styles['Normal']),'','',
+                format_numbers(mmbtu_saved_3rd),
+                format_numbers(mmbtu_3rd),
+                '$ '+format_numbers(total_3rd)]
+    col2_row4 = [Paragraph('<font size=7.7  name=helvetica  color=#4c4f52>New Solar PV Install</font>',styles['Normal']),'','',
+                format_numbers(mmbtu_saved_solar),
+                format_numbers(mmbtu_solar),
+                '$ '+format_numbers(total_solar)]
 
     col2_row5 = ['','','','','Grand Total Incentive','$ '+format_numbers(total_1st+total_2nd+total_3rd+total_solar)]
   
@@ -727,7 +738,7 @@ def create_pdf(data_dict, out_file):
                                 ('FONT',(4,5),(-1,5),'Helvetica-Bold',8.5)                          
                                 ])
     col2_tbl2.setStyle(col2_tbl2_styles)
-    Story.append(col2_tbl2)
+    
 
 
     page2_column_1_p1 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>The Contractor Incentive is based on anticipated reductions "+
@@ -736,12 +747,12 @@ def create_pdf(data_dict, out_file):
                                   "Administrator and may change if the nal scope of work diers from the proposal or if measured "+
                                   "improvements (like air leakage) following installation dier from the estimate. Incentives are paid to "+
                                   "participating Contractors, who may share them with customers at their discretion.</font>",styles['line-height'])
-    Story.append(Spacer(1,5))
-    Story.append(page2_column_1_p1)
-    Story.append(Spacer(1,5))
+    
+    
+    
     page2_title_6_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>POTENTIAL CUSTOMER REBATES</font>",styles['line-height'])
-    Story.append(page2_title_6_p)
-    Story.append(Spacer(1,5))
+    
+    
 
     page2_column_2_text_p3 = Paragraph("<font name=helvetica  color=#4e4e52  size=9>Customers might be eligible for rebates "+
                             "through the Mass Save program for installing equipment that meets "+
@@ -750,14 +761,14 @@ def create_pdf(data_dict, out_file):
     
    
 
-    Story.append(page2_column_2_text_p3)
+    
 
     page2_column_2_text_p4 = Paragraph("<font name=helvetica  color=#4e4e52 size=7.5>Also you could be eligible for a $300 Mass "+
                                             "Clean Energy Center rebate for a SEER 18 Mini Split Heat Pump.\n"+
                                              "Visit <a color=blue href='https://www.masssave.com/residential/clean-heating-and-cooling'>bit.ly/ma-mvp-2</a>. for more details </font>",styles['Normal'])
     
    
-   
+
     
      # last table of page 2 col 2
     tbl4_titles =['MASS SAVE CUSTOMER REBATES','AMOUNT']
@@ -785,9 +796,24 @@ def create_pdf(data_dict, out_file):
                  ])
 
     tbl4.setStyle(tbl4_styles)
-    Story.append(tbl4)
-    # Story.append(Spacer(1,3))
-    Story.append(page2_column_2_text_p4)
+
+    if 'hes' not in data_dict:
+        Story.append(page2_title_4_p)
+        Story.append(Spacer(1,2))
+        Story.append(page2_tbl_col3)
+        Story.append(Spacer(1,5))
+        Story.append(mmbtu_table)
+        Story.append(col2_tbl2)
+        Story.append(Spacer(1,5))
+        Story.append(page2_column_1_p1)
+        Story.append(Spacer(1,5))
+        Story.append(page2_title_6_p)
+        Story.append(Spacer(1,5))
+        Story.append(page2_column_2_text_p3)  
+        Story.append(tbl4)
+        # Story.append(Spacer(1,3))
+        Story.append(page2_column_2_text_p4)
+
 
     #FOOTER FRAME FOR PAGE 2
     Story.append(FrameBreak)
