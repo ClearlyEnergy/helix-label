@@ -629,7 +629,7 @@ def create_pdf(data_dict, out_file):
     page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4e4e52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
                                         'for an estimated incentive of</font>',styles['Normal'])
     
-    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=14><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
+    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=12><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
     data = [[page2_column_2_text_p,'','','',incentive_1_p]]
     page2_tbl_col3 = Table(data)
     page2_tbl_col3_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),
@@ -752,7 +752,7 @@ def create_pdf(data_dict, out_file):
 
     Story.append(page2_column_2_text_p3)
 
-    page2_column_2_text_p4 = Paragraph("<font name=helvetica  color=#4e4e52 size=9>Also you could be eligible for a $300 Mass "+
+    page2_column_2_text_p4 = Paragraph("<font name=helvetica  color=#4e4e52 size=7.5>Also you could be eligible for a $300 Mass "+
                                             "Clean Energy Center rebate for a SEER 18 Mini Split Heat Pump.\n"+
                                              "Visit <a color=blue href='https://www.masssave.com/residential/clean-heating-and-cooling'>bit.ly/ma-mvp-2</a>. for more details </font>",styles['Normal'])
     
@@ -786,13 +786,13 @@ def create_pdf(data_dict, out_file):
 
     tbl4.setStyle(tbl4_styles)
     Story.append(tbl4)
-    Story.append(Spacer(1,3))
+    # Story.append(Spacer(1,3))
     Story.append(page2_column_2_text_p4)
 
     #FOOTER FRAME FOR PAGE 2
     Story.append(FrameBreak)
-    page2_footer_frame = Frame(document.leftMargin,document.height-document.height,document.width,0.10*document.height, showBoundary=0)
-    Story.append(Spacer(1,12))
+    page2_footer_frame = Frame(document.leftMargin,document.height-0.995*document.height,document.width,0.06*document.height, showBoundary=0)
+    # Story.append(Spacer(1,8))
     Story.append(footer_table)
 
     # SETTING UP PAGE TEMPLATES
