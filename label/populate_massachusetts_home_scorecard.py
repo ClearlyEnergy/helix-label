@@ -2,7 +2,7 @@
 #! /usr/bin/python
 # run with python label/populate_massachusetts_home_scorecard.py
 
-from utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+from .utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
