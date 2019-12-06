@@ -2,7 +2,7 @@
 #! /usr/bin/python
 # run with python label/populate_massachusetts_home_scorecard.py
 
-from utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+from utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Hes_Image
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
@@ -817,8 +817,12 @@ def create_pdf(data_dict, out_file):
 #setting HES background image
     hes_background =  IMG_PATH+"hes_background.png"
     if 'hes' in data_dict:
-        hes_image = Image(hes_background,page2_column_2.width,page2_column_2.height*0.3)
+        hes_image = Hes_Image(hes_background,page2_column_2.width,page2_column_2.height*0.3,hAlign='LEFT')
         Story.append(hes_image)
+        from reportlab.pdfgen import canvas
+        value = 9
+        para = Paragraph('<font size=11 color=#ffffff>{}</font>'.format(value),style=styles['Normal'])
+        
 
 
     #FOOTER FRAME FOR PAGE 2
