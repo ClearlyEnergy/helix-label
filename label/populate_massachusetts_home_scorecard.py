@@ -816,12 +816,31 @@ def create_pdf(data_dict, out_file):
 
 #setting HES background image
     hes_background =  IMG_PATH+"hes_background.png"
+    hes_box_path = IMG_PATH+'hes_box.png'
     if 'hes' in data_dict:
-        hes_image = Hes_Image(hes_background,page2_column_2.width,page2_column_2.height*0.3,hAlign='LEFT')
-        Story.append(hes_image)
-        from reportlab.pdfgen import canvas
-        value = 9
-        para = Paragraph('<font size=11 color=#ffffff>{}</font>'.format(value),style=styles['Normal'])
+        hes_image = Image(hes_background,page2_column_2.width*0.95,6*cm)#,hAlign='LEFT')
+        hes_box = Image(hes_box_path,1.5*cm,1.5*cm)
+
+       
+        para = Paragraph('<font size=22 color=#ffffff><b>{}</b></font>'.format(data_dict['hes_improved']),style=styles['Normal'])
+        hes_table_data = [[hes_image,''],[para,hes_box]]
+        hes_table = Table(hes_table_data,rowHeights=5*cm,colWidths=3*cm)
+        hex_box_pos = -2.1+((data_dict['hes_improved']-1)/10.0)*5.8
+        const = -3.5 if data_dict['hes_improved']<10 else -3.9
+        hes_table_style = ([
+                            ('SPAN',(0,0),(1,0)),
+                            ('ALIGN',(0,0),(0,0),'CENTER'),
+                            ('BOTTOMPADDING',(1,1),(1,1),7.5*cm),
+                            ('LEFTPADDING',(1,1),(1,1),hex_box_pos*cm),
+                            ('BOTTOMPADDING',(0,1),(0,1),10.2*cm),
+                            ('LEFTPADDING',(0,1),(0,1),const*cm),#>10 -3.9 <3.5
+                            # ('BOX', (0,1), (0,1), 0.25, colors.white),
+                            ])
+
+        hes_table.setStyle(hes_table_style)
+        Story.append(hes_table)
+        
+
         
 
 
