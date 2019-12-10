@@ -1,6 +1,6 @@
 # implemented this class so that we can colour our frames, for this particular project we wanted to colour the first frame
 
-from reportlab.platypus import SimpleDocTemplate, Frame 
+from reportlab.platypus import SimpleDocTemplate, Frame , Image
 from reportlab.lib.colors import toColor
 
 class ColorFrameSimpleDocTemplate(SimpleDocTemplate,object):
@@ -39,3 +39,17 @@ class ColorFrame(Frame,object):
         if self.background:
             self.drawBackground(canv)
         Frame.addFromList(self, drawlist, canv)
+
+class Hes_Image(Image):
+    
+    def wrap(self, availWidth, availHeight):
+        height, width = Image.wrap(self,availWidth,availHeight)
+        return width, height
+    
+    def draw(self):
+
+        # Image.canv.
+        self.canv.drawString(100,400,'8uiuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu')
+        # self.canv.rotate(45)
+        Image.draw(self)
+
