@@ -57,12 +57,42 @@ def pie_chart(data_dict):
 
 def format_numbers(amount):
     ''' formats numbers above a 1000 to make them readable '''
+    if amount is None:
+        return ''
+
     if amount<1000:
         return str(amount)
     return str(amount/1000)+","+str(amount%1000)
 
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
+
+
+    data_dict = {'address_line_1': '14 Tanglewood Dr', 
+            'address_line_2': None,
+             'city': 'Shrewsbury', 
+             'state': 'MA', 
+             'postal_code': '1545', 
+             'fuel_oil': 2.57, 
+             'electricity': 0.19,
+              'natural_gas': 1.23, 'wood': 0, 'pellets': 0,
+               'propane': 2.98, 'primary_heating_fuel_type': None,
+                'fuel_energy_cost_base': None, 'fuel_energy_cost_saved': 0,
+                 'fuel_energy_cost_improved': None, 'fuel_energy_usage_saved': None, 
+                 'fuel_energy_usage_improved': None, 'fuel_energy_usage_base': None, 
+                 'total_energy_cost_improved': 3247, 'total_energy_cost_base': 4748,
+                'total_energy_cost_saved': 1501, 'total_energy_usage_improved': 58,
+                'total_energy_usage_saved': 27, 'total_energy_usage_base': 85, 
+                'electric_energy_usage_improved': 17031.3, 
+                'electric_energy_usage_saved': 7874.7, 'electric_energy_usage_base': 24906.1,
+                'electric_energy_cost_improved': 3247, 'electric_energy_cost_saved': 1501, 
+                'electric_energy_cost_base': 4748, 'co2_production_improved': 10.4,
+                'co2_production_base': 15.2, 'co2_production_saved': 5, 
+                'incentive_1': 2090, 'conditioned_area': 1920, 'year_built': 1972, 
+                'number_of_bedrooms': 3, 'name': 'Louise Reardon', 
+                'green_assessment_property_date': '2018-11-29 00:00:00',
+                'fuel_percentage': 0.0, 'fuel_percentage_co2': 0.0,
+                'electric_percentage': 100.0, 'electric_percentage_co2': 100.0}
 
     #adding values for testing
     if 'hes' not in data_dict:
@@ -286,9 +316,9 @@ def create_pdf(data_dict, out_file):
     Story.append(tbl_pie)
 
    
-    electricity =0.19
-    propane = 2.98
-    fuel_oil=2.57
+    electricity =data_dict['electricity']
+    propane = '' if 'propane' not in data_dict else data_dict['propane']
+    fuel_oil= '' if 'fuel_oil' not in data_dict else data_dict['fuel_oil']
     styles.add(ParagraphStyle(name='CENTERED',alignment=TA_CENTER))
     last_paragraph = Paragraph('<font color=#4e4e52 size=8>Electricity: $ {}/kWh, Propane: $ {}/gallon, Oil: $ {}/gallon</font>'.format(electricity,propane,fuel_oil),styles['CENTERED'])
     Story.append(Spacer(1,8))
@@ -353,10 +383,10 @@ def create_pdf(data_dict, out_file):
     # Story.append(Spacer(1,4))
     propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(data_dict['propane_percentage'])
     fuel_oil_entry ='' if ('fuel_oil_percentage' not in data_dict)  else '{}% Fuel Oil'.format(data_dict['fuel_oil_percentage']) 
-    electricity_percentage = data_dict['electricity_percentage']
+    electric_percentage = data_dict['electric_percentage']
     data_f2=[[Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electricity_percentage)),styles['Normal'])]]
+            Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electric_percentage)),styles['Normal'])]]
 
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
     tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
@@ -432,7 +462,7 @@ def create_pdf(data_dict, out_file):
     f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
     # Story.append(f3_text3_p)
     # Story.append(Spacer(1,4))
-    fuel_oil_percentage_f3 = data_dict['fuel_oil_percentage_co2']
+    fuel_oil_percentage_f3 = data_dict['fuel_percentage_co2']
     electricity_percentage_f3 = data_dict['electric_percentage_co2']
     data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
     Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(electricity_percentage_f3)),styles['Normal'])]]
