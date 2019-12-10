@@ -169,7 +169,7 @@ def create_pdf(data_dict, out_file):
     Story.append(address_p)
     Story.append(Spacer(1, 5))
     #create style for pragraphs in frame_1
-    styles.add(ParagraphStyle(name='f1_leading',leading=16))
+    styles.add(ParagraphStyle(name='f1_leading',leading=14))
    
     
     
@@ -189,7 +189,7 @@ def create_pdf(data_dict, out_file):
     primary_heating_fuel_type = data_dict['primary_heating_fuel_type']
     primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
 
-    assessment_date = datetime.date(datetime.now())#data_dict['green_assessment_property_date']
+    assessment_date = datetime.date() if data_dict['green_assessment_property_date'] is None else datetime.strptime(data_dict['green_assessment_property_date'],'%Y-%m-%d %H:%M:%S').date()
     
     assessment_date_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
     assessment_date_header_p = Paragraph('<font color=#4e4e52 size=8>Assessment Date</font>',styles['f1_leading'])
@@ -209,7 +209,6 @@ def create_pdf(data_dict, out_file):
     tbl_frame_1.setStyle(tbl_frame_1_tableStyle)
     Story.append(tbl_frame_1)
 
-    # Story.append(Story.append(Spacer(1, 6)))
 
     f1_header_2 = "<font  name=Helvetica-Bold color=#666666 size=11>YEARLY ENERGY USE</font>"
     f1_header2_p = Paragraph(f1_header_2,styles['Heading2'])
@@ -220,9 +219,9 @@ def create_pdf(data_dict, out_file):
     electric_energy_usage_base = data_dict['electric_energy_usage_base']
     electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(electric_energy_usage_base))),styles['f1_leading'])
 
-    fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format(data_dict['primary_heating_fuel_type']),styles['f1_leading'])
+    fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format('' if data_dict['primary_heating_fuel_type'] is None else data_dict['primary_heating_fuel_type']),styles['f1_leading'])
     fuel_energy_base = data_dict['fuel_energy_usage_base']
-    fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
+    fuel_energy_base_p =Paragraph('',styles['Normal']) if fuel_energy_base is None else  Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
 
     data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
     tbl1_frame_1 = Table(data2_f1)
@@ -230,7 +229,6 @@ def create_pdf(data_dict, out_file):
     tbl1_frame_1.setStyle(tbl1_frame_1_tableStyle)
     Story.append(tbl1_frame_1)
 
-    # Story.append(Story.append(Spacer(1, 12)))
    
     f1_header_3 = "<font  name=Helvetica-Bold color=#666666 size=11>YEARLY COSTS & SAVINGS<super >*</super> </font>"#add prefix
     f1_header3_p = Paragraph(f1_header_3,styles['Heading2'])
@@ -315,13 +313,18 @@ def create_pdf(data_dict, out_file):
     tbl_pie.setStyle(tbl_pie_tableStyle)
     Story.append(tbl_pie)
 
-   
-    electricity =data_dict['electricity']
-    propane = '' if 'propane' not in data_dict else data_dict['propane']
-    fuel_oil= '' if 'fuel_oil' not in data_dict else data_dict['fuel_oil']
+
     styles.add(ParagraphStyle(name='CENTERED',alignment=TA_CENTER))
-    last_paragraph = Paragraph('<font color=#4e4e52 size=8>Electricity: $ {}/kWh, Propane: $ {}/gallon, Oil: $ {}/gallon</font>'.format(electricity,propane,fuel_oil),styles['CENTERED'])
-    Story.append(Spacer(1,8))
+#propane, electricty, oil, pellet, wood, natural_gas,
+    electricity = 'Electricity: $ {}/kWh'.format( data_dict['electricity'])
+    propane  ='' if 'propane' not in data_dict else 'Propane: $ {}/gallon'.format(data_dict['propane'])
+    oil  = '' if 'fuel_oil' not in data_dict else 'Oil: $ {}/gallon'.format(data_dict['fuel_oil'])
+    pellets = '' if 'pellets' not in data_dict else 'pellets: $ {}/ton'.format(data_dict['pellets'])
+    wood = '' if 'wood' not in data_dict else 'wood: $ {}/cord'.format(data_dict['wood'])
+    gas = '' if 'natural_gas' not in data_dict else 'gas: $ {}/mmbtu'.format(data_dict['natural_gas'])
+
+    last_paragraph = Paragraph('<font color=#4e4e52 size=8>{} {} {} {} {} {}</font>'.format(electricity,propane,oil,gas,wood,pellets),styles['CENTERED'])
+    Story.append(Spacer(1,4))
     Story.append(last_paragraph)
 
     # creating and populating frame2( COLUMN 2)
@@ -410,7 +413,7 @@ def create_pdf(data_dict, out_file):
     Story.append(FrameBreak)
     frameWidth_3 = document.width/3
     frameHeight_3 = document.height-header_frame.height+(0.25*inch)
-    column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=1)
+    column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=0)
     f3_header1 = "<font name=Helvetica-Bold color=#666666 size=11>HOME CARBON FOOTPRINT</font>"
     f3_header1_p = Paragraph(f3_header1,styles['Heading2'])
     Story.append(f3_header1_p)
