@@ -436,7 +436,7 @@ def create_pdf(data_dict, out_file):
     peg_m_p = Paragraph('<font name=Helvetica-Bold><img valign="-27" src="{}" width="100" height="20"/></font>'.format(peg_m_f3),styles['Normal'])
     peg_m_p1 = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="15"/></font>'.format(peg_m_f3),styles['Normal'])
 
-    data_tbl1_f3 = [['',peg_m_p,co2_production_base_p,co2_text_p],
+    data_tbl1_f3 = [[img_sc_ton,peg_m_p,co2_production_base_p,co2_text_p],
                     ['','','',''],
                     ['',peg_m_p1,co2_production_improved_p,co2_improved_text_p ]]
 
