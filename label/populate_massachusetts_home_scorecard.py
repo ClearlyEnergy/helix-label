@@ -2,13 +2,15 @@
 #! /usr/bin/python
 # run with python label/populate_massachusetts_home_scorecard.py
 
-from utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Hes_Image
+
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+import os
+
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph, Spacer,Table,TableStyle, BaseDocTemplate, Frame, PageTemplate, FrameBreak, NextPageTemplate, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch, cm, mm
 from reportlab.lib.pagesizes import letter, landscape
-import pkg_resources
 from reportlab.lib import colors
 from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, String
@@ -23,9 +25,9 @@ PAGE_HEIGHT=defaultPageSize[1]
 PAGE_WIDTH=defaultPageSize[0]
 styles = getSampleStyleSheet()
 
-
-IMG_PATH = pkg_resources.resource_filename('label', 'images/')
-FONT_PATH = pkg_resources.resource_filename('label', '.fonts/')
+module_path = os.path.abspath(os.path.dirname(__file__))
+FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
+IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
 CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
 CUSTOM_DGREEN = colors.Color(red=(65.0/255),green=(173.0/255),blue=(73.0/255))
 CUSTOM_MGREEN = colors.Color(red=(146.0/255),green=(200.0/255),blue=(74.0/255))
@@ -104,12 +106,12 @@ def create_pdf(data_dict, out_file):
     # print(data_dict)
     Story = []
     # Story.append(Spacer(1,0.005*cm))
-    document = ColorFrameSimpleDocTemplate('MAScorecard.pdf',pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
+    document = ColorFrameSimpleDocTemplate(out_file,pagesize=landscape(letter),rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()
    
     ##HEADER
-    logo = IMG_PATH+"logo.jpg"
-    home_energy_use =IMG_PATH+'home_energy_use.png'
+    logo = IMG_PATH+"/logo.jpg"
+    home_energy_use =IMG_PATH+'/home_energy_use.png'
     img_logo = Image(logo,2*cm,1.3*cm)
     
     header_text ='''<font name=Helvetica size=28>Your Massachusetts Home Scorecard</font>'''
@@ -214,17 +216,26 @@ def create_pdf(data_dict, out_file):
     f1_header_2 = "<font  name=Helvetica-Bold color=#666666 size=11>YEARLY ENERGY USE</font>"
     f1_header2_p = Paragraph(f1_header_2,styles['Heading2'])
     Story.append(f1_header2_p)
-    
 
     electric_energy_usage_base_header_p =Paragraph('<font color=#4e4e52 size=8> Electricity </font>',styles['f1_leading'])
     electric_energy_usage_base = data_dict['electric_energy_usage_base']
     electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(electric_energy_usage_base))),styles['f1_leading'])
 
+
     fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format('' if data_dict['primary_heating_fuel_type'] is None else data_dict['primary_heating_fuel_type']),styles['f1_leading'])
     fuel_energy_base = data_dict['fuel_energy_usage_base']
     fuel_energy_base_p =Paragraph('',styles['Normal']) if fuel_energy_base is None else  Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
 
-    data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
+    data2_f1=[]
+    if data_dict['fuel_energy_usage_base'] is not None:
+        fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format(data_dict['primary_heating_fuel_type']),styles['f1_leading'])
+        fuel_energy_base = data_dict['fuel_energy_usage_base']
+        fuel_energy_base_p = Paragraph('<font name=Helvetica-Bold color=#474646>{} gallons</font>'.format(str(format_numbers(fuel_energy_base))),styles['f1_leading'])
+        data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p],[fuel_energy_base_header_p,fuel_energy_base_p]]]
+    else:
+        data2_f1 =[[[electric_energy_usage_base_header_p,electric_energy_usage_base_p]]]
+
+
     tbl1_frame_1 = Table(data2_f1)
     tbl1_frame_1_tableStyle = TableStyle([('ALIGN', (0, 0), (0, -1),'LEFT'),('LEFTPADDING',(0,0),(0,-1),0)])
     tbl1_frame_1.setStyle(tbl1_frame_1_tableStyle)
@@ -238,8 +249,6 @@ def create_pdf(data_dict, out_file):
 
     total_energy_cost_base=data_dict['total_energy_cost_base']
     total_energy_cost_base_text_p= Paragraph('<font color=#4e4e52 size=8>Pre-upgrade Energy cost per yr</font>',styles['Normal'])
-
-
 
     total_energy_cost_improved=data_dict['total_energy_cost_improved']
     total_energy_cost_improved_text_p= Paragraph('<font color=#4e4e52 size=8>Post-upgrade Energy Cost per yr</font>',styles['Normal'])
@@ -341,9 +350,9 @@ def create_pdf(data_dict, out_file):
     Story.append(f2_text_p)
 
     
-    scorecard_btu = IMG_PATH+"scorecard_btu.png"
-    peg_xl = IMG_PATH+"peg_xl.png"
-    peg_sm = IMG_PATH+"peg_sm.png"
+    scorecard_btu = IMG_PATH+"/scorecard_btu.png"
+    peg_xl = IMG_PATH+"/peg_xl.png"
+    peg_sm = IMG_PATH+"/peg_sm.png"
     img_sc_btu = Image(scorecard_btu,width=6.17*cm,height=10.5*cm)
     total_energy_usage_base =data_dict['total_energy_usage_base']    
     total_energy_usage_base_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(total_energy_usage_base),styles['Title'])
@@ -385,6 +394,7 @@ def create_pdf(data_dict, out_file):
     # Story.append(Spacer(1,30))
     # Story.append(f2_text3_p)
     # Story.append(Spacer(1,4))
+
     propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(round(data_dict['propane_percentage']))
     fuel_oil_entry ='' if ('fuel_percentage' not in data_dict)  else '{}% Fuel Oil'.format(round(data_dict['fuel_percentage'])) 
     electric_percentage = data_dict['electric_percentage']
@@ -393,6 +403,7 @@ def create_pdf(data_dict, out_file):
             Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal'])
             ]]
+
 
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
     tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
@@ -434,10 +445,10 @@ def create_pdf(data_dict, out_file):
     co2_production_improved = data_dict['co2_production_improved']
     co2_production_improved_p = Paragraph('<font name=Helvetica-Bold  color=#666666>{}</font>'.format(co2_production_improved),styles['Normal'])
     co2_improved_text_p = Paragraph('<font name=Helvetica size=7.5 color=#4c4f52 >Footprint after recommended improvements</font>',styles['Normal'])
-    scorecard_ton =IMG_PATH+'scorecard_ton.png'
+    scorecard_ton =IMG_PATH+'/scorecard_ton.png'
 #    img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=10*cm)
     img_sc_ton = Image(scorecard_ton,width=5.5*cm,height=8.525*cm)
-    peg_m_f3 = IMG_PATH+"peg_m.png"
+    peg_m_f3 = IMG_PATH+"/peg_m.png"
  
     peg_m_p = Paragraph('<font name=Helvetica-Bold><img valign="-27" src="{}" width="100" height="20"/></font>'.format(peg_m_f3),styles['Normal'])
     peg_m_p1 = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="15"/></font>'.format(peg_m_f3),styles['Normal'])
@@ -471,10 +482,12 @@ def create_pdf(data_dict, out_file):
     f3_text3_p = Paragraph('<font size=8 color=#736d5e>Estimated average carbon footprint (tons/yr):</font>',styles['Centre'])
     # Story.append(f3_text3_p)
     # Story.append(Spacer(1,4))
+
     fuel_oil_percentage_f3 = data_dict['fuel_percentage_co2']
     electricity_percentage_f3 = data_dict['electric_percentage_co2']
     data_tbl2_f3=[[Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(round(fuel_oil_percentage_f3))),styles['Normal']),
     Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(round(electricity_percentage_f3))),styles['Normal'])]]
+
 
     tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
     tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(1,0),0.5*cm),
@@ -547,9 +560,9 @@ def create_pdf(data_dict, out_file):
     Story.append(foot_text_p1)
     # Story.append(foot_text_p2)
     footer_address_p = Paragraph('''<font size=8 color=#736d5e>Home Owner |{},{},{},{},{}</font>'''.format(address_line_1,address_line_2,city,state,postal_code),styles['Normal'])
-    logo_footer = IMG_PATH+"logo.jpg"
+    logo_footer = IMG_PATH+"/logo.jpg"
     img_logo_footer = Image(logo,cm,cm)
-    footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
+    footer_text_img_p = Paragraph('''<font size=9 color=#736d5e >Brought to you by</font> <img valign="middle" src="{}/logo.jpg" width="30" height="20"/>'''.format(IMG_PATH),styles['Normal'])
 
     footer_data = [[footer_address_p,'','','','',footer_text_img_p]]
     footer_table = Table(footer_data)
@@ -579,7 +592,7 @@ def create_pdf(data_dict, out_file):
     ## SETTING UP FRAME HEADER FOR PAGE 2
     Story.append(NextPageTemplate('secondPage'))
     page2_header_frame = Frame(document.leftMargin,document.height-0.05*document.height,document.width,0.11*document.height, showBoundary=0)
-    page2_head_text_img_p = Paragraph('''<img valign="middle" src="{}logo.jpg" width="60" height="40"/><font size=28 color=black > More Information</font> '''.format(IMG_PATH),styles['Normal'])
+    page2_head_text_img_p = Paragraph('''<img valign="middle" src="{}/logo.jpg" width="60" height="40"/><font size=28 color=black > More Information</font> '''.format(IMG_PATH),styles['Normal'])
     Story.append(page2_head_text_img_p)
     # print(document.height)
 
@@ -901,9 +914,8 @@ def create_pdf(data_dict, out_file):
 
  
     style = styles["Normal"]
-    #populate story with paragraphs
-    
-    # print(Story)
+
+    #populate story with paragraphs    
     document.build(Story)
 
 
@@ -912,11 +924,12 @@ if __name__ == '__main__':
     'year_built': 1850, 'conditioned_area': 2735, 'number_of_bedrooms': 3, 'primary_heating_fuel_type': 'Fuel Oil',
     'green_assessment_property_date': 'N/A', 'name': 'Dave Saves', 'total_energy_usage_base': 205, 'total_energy_usage_improved': 122, 
     'electric_energy_usage_base': 3613, 'fuel_energy_usage_base': 1324,
-    'total_energy_cost_base': 4343, 'total_energy_cost_improved': 2798, 
+
     'propane_percentage':4, 'fuel_percentage': 90, 'electric_percentage': 6,
     'co2_production_base': 16.4, 'co2_production_improved': 10.2,
     'fuel_percentage_co2': 93, 'electric_percentage_co2': 7.0,
     'incentive_1': 11435,'electricity':0,
+
 }
     out_file = 'MAScorecard.pdf'
     create_pdf(data_dict, out_file) 
