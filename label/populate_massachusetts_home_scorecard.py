@@ -60,9 +60,10 @@ def format_numbers(amount):
     if amount is None:
         return ''
 
+    temp =round(amount%1000,1)
     if amount<1000:
         return str(amount)
-    return str(int(amount//1000))+","+str(round(amount%1000,1))
+    return str(int(amount//1000))+","+(('0'+str(round(amount%1000,1))) if temp<100 else str(round(amount%1000,1)))
 
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
@@ -95,10 +96,10 @@ def create_pdf(data_dict, out_file):
                 'electric_percentage': 100.0, 'electric_percentage_co2': 100.0}
 
     #adding values for testing
-    if 'hes' not in data_dict:
-        data_dict['hes']=6
-    if 'hes_improved' not in data_dict:
-        data_dict['hes_improved']=9
+    # if 'hes' not in data_dict:
+    #     data_dict['hes']=6
+    # if 'hes_improved' not in data_dict:
+    #     data_dict['hes_improved']=9
 
     # print(data_dict)
     Story = []
@@ -384,12 +385,14 @@ def create_pdf(data_dict, out_file):
     # Story.append(Spacer(1,30))
     # Story.append(f2_text3_p)
     # Story.append(Spacer(1,4))
-    propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(data_dict['propane_percentage'])
-    fuel_oil_entry ='' if ('fuel_oil_percentage' not in data_dict)  else '{}% Fuel Oil'.format(data_dict['fuel_oil_percentage']) 
+    propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(round(data_dict['propane_percentage']))
+    fuel_oil_entry ='' if ('fuel_percentage' not in data_dict)  else '{}% Fuel Oil'.format(round(data_dict['fuel_percentage'])) 
     electric_percentage = data_dict['electric_percentage']
-    data_f2=[[Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(electric_percentage)),styles['Normal'])]]
+    data_f2=[[
+            Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(round(electric_percentage))),styles['Normal']),
+            Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
+            Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal'])
+            ]]
 
     tbl1_frame_2 = Table(data_f2,rowHeights=cm)
     tblStyle1_frame_2 = TableStyle([('LEFTPADDING',(0,0),(-1,-1),cm),
@@ -470,8 +473,8 @@ def create_pdf(data_dict, out_file):
     # Story.append(Spacer(1,4))
     fuel_oil_percentage_f3 = data_dict['fuel_percentage_co2']
     electricity_percentage_f3 = data_dict['electric_percentage_co2']
-    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(fuel_oil_percentage_f3)),styles['Normal']),
-    Paragraph('<font name=Helvetica size=8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(electricity_percentage_f3)),styles['Normal'])]]
+    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(round(fuel_oil_percentage_f3))),styles['Normal']),
+    Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(round(electricity_percentage_f3))),styles['Normal'])]]
 
     tbl2_frame_3 = Table(data_tbl2_f3,rowHeights=cm)
     tblStyle2_frame_3 = TableStyle([('LEFTPADDING',(0,0),(1,0),0.5*cm),
@@ -664,7 +667,7 @@ def create_pdf(data_dict, out_file):
     page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4e4e52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
                                         'for an estimated incentive of</font>',styles['Normal'])
     
-    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=12><strong>$ {}</strong></font>'.format(str(incentive_1/1000)+","+str(incentive_1%1000)),styles['Normal'])
+    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=12><strong>$ {}</strong></font>'.format(format_numbers(incentive_1)),styles['Normal'])
     data = [[page2_column_2_text_p,'','','',incentive_1_p]]
     page2_tbl_col3 = Table(data)
     page2_tbl_col3_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),
