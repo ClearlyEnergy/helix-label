@@ -62,7 +62,7 @@ def format_numbers(amount):
 
     if amount<1000:
         return str(amount)
-    return str(amount/1000)+","+str(amount%1000)
+    return str(int(amount//1000))+","+str(round(amount%1000,1))
 
 def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
@@ -410,7 +410,7 @@ def create_pdf(data_dict, out_file):
     Story.append(FrameBreak)
     frameWidth_3 = document.width/3
     frameHeight_3 = document.height-header_frame.height+(0.25*inch)
-    column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=0)
+    column_3 = Frame(document.leftMargin+frameWidth_3+frameWidth_3+inch,document.bottomMargin,frameWidth_3-inch,frameHeight_3, showBoundary=1)
     f3_header1 = "<font name=Helvetica-Bold color=#666666 size=11>HOME CARBON FOOTPRINT</font>"
     f3_header1_p = Paragraph(f3_header1,styles['Heading2'])
     Story.append(f3_header1_p)
@@ -436,7 +436,10 @@ def create_pdf(data_dict, out_file):
     peg_m_p = Paragraph('<font name=Helvetica-Bold><img valign="-27" src="{}" width="100" height="20"/></font>'.format(peg_m_f3),styles['Normal'])
     peg_m_p1 = Paragraph('<font name=Helvetica-Bold><img valign="12" src="{}" width="60" height="15"/></font>'.format(peg_m_f3),styles['Normal'])
 
-    data_tbl1_f3 = [[img_sc_ton,peg_m_p,co2_production_base_p,co2_text_p],['','','',''],['',peg_m_p1,co2_production_improved_p,co2_improved_text_p ]]
+    data_tbl1_f3 = [['',peg_m_p,co2_production_base_p,co2_text_p],
+                    ['','','',''],
+                    ['',peg_m_p1,co2_production_improved_p,co2_improved_text_p ]]
+
     peg_m_pos1 = -12 + (0.9 if co2_production_base>20 else (0 if co2_production_base <0 else ((co2_production_base/20.0)*12.9)))
     peg_m_pos = -2.2 + (10.5 if co2_production_improved>20 else (0 if co2_production_improved <0 else ((co2_production_improved/20.0)*12.7)))
 
@@ -904,10 +907,10 @@ if __name__ == '__main__':
     'green_assessment_property_date': 'N/A', 'name': 'Dave Saves', 'total_energy_usage_base': 205, 'total_energy_usage_improved': 122, 
     'electric_energy_usage_base': 3613, 'fuel_energy_usage_base': 1324,
     'total_energy_cost_base': 4343, 'total_energy_cost_improved': 2798, 
-    'propane_percentage':4, 'fuel_oil_percentage': 90, 'electricity_percentage': 6,
+    'propane_percentage':4, 'fuel_percentage': 90, 'electric_percentage': 6,
     'co2_production_base': 16.4, 'co2_production_improved': 10.2,
-    'fuel_oil_percentage_co2': 93, 'electric_percentage_co2': 7.0,
-    'incentive_1': 11435
+    'fuel_percentage_co2': 93, 'electric_percentage_co2': 7.0,
+    'incentive_1': 11435,'electricity':0,
 }
     out_file = 'MAScorecard.pdf'
     create_pdf(data_dict, out_file) 
