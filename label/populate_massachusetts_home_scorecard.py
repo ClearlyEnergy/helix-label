@@ -71,33 +71,33 @@ def create_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
 
 
-    data_dict = {'address_line_1': '14 Tanglewood Dr', 
-            'address_line_2': None,
-             'city': 'Shrewsbury', 
-             'state': 'MA', 
-             'postal_code': '1545', 
-             'fuel_oil': 2.57, 
-             'electricity': 0.19,
-              'natural_gas': 1.23, 'wood': 0, 'pellets': 0,
-               'propane': 2.98, 'primary_heating_fuel_type': None,
-                'fuel_energy_cost_base': None, 'fuel_energy_cost_saved': 0,
-                 'fuel_energy_cost_improved': None, 'fuel_energy_usage_saved': None, 
-                 'fuel_energy_usage_improved': None, 'fuel_energy_usage_base': None, 
-                 'total_energy_cost_improved': 3247, 'total_energy_cost_base': 4748,
-                'total_energy_cost_saved': 1501, 'total_energy_usage_improved': 58,
-                'total_energy_usage_saved': 27, 'total_energy_usage_base': 85, 
-                'electric_energy_usage_improved': 17031.3, 
-                'electric_energy_usage_saved': 7874.7, 'electric_energy_usage_base': 24906.1,
-                'electric_energy_cost_improved': 3247, 'electric_energy_cost_saved': 1501, 
-                'electric_energy_cost_base': 4748, 'co2_production_improved': 10.4,
-                'co2_production_base': 15.2, 'co2_production_saved': 5, 
-                'incentive_1': 2090, 'conditioned_area': 1920, 'year_built': 1972, 
-                'number_of_bedrooms': 3, 'name': 'Louise Reardon', 
-                'green_assessment_property_date': '2018-11-29 00:00:00',
-                'fuel_percentage': 0.0, 'fuel_percentage_co2': 0.0,
-                'electric_percentage': 100.0, 'electric_percentage_co2': 100.0}
+#     data_dict = {'address_line_1': '14 Tanglewood Dr', 
+#             'address_line_2': None,
+#              'city': 'Shrewsbury', 
+#              'state': 'MA', 
+#              'postal_code': '1545', 
+#              'fuel_oil': 2.57, 
+#              'electricity': 0.19,
+#               'natural_gas': 1.23, 'wood': 0, 'pellets': 0,
+#                'propane': 2.98, 'primary_heating_fuel_type': None,
+#                 'fuel_energy_cost_base': None, 'fuel_energy_cost_saved': 0,
+#                  'fuel_energy_cost_improved': None, 'fuel_energy_usage_saved': None, 
+#                  'fuel_energy_usage_improved': None, 'fuel_energy_usage_base': None, 
+#                  'total_energy_cost_improved': 3247, 'total_energy_cost_base': 4748,
+#                 'total_energy_cost_saved': 1501, 'total_energy_usage_improved': 58,
+#                 'total_energy_usage_saved': 27, 'total_energy_usage_base': 85, 
+#                 'electric_energy_usage_improved': 17031.3, 
+#                 'electric_energy_usage_saved': 7874.7, 'electric_energy_usage_base': 24906.1,
+#                 'electric_energy_cost_improved': 3247, 'electric_energy_cost_saved': 1501, 
+#                 'electric_energy_cost_base': 4748, 'co2_production_improved': 10.4,
+#                 'co2_production_base': 15.2, 'co2_production_saved': 5, 
+#                 'incentive_1': 2090, 'conditioned_area': 1920, 'year_built': 1972, 
+#                 'number_of_bedrooms': 3, 'name': 'Louise Reardon', 
+#                 'green_assessment_property_date': '2018-11-29 00:00:00',
+#                 'fuel_percentage': 0.0, 'fuel_percentage_co2': 0.0,
+#                 'electric_percentage': 100.0, 'electric_percentage_co2': 100.0}
 
-    #adding values for testing
+    # adding values for testing
     # if 'hes' not in data_dict:
     #     data_dict['hes']=6
     # if 'hes_improved' not in data_dict:
@@ -130,8 +130,12 @@ def create_pdf(data_dict, out_file):
                                 ('BACKGROUND',(0,1),(0,1),colors.HexColor('#666666')),
                                 ('RIGHTPADDING',(0,0),(0,0),0.5),
                                 ('INNERGRID', (0,0), (-1,-1), 0.1, colors.gray),
-                                ('BOX', (0,0), (-1,-1), 0.1, colors.HexColor('#666666'))])
-
+                                # ('BOX', (0,0), (-1,-1), 0.1, colors.HexColor('#666666')),
+                                ('LINEABOVE', (0, 0), (1, 0),1.3, colors.HexColor('#666666')),
+                                ('LINEAFTER', (-1,0 ), (-1, -1), 1.3,colors.HexColor('#666666')),
+                                 ('LINEBEFORE', (0, 0), (0, 1), 1.3, colors.HexColor('#666666')),
+                                ])
+            
     sm_table.setStyle(sm_tableStyle)
     data = [[img_logo,[hp1,hp2],'','','','','',sm_table]]
     tblStyle = TableStyle([('LEFTPADDING',(1,0),(1,0),0),
@@ -159,7 +163,7 @@ def create_pdf(data_dict, out_file):
     f1_text1_p = Paragraph(f1_text1,styles['Normal'])
     
     address_line_1 = data_dict['address_line_1']
-    address_line_2 = data_dict['address_line_2']
+    address_line_2 = '' if data_dict['address_line_2'] is None else data_dict['address_line_2']
     city=data_dict['city']
     state = data_dict['state']
     postal_code= data_dict['postal_code']
@@ -397,7 +401,7 @@ def create_pdf(data_dict, out_file):
 
     propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(round(data_dict['propane_percentage']))
     fuel_oil_entry ='' if ('fuel_percentage' not in data_dict)  else '{}% Fuel Oil'.format(round(data_dict['fuel_percentage'])) 
-    electric_percentage = data_dict['electric_percentage']
+    electric_percentage = 0 if 'electric_percentage' not in data_dict else data_dict['electric_percentage']
     data_f2=[[
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(round(electric_percentage))),styles['Normal']),
             Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
@@ -483,8 +487,8 @@ def create_pdf(data_dict, out_file):
     # Story.append(f3_text3_p)
     # Story.append(Spacer(1,4))
 
-    fuel_oil_percentage_f3 = data_dict['fuel_percentage_co2']
-    electricity_percentage_f3 = data_dict['electric_percentage_co2']
+    fuel_oil_percentage_f3 = 0 if 'fuel_percentage' not in data_dict else data_dict['fuel_percentage_co2']
+    electricity_percentage_f3 =0 if 'electric_percentage_co2'not in data_dict else data_dict['electric_percentage_co2']
     data_tbl2_f3=[[Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(round(fuel_oil_percentage_f3))),styles['Normal']),
     Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(round(electricity_percentage_f3))),styles['Normal'])]]
 
@@ -867,8 +871,8 @@ def create_pdf(data_dict, out_file):
         Story.append(page2_column_2_text_p4)
 
 #setting HES background image
-    hes_background =  IMG_PATH+"hes_background.png"
-    hes_box_path = IMG_PATH+'hes_box.png'
+    hes_background =  IMG_PATH+"/hes_background.png"
+    hes_box_path = IMG_PATH+'/hes_box.png'
     if 'hes' in data_dict:
         hes_image = Image(hes_background,page2_column_2.width*0.95,6*cm)#,hAlign='LEFT')
         hes_box = Image(hes_box_path,1.5*cm,1.5*cm)
@@ -931,5 +935,23 @@ if __name__ == '__main__':
     'incentive_1': 11435,'electricity':0,
 
 }
+    data_dict ={'address_line_1': '34 Somerset Rd', 'address_line_2': None,
+                 'city': 'Brookline', 'state': 'MA', 'postal_code': '2445', 
+                 'fuel_oil': 2.57, 'electricity': 0.19, 'natural_gas': 1.23,
+                  'wood': 0, 'pellets': 0, 'propane': 2.98, 
+                  'primary_heating_fuel_type': 'Natural Gas', 'fuel_energy_cost_base': 2030, 
+                  'fuel_energy_cost_saved': 512, 'fuel_energy_cost_improved': 1518,
+                   'fuel_energy_usage_saved': 418, 'fuel_energy_usage_improved': 1238, 
+                   'fuel_energy_usage_base': 1655, 'total_energy_cost_improved': 2552,
+                    'total_energy_cost_base': 3066, 'total_energy_cost_saved': 515, 
+                    'total_energy_usage_improved': 142, 'total_energy_usage_saved': 42, 
+                    'total_energy_usage_base': 184, 'electric_energy_usage_improved': 5423.4, 
+                    'electric_energy_usage_saved': 12.3, 'electric_energy_usage_base': 5435.6,
+                     'electric_energy_cost_improved': 1034, 'electric_energy_cost_saved': 2, 
+                     'electric_energy_cost_base': 1036, 'co2_production_improved': 9.9, 
+                     'co2_production_base': 12.1, 'co2_production_saved': 2,
+                      'incentive_1': 5625, 'conditioned_area': 2545, 'year_built': 1925, 
+                      'number_of_bedrooms': 5, 'name': 'Paul Eldrenkamp', 
+                      'green_assessment_property_date': '2018-11-07 00:00:00'}
     out_file = 'MAScorecard.pdf'
     create_pdf(data_dict, out_file) 
