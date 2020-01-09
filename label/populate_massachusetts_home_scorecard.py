@@ -93,7 +93,7 @@ def create_pdf(data_dict, out_file):
 #                 'co2_production_base': 15.2, 'co2_production_saved': 5, 
 #                 'incentive_1': 2090, 'conditioned_area': 1920, 'year_built': 1972, 
 #                 'number_of_bedrooms': 3, 'name': 'Louise Reardon', 
-#                 'green_assessment_property_date': '2018-11-29 00:00:00',
+#                 'green_assessment_property_date': '2018-11-29',
 #                 'fuel_percentage': 0.0, 'fuel_percentage_co2': 0.0,
 #                 'electric_percentage': 100.0, 'electric_percentage_co2': 100.0}
 
@@ -196,7 +196,7 @@ def create_pdf(data_dict, out_file):
     primary_heating_fuel_type = data_dict['primary_heating_fuel_type']
     primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
 
-    assessment_date = datetime.date() if data_dict['green_assessment_property_date'] is None else datetime.strptime(data_dict['green_assessment_property_date'],'%Y-%m-%d %H:%M:%S').date()
+    assessment_date = datetime.date() if data_dict['green_assessment_property_date'] is None else datetime.strptime(data_dict['green_assessment_property_date'],'%Y-%m-%d').date()
     
     assessment_date_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
     assessment_date_header_p = Paragraph('<font color=#4e4e52 size=8>Assessment Date</font>',styles['f1_leading'])
@@ -223,7 +223,7 @@ def create_pdf(data_dict, out_file):
 
     electric_energy_usage_base_header_p =Paragraph('<font color=#4e4e52 size=8> Electricity </font>',styles['f1_leading'])
     electric_energy_usage_base = data_dict['electric_energy_usage_base']
-    electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(electric_energy_usage_base))),styles['f1_leading'])
+    electric_energy_usage_base_p =Paragraph('<font name=Helvetica-Bold color=#474646>{} kWh</font>'.format(str(format_numbers(round(electric_energy_usage_base)))),styles['f1_leading'])
 
 
     fuel_energy_base_header_p = Paragraph('<font color=#4e4e52 size=8> {} </font>'.format('' if data_dict['primary_heating_fuel_type'] is None else data_dict['primary_heating_fuel_type']),styles['f1_leading'])
@@ -331,11 +331,11 @@ def create_pdf(data_dict, out_file):
     styles.add(ParagraphStyle(name='CENTERED',alignment=TA_CENTER))
 #propane, electricty, oil, pellet, wood, natural_gas,
     electricity = 'Electricity: $ {}/kWh'.format( data_dict['electricity'])
-    propane  ='' if 'propane' not in data_dict else 'Propane: $ {}/gallon'.format(data_dict['propane'])
-    oil  = '' if 'fuel_oil' not in data_dict else 'Oil: $ {}/gallon'.format(data_dict['fuel_oil'])
-    pellets = '' if 'pellets' not in data_dict else 'pellets: $ {}/ton'.format(data_dict['pellets'])
-    wood = '' if 'wood' not in data_dict else 'wood: $ {}/cord'.format(data_dict['wood'])
-    gas = '' if 'natural_gas' not in data_dict else 'gas: $ {}/mmbtu'.format(data_dict['natural_gas'])
+    propane  ='' if data_dict['primary_heating_fuel_type'] != 'Propane' else 'Propane: $ {}/gallon'.format(data_dict['propane'])
+    oil  = '' if data_dict['primary_heating_fuel_type'] != 'Fuel Oil' else 'Oil: $ {}/gallon'.format(data_dict['fuel_oil'])
+    pellets = '' if data_dict['primary_heating_fuel_type'] != 'Pellets' else 'pellets: $ {}/ton'.format(data_dict['pellets'])
+    wood = '' if data_dict['primary_heating_fuel_type'] != 'Wood' else 'wood: $ {}/cord'.format(data_dict['wood'])
+    gas = '' if data_dict['natural_gas'] != 'Natural Gas' else 'gas: $ {}/mmbtu'.format(data_dict['natural_gas'])
 
     last_paragraph = Paragraph('<font color=#4e4e52 size=8>{} {} {} {} {} {}</font>'.format(electricity,propane,oil,gas,wood,pellets),styles['CENTERED'])
     Story.append(Spacer(1,4))
@@ -420,7 +420,7 @@ def create_pdf(data_dict, out_file):
                                     ('ALIGN',(0,0),(-1,-1),'CENTER')])
 
     tbl1_frame_2.setStyle(tblStyle1_frame_2)
-    if 'hes' not in data_dict:
+    if 'base_score' not in data_dict:
         Story.append(Spacer(1,30))
         Story.append(f2_text3_p)
         Story.append(Spacer(1,4))
@@ -505,7 +505,7 @@ def create_pdf(data_dict, out_file):
                                     ])
 
     tbl2_frame_3.setStyle(tblStyle2_frame_3)
-    if 'hes' not in data_dict: 
+    if 'base_score' not in data_dict: 
         Story.append(Spacer(1,40))
         Story.append(Spacer(1,9)) 
         Story.append(f3_text3_p)
@@ -513,11 +513,11 @@ def create_pdf(data_dict, out_file):
         Story.append(tbl2_frame_3)
 
     # THIS IS FOR COLUMN 3 IF HES IS IN THE DATA DICTIONERY
-    if 'hes' in data_dict:
+    if 'base_score' in data_dict:
         col_head = lambda st: Paragraph('<font name=Helvetica size=8  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
         row_data = lambda st: Paragraph('<font name=Helvetica size=10  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
     
-        data1=[[col_head('SCORE TODAY'),col_head('IMPROVED')],[row_data('{} out of 10'.format(data_dict['hes'])),row_data('{} out of 10'.format(data_dict['hes_improved']))]]
+        data1=[[col_head('SCORE TODAY'),col_head('IMPROVED')],[row_data('{} out of 10'.format(data_dict['base_score'])),row_data('{} out of 10'.format(data_dict['improved_score']))]]
         inner_table = Table(data1)
         inner_table_style = TableStyle([
                                         ('BACKGROUND',(0,0),(0,1),colors.HexColor('#666666')),
@@ -549,7 +549,7 @@ def create_pdf(data_dict, out_file):
     #  FOOTER FRAME
     Story.append(FrameBreak)
     footer_width = document.width
-    if 'hes' in data_dict:
+    if 'base_score' in data_dict:
         footer_width = document.width-frameWidth_3
   
     footer_frame = Frame(document.leftMargin,document.height-0.98*document.height,footer_width,0.13*document.height, showBoundary=0)
@@ -680,12 +680,13 @@ def create_pdf(data_dict, out_file):
     page2_title_4_p= Paragraph("<font name=helvetica color=#4c4f52 size=12>CONTRACTOR INCENTIVE</font>",styles['line-height'])
 
   
-    incentive_1 = data_dict['incentive_1']
-    page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4e4e52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
-                                        'for an estimated incentive of</font>',styles['Normal'])
+#    incentive_1 = data_dict['incentive_1']
+#    page2_column_2_text_p = Paragraph('<font name=helvetica  color=#4e4e52 size=9>Based on the current list of recommendations, this project <b>may qualify </b>'+
+#                                        'for an estimated incentive of</font>',styles['Normal'])
     
-    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=12><strong>$ {}</strong></font>'.format(format_numbers(incentive_1)),styles['Normal'])
-    data = [[page2_column_2_text_p,'','','',incentive_1_p]]
+#    incentive_1_p = Paragraph('<font name=helvetica color=#4c4f52 size=12><strong>$ {}</strong></font>'.format(format_numbers(incentive_1)),styles['Normal'])
+#    data = [[page2_column_2_text_p,'','','',incentive_1_p]]
+#    data = [[page2_column_2_text_p,'','','','']]
     page2_tbl_col3 = Table(data)
     page2_tbl_col3_style = TableStyle([('LEFTPADDING',(0,0),(0,0),0),
                                         ('SPAN',(0,0),(3,0)),
@@ -853,7 +854,8 @@ def create_pdf(data_dict, out_file):
 
     tbl4.setStyle(tbl4_styles)
 #conditionally rendering column2 on page2
-    if 'hes' not in data_dict:
+    show_p2_col2 = False
+    if ('base_score' not in data_dict) and show_p2_col2:
         Story.append(page2_title_4_p)
         Story.append(Spacer(1,2))
         Story.append(page2_tbl_col3)
@@ -873,16 +875,16 @@ def create_pdf(data_dict, out_file):
 #setting HES background image
     hes_background =  IMG_PATH+"/hes_background.png"
     hes_box_path = IMG_PATH+'/hes_box.png'
-    if 'hes' in data_dict:
+    if 'base_score' in data_dict:
         hes_image = Image(hes_background,page2_column_2.width*0.95,6*cm)#,hAlign='LEFT')
         hes_box = Image(hes_box_path,1.5*cm,1.5*cm)
 
        
-        para = Paragraph('<font size=22 color=#ffffff><b>{}</b></font>'.format(data_dict['hes_improved']),style=styles['Normal'])
+        para = Paragraph('<font size=22 color=#ffffff><b>{}</b></font>'.format(data_dict['improved_score']),style=styles['Normal'])
         hes_table_data = [[hes_image,''],[para,hes_box]]
         hes_table = Table(hes_table_data,rowHeights=5*cm,colWidths=3*cm)
-        hex_box_pos = -2.1+((data_dict['hes_improved']-1)/10.0)*5.8
-        const = -3.5 if data_dict['hes_improved']<10 else -3.9
+        hex_box_pos = -2.1+((data_dict['improved_score']-1)/10.0)*5.8
+        const = -3.5 if data_dict['improved_score']<10 else -3.9
         hes_table_style = ([
                             ('SPAN',(0,0),(1,0)),
                             ('ALIGN',(0,0),(0,0),'CENTER'),
@@ -939,7 +941,7 @@ if __name__ == '__main__':
                  'city': 'Brookline', 'state': 'MA', 'postal_code': '2445', 
                  'fuel_oil': 2.57, 'electricity': 0.19, 'natural_gas': 1.23,
                   'wood': 0, 'pellets': 0, 'propane': 2.98, 
-                  'primary_heating_fuel_type': 'Natural Gas', 'fuel_energy_cost_base': 2030, 
+                  'primary_heating_fuel_type': 'Fuel Oil', 'fuel_energy_cost_base': 2030, 
                   'fuel_energy_cost_saved': 512, 'fuel_energy_cost_improved': 1518,
                    'fuel_energy_usage_saved': 418, 'fuel_energy_usage_improved': 1238, 
                    'fuel_energy_usage_base': 1655, 'total_energy_cost_improved': 2552,
@@ -952,6 +954,7 @@ if __name__ == '__main__':
                      'co2_production_base': 12.1, 'co2_production_saved': 2,
                       'incentive_1': 5625, 'conditioned_area': 2545, 'year_built': 1925, 
                       'number_of_bedrooms': 5, 'name': 'Paul Eldrenkamp', 
-                      'green_assessment_property_date': '2018-11-07 00:00:00'}
+                      'green_assessment_property_date': '2018-11-07', 
+                  'base_score': 4, 'improved_score': 7}
     out_file = 'MAScorecard.pdf'
     create_pdf(data_dict, out_file) 

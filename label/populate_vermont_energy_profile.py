@@ -152,12 +152,12 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
     text_cost_1 = Paragraph("THIS HOME'S ANNUAL EXPECTED ENERGY COST", p1_1)
     text_cost_2 = Paragraph('$'+"{:,}".format(int(data_dict['score'])), p1_2)
-#    text_cost_3 = Paragraph('*Third-Party Verified', p1_5)
+    text_cost_3 = Paragraph(data_dict['rating'], p1_5)
 
     text_use_1 = Paragraph(str(int(data_dict['cons_mmbtu']))+' MMBtu', p1_3)
     text_use_2 = Paragraph(str(int(data_dict['cons_mmbtu_max'])), p1_4)
 
-    header_table = Table([['','','','',''],['', im, '',[text_cost_1, text_cost_2], [im2, text_use_1, text_use_2], ''],['','','','','']],
+    header_table = Table([['','','','',''],['', im, '',[text_cost_1, text_cost_2, text_cost_3], [im2, text_use_1, text_use_2], ''],['','','','','']],
         colWidths=[0.3*inch, 1.63 * inch, 0.1*inch, 1.93 * inch, 3.67 * inch,0.1*inch],
         rowHeights=[0.1*inch, 1.65 * inch, 0.1*inch], spaceBefore=0, spaceAfter=20)
     header_table.setStyle(TableStyle([
@@ -236,7 +236,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         if data_dict[fuel+'_score'] != 0:
             tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[num]+"</font> " + FUELLABEL[num], p14), Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num], p16), Paragraph('{0:.2f}'.format(data_dict['rate_'+fuel]) + ' $/'+FUELUNIT[num], p16)]])
 
-    if data_dict['solar_score'] > 0:
+    if data_dict['solar_score'] != 0:
         tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", p14), Paragraph('$'+"{:,}".format(int(data_dict['solar_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_solar'])) + ' kwh', p16)]])
         
     cost_subTable = Table(tct, colWidths = [1.93*inch])
@@ -248,7 +248,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
             ('INNERGRID', (-1,-2), (-1, -1), 1, CUSTOM_DGREEN),
          ]))    
     pie = pie_chart(data_dict)
-    if data_dict['hers_score'] or data_dict['hes_score']:
+    if 'hers_score' in data_dict or 'hes_score' in data_dict:
         if data_dict['hers_score']:
             t_source = Paragraph("Source: RESNET HERS Index. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
         if data_dict['hes_score']:
@@ -278,7 +278,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     
     tc3 = Paragraph('TAKE ACTION!', p9)
     tc4 = Paragraph("The following actions can help you save money on your energy costs for years to come", p10b)
-    if data_dict["evt"] or data_dict["estar_wh"] or data_dict["hers_score"] or data_dict["hes_score"]:
+    if ('evt' in data_dict and data_dict["evt"]) or ('estar_wh' in data_dict and data_dict["estar_wh"]) or 'hers_score' in data_dict or 'hes' in data_dict:
         tb = [Paragraph("Contact a certified energy professional to learn how to make your home more efficient and comfortable and what financial incentives are available.", p11, bulletText=unchecked.encode('UTF8')), 
         Paragraph('Turn it off. ALL the way off. When not in use, power down all electronics completely to avoid “phantom electricity loads" or invest in an advanced power strip to do it for you.', p12, bulletText=unchecked.encode('UTF8')), 
         Paragraph("Vacuum coils, vents, and ducts. Remove the dust buildup collecting on your refrigerator and heating systems by vacuuming the coils and condenser unit behind and underneath the refrigerator at least once a year.  If you have a forced-air system, you can vacuum the vents and ducts and change air filters.", p14, bulletText=unchecked.encode('UTF8'))]
@@ -297,14 +297,17 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     if data_dict['has_audit']:
         t_achieve.append([Paragraph("This home has gone through an Efficiency Excellence Network audit", p12b, bulletText=checked.encode('UTF8'))])
 
-    if data_dict['evt'] or data_dict['estar_wh'] or data_dict['hers_score'] or data_dict['hes_score']:
-        if data_dict['evt']:
+    if data_dict['has_solar']:
+        t_achieve.append([Paragraph("This home has " + str(data_dict['capacity']) + 'kw of photovoltaic solar on site', p12b, bulletText=checked.encode('UTF8'))])
+
+    if ('evt' in data_dict and data_dict['evt']) or ('estar_wh' in data_dict and data_dict['estar_wh']) or 'hers_score' in data_dict or 'hes_score' in data_dict:
+        if 'evt' in data_dict and data_dict['evt']:
             t_achieve.append(Paragraph(data_dict['evt'], p12b, bulletText=checked.encode('UTF8')))
-        if data_dict['estar_wh']:
+        if 'estar_wh' in data_dict and data_dict['estar_wh']:
             t_achieve.append(Paragraph('EPA ENERGYSTAR® Home', p12b, bulletText=checked.encode('UTF8')))
-        if data_dict['hers_score']:
+        if 'hers_score' in data_dict:
             t_achieve.append(Paragraph('HERS Index Score: ' + str(data_dict['hers_score']), p12b, bulletText=checked.encode('UTF8')))
-        if data_dict['hes_score']:
+        if 'hes_score' in data_dict:
             t_achieve.append(Paragraph('Home Energy Score: ' + str(data_dict['hes_score']) + '/10', p12b, bulletText=checked.encode('UTF8')))
         if len(t_achieve) > 2:
             t_achieve = [t_achieve[0:2], t_achieve[2:]]
@@ -549,15 +552,16 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 ### BUILD PAGE
     doc.build(Story, onFirstPage=myFirstPage, onLaterPages=myLaterPages)
 
-
+# Run with:  python3 -m label.populate_massachusetts_home_scorecard
 if __name__ == '__main__':
     data_dict = {'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
         'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 4656.0, 'cons_mmbtu': 192.035812, 'cons_mmbtu_max': 491.99764, 'cons_mmbtu_min': 90.566712,
-        'heatingfuel': 'Heating Oil', 'ng_score': 0.0, 'elec_score': 1251.0, 'ho_score': 3405.0, 'propane_score': 0.0, 'wood_cord_score': 0, 'wood_pellet_score': 0, 'solar_score': 872.0,
+        'heatingfuel': 'Heating Oil', 'ng_score': 0.0, 'elec_score': 1251.0, 'ho_score': 3405.0, 'propane_score': 0.0, 'wood_cord_score': 0, 'wood_pellet_score': 0, 'solar_score': -872.0,
         'cons_elec': 12129.0,'cons_ng': 0.0, 'cons_ho': 1213.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 164.0, 'cons_solar': -4978.0,
         'rate_ho': 2.807,  'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
-        'evt': None, 'hers_score':None, 'hes_score':None, 'estar_wh': False, 'author_name': 'John Doe', 'heater_estar': True,
-        'water_estar': True,'ac_estar': False,'fridge_estar': False,'washer_estar': False,'dishwasher_estar': False, 'has_audit': True, 'auditor': 'Joe'}
+        'evt': None, 'hers_score': 55, 'hes_score':None, 'estar_wh': False, 'author_name': 'John Doe', 'heater_estar': True,
+        'water_estar': True,'ac_estar': False,'fridge_estar': False,'washer_estar': False,'dishwasher_estar': False, 'has_audit': True, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 
+        'rating': 'Homeowner Verified'}
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
     
