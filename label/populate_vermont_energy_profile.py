@@ -248,12 +248,14 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
             ('INNERGRID', (-1,-2), (-1, -1), 1, CUSTOM_DGREEN),
          ]))    
     pie = pie_chart(data_dict)
-    if 'hers_score' in data_dict or 'hes_score' in data_dict:
-        if data_dict['hers_score']:
-            t_source = Paragraph("Source: RESNET HERS Index. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
-        if data_dict['hes_score']:
-            t_source = Paragraph("Source: DOE Home Energy Score. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
-    else:
+    has_score = False
+    if 'hers_score' in data_dict and data_dict['hers_score']:
+        t_source = Paragraph("Source: RESNET HERS Index. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
+        has_score = True
+    if 'hes_score' in data_dict and data_dict['hes_score']:
+        t_source = Paragraph("Source: DOE Home Energy Score. Utility and fuel rates: Department of Energy & Energy Information Agency", p8b)
+        has_score = True
+    if not has_score:
         t_source = Paragraph("The Energy Estimate <font name='InterItalic'>powered by</font> HELIX and ClearlyEnergy. Utility and fuel rates: Department of Energy & Energy Information Agency",p8b)
     
     
