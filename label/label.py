@@ -13,14 +13,14 @@ INPUT_TEMPLATE_PATH = "./templates/"
 OUTPUT_PATH = "./tmp/"
 
 class Label:
-    def __init__(self):
+    def __init__(self, aws_key='', aws_secret=''):
         self.module_path = os.path.abspath(os.path.dirname(__file__))
         self.in_path = os.path.normpath(os.path.join(self.module_path, INPUT_TEMPLATE_PATH))
         self.out_path = os.path.normpath(os.path.join(self.module_path, OUTPUT_PATH))
         self.s3_resource = boto3.resource(
             's3',
-            aws_access_key_id=os.environ.get('S3_KEY', ''),
-            aws_secret_access_key=os.environ.get('S3_SECRET', '')
+            aws_access_key_id=os.environ.get('S3_KEY', aws_key),
+            aws_secret_access_key=os.environ.get('S3_SECRET', aws_secret)
             )
         
     def green_addendum(self, data_dict):
@@ -30,27 +30,27 @@ class Label:
         out_filename = self._write_S3(out_file)
         return out_filename
         
-    def vermont_energy_profile(self, data_dict):
+    def vermont_energy_profile(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/VTLabel.pdf'
         write_vermont_energy_profile_pdf(data_dict, out_file)
-        out_filename = self._write_S3(out_file)
+        out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
-    def massachusetts_energy_scorecard(self, data_dict):
+    def massachusetts_energy_scorecard(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/MAScorecard.pdf'
         create_pdf(data_dict, out_file)
-        out_filename = self._write_S3(out_file)
+        out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
         
-    def _write_S3(self, file_name):
-        bucket = os.environ.get('S3_BUCKET','')
+    def _write_S3(self, file_name, aws_bucket=''):
+        bucket = os.environ.get('S3_BUCKET',aws_bucket)
         filename = 'labels/' + str(uuid.uuid4())+'.pdf'
         self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs={'ContentType': 'application/pdf', 'ACL':'public-read'})
         os.remove(file_name)
         return filename
         
-    def remove_label(self, filename):
-        bucket = os.environ.get('S3_BUCKET','')
+    def remove_label(self, filename, aws_bucket=''):
+        bucket = os.environ.get('S3_BUCKET',aws_bucket)
         ret = self.s3_resource.Object(bucket,'labels/' + filename).delete()
         if ret['ResponseMetadata']['HTTPStatusCode'] == 204:
             return True
