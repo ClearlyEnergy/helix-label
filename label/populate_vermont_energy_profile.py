@@ -237,7 +237,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
             tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[num]+"</font> " + FUELLABEL[num], p14), Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num], p16), Paragraph('{0:.2f}'.format(data_dict['rate_'+fuel]) + ' $/'+FUELUNIT[num], p16)]])
 
     if data_dict['solar_score'] != 0:
-        tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", p14), Paragraph('$'+"{:,}".format(int(data_dict['solar_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_solar'])) + ' kwh', p16)]])
+        tct.append([[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", p14), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['solar_score'])), p15), Paragraph("{:,}".format(int(data_dict['cons_solar'])) + ' kwh', p16)]])
         
     cost_subTable = Table(tct, colWidths = [1.93*inch])
     cost_subTable.setStyle(TableStyle([
