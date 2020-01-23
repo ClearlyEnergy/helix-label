@@ -297,7 +297,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     t_achieve = []
 #    t_achieve.append(Paragraph(" ",p11))    
     if data_dict['has_audit']:
-        t_achieve.append([Paragraph("This home has gone through an Efficiency Excellence Network audit", p12b, bulletText=checked.encode('UTF8'))])
+        t_achieve.append([Paragraph("This home has gone through a professional energy audit", p12b, bulletText=checked.encode('UTF8'))])
 
     if data_dict['has_solar']:
         t_achieve.append([Paragraph("This home has " + str(data_dict['capacity']) + 'kw of photovoltaic solar on site', p12b, bulletText=checked.encode('UTF8'))])
