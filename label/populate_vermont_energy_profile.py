@@ -134,6 +134,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     font_bold = 'InterstateBlack'
     checked = u"\u2713"
     unchecked = u"\u2752"
+    check_img = IMG_PATH+"/HomeEnergyProfile_icons-13.png"
     leq = u"\u2264"
     geq = u"\u2265"
     registered = u"\u00AE"
@@ -336,9 +337,9 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     
     t_achieve = []
     if data_dict['has_audit']:
-        t_achieve.append([Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> This home has gone through a professional energy audit''', pc273)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> This home has gone through a professional energy audit''', pc273)])
     else:
-        t_achieve.append([Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> Generated a Vermont Home Energy Profile.''', pc273)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> Generated a Vermont Home Energy Profile.''', pc273)])
     achieve_table = Table(t_achieve, colWidths = [5.1*inch])
     achieve_table.setStyle(TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
@@ -350,15 +351,14 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 #        t_achieve.append([Paragraph("This home has " + str(data_dict['capacity']) + 'kw of photovoltaic solar on site', pc272, bulletText=checked.encode('UTF8'))])
 
     t_achieve = []
-    check_img = Image(IMG_PATH+"/HomeEnergyProfile_icons-13.png", 0.2*inch, 0.2*inch)
     if 'evt' in data_dict and data_dict['evt']:
-        t_achieve.append([Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> '''+data_dict['evt'], pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+data_dict['evt'], pc272)])
     if 'estar_wh' in data_dict and data_dict['estar_wh']:
-        t_achieve.append([Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> EPA ENERGYSTAR® Home''', pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> EPA ENERGYSTAR® Home''', pc272)])
     if 'hers_score' in data_dict and data_dict['hers_score']:
-        t_achieve.append([Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> HERS Index Score: ''' + str(data_dict['hers_score']), pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> HERS Index Score: ''' + str(data_dict['hers_score']), pc272)])
     if 'hes_score' in data_dict and data_dict['hes_score']:
-        t_achieve.append([Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> Home Energy Score: ''' + str(data_dict['hes_score']) + '/10', pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> Home Energy Score: ''' + str(data_dict['hes_score']) + '/10', pc272)])
     if len(t_achieve) > 2:
         t_achieve = [t_achieve[0:2], t_achieve[2:]]
     else:
@@ -374,17 +374,17 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
     estarr = []
     if data_dict['heater_estar']:
-        estarr.append(Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> ENERGYSTAR® Heating System''', pc272))
+        estarr.append(Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> ENERGYSTAR® Heating System''', pc272))
     if data_dict['water_estar']:
-        estarr.append(Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> ENERGYSTAR® Water Heater''', pc272))
+        estarr.append(Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> ENERGYSTAR® Water Heater''', pc272))
     if data_dict['ac_estar']:
-        estarr.append(Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> ENERGYSTAR® Air Conditioning''', pc272))
+        estarr.append(Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> ENERGYSTAR® Air Conditioning''', pc272))
     if data_dict['fridge_estar']:
-        estarr.append(Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> ENERGYSTAR® Refrigerator''', pc272))
+        estarr.append(Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> ENERGYSTAR® Refrigerator''', pc272))
     if data_dict['washer_estar']:
-        estarr.append(Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> ENERGYSTAR® Clothes Washer''', pc272))
+        estarr.append(Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> ENERGYSTAR® Clothes Washer''', pc272))
     if data_dict['dishwasher_estar']:
-        estarr.append(Paragraph('''<img src="label/images/HomeEnergyProfile_icons-13.png" height="12" width="12"/> ENERGYSTAR® Dishwasher''', pc272))
+        estarr.append(Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> ENERGYSTAR® Dishwasher''', pc272))
     if len(estarr) > 4:
         estarr = [estarr[0:2],estarr[2:4],estarr[4:]]
     elif len(estarr) > 2:
