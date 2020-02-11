@@ -23,11 +23,11 @@ class Label:
             aws_secret_access_key=os.environ.get('S3_SECRET', aws_secret)
             )
 
-    def green_addendum(self, data_dict):
+    def green_addendum(self, data_dict, aws_bucket=''):
         in_file = self.in_path + '/ResidentialGreenandEnergyEfficientAddendum.pdf'
         out_file = self.out_path + '/GreenAddendum.pdf'
         write_green_addendum_pdf(in_file, data_dict, out_file)
-        out_filename = self._write_S3(out_file)
+        out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
     def vermont_energy_profile(self, data_dict, aws_bucket=''):
