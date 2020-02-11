@@ -69,14 +69,15 @@ class flowable_triangle(Flowable):
         self.canv.setFont("FontAwesome", 30)        
 
 class flowable_text(Flowable):
-    def __init__(self, offset_x, offset_y, text):
+    def __init__(self, offset_x, offset_y, text, font_size):
         Flowable.__init__(self)
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.text = text
+        self.font_size = font_size
         
     def draw(self):
-        self.canv.setFont("InterstateBlack", 9)
+        self.canv.setFont("InterstateBlack", self.font_size)
         self.canv.setFillColor(colors.gray)
         self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)        
     
@@ -238,15 +239,18 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     wedge = Image(wedge_img, 5.0*inch, 2.25*inch)
     Story.append(wedge)
     triangle = IMG_PATH+"/triangle.png"
-    offset_x = 0.62+data_dict['cons_mmbtu']/data_dict['cons_mmbtu_max']*(4.82-0.62)
+    offset_x = 0.53+data_dict['cons_mmbtu']/data_dict['cons_mmbtu_max']*(4.75-0.53)
     pic = flowable_triangle(triangle,offset_x, 1.78, 0.2, 0.288,'')
     Story.append(pic)
-    txt = flowable_text(min(offset_x-0.5,4), 2.2, "This home's usage: " + str(int(data_dict['cons_mmbtu'])))
+    txt = flowable_text(min(offset_x-0.5,4), 2.2, "This home's usage: " + str(int(data_dict['cons_mmbtu'])),9)
     Story.append(txt)
     triangle2 = IMG_PATH+"/triangle2.png"
-    offset_x = 0.62+data_dict['cons_mmbtu_min']/data_dict['cons_mmbtu_max']*(4.82-0.62)
+    offset_x = 0.62 + 40.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
     pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'40 High Performance Home')
     Story.append(pic)
+    txt = flowable_text(4.82, 0.44, str(int(data_dict['cons_mmbtu_max'])),7)
+    Story.append(txt)
+    
     
     # Expected Cost
     y_offset += 0.02
@@ -472,7 +476,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-05.png", 0.05*doc.width,0.05*doc.width), Paragraph('INSULATION & INFILTRATION',p2_r10),Paragraph('All cavities filled plus insulation covering framing, air sealing',p2_r11),Paragraph('Vermont energy code standards',p2_r12),Paragraph('Little to none',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-06.png", 0.05*doc.width,0.05*doc.width), Paragraph('HEATING & COOLING SYSTEMS',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Federal minimum standard efficiency',p2_r12),Paragraph('0-15+ years old, no annual maintenance',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-07.png", 0.05*doc.width,0.05*doc.width), Paragraph('LIGHTS & APPLIANCES',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Mix of incandescent and LED/CFL bulbs; mix of ENERGY STAR and conventional appliances',p2_r12),Paragraph('Incandescent bulbs, conventional appliances',p2_r11)],
-        [Image(IMG_PATH+"/HomeEnergyProfile_icons-08.png", 0.05*doc.width,0.05*doc.width), Paragraph('RENEWABLE ENERGY',p2_r10),Paragraph('Sized to off-set all or most consumption',p2_r11),Paragraph('Offsets some energy consumption',p2_r12),Paragraph('None',p2_r11)],
+        [Image(IMG_PATH+"/HomeEnergyProfile_icons-08.png", 0.05*doc.width,0.05*doc.width), Paragraph('RENEWABLE ENERGY',p2_r10),Paragraph('Sized to off-set all or most consumption',p2_r11),Paragraph('None',p2_r12),Paragraph('None',p2_r11)],
     ], colWidths = [0.05*doc.width, 0.275*doc.width, 0.225*doc.width, 0.225*doc.width, 0.225*doc.width])
     features_table.setStyle(features_table_style)
     Story.append(features_table)
@@ -532,7 +536,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 if __name__ == '__main__':
     data_dict = {
         'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
-        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 192.035812, 'cons_mmbtu_max': 491.99764, 'cons_mmbtu_min': 90.566712,
+        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 40, 'cons_mmbtu_max':254, 'cons_mmbtu_min': 90.566712,
         'heatingfuel': 'Wood Pellet', 'ng_score': 0.0, 'elec_score': 1251.0, 'ho_score': 0.0, 'propane_score': 0.0, 'wood_cord_score': 0, 'wood_pellet_score': 1111, 'solar_score': 872.0,
         'cons_elec': 12129.0, 'cons_ng': 0.0, 'cons_ho': 1213.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 164.0, 'cons_solar': -4978.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,

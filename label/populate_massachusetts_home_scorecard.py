@@ -437,9 +437,9 @@ def create_pdf(data_dict, out_file):
                     ['','','',''],
                     ['',peg_m_p1,co2_production_improved_p,co2_improved_text_p ]]
 
+    peg_m_pos1 = -12 + (12.5 if co2_production_base>20 else (0 if co2_production_base <0 else ((co2_production_base/20.0)*12.9)))
 #    peg_m_pos1 = -12 + (0.9 if co2_production_base>20 else (0 if co2_production_base <0 else ((co2_production_base/20.0)*12.9)))
-    peg_m_pos1 = -2.2 + (3 if co2_production_base>20 else (0 if co2_production_base <0 else ((co2_production_base/20.0)*12.9)))
-    peg_m_pos = -2.2 + (10.5 if co2_production_improved>20 else (0 if co2_production_improved <0 else ((co2_production_improved/20.0)*12.7)))
+    peg_m_pos = -2.2 + (12.5 if co2_production_improved>20 else (0 if co2_production_improved <0 else ((co2_production_improved/20.0)*12.7)))
 
 
     tblStyle_f3 = TableStyle([('LEFTPADDING',(1,0),(1,0),-3.5*cm),
@@ -921,7 +921,7 @@ if __name__ == '__main__':
         'fuel_energy_usage_base': 1655.2, 'total_energy_cost_improved': 2552.2,
         'total_energy_cost_base': 3066.1, 'total_energy_usage_improved': 142.1,  
         'total_energy_usage_base': 200, 'electric_energy_usage_base': 12000.0,
-        'co2_production_improved': 20, 'co2_production_base': 30, 
+        'co2_production_improved':7, 'co2_production_base': 13, 
         'conditioned_area': 2545.0, 'year_built': 1925.0, 
         'number_of_bedrooms': 5, 'name': 'Paul Eldrenkamp', 
         'assessment_date': '2018-11-07', 'base_score': 4, 'improved_score': 7}
