@@ -166,7 +166,13 @@ def create_pdf(data_dict, out_file):
     primary_heating_fuel_type = data_dict['primary_heating_fuel_type'].capitalize()
     primary_heating_fuel_type_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(primary_heating_fuel_type)),styles['f1_leading'])
 
-    assessment_date = datetime.date() if data_dict['assessment_date'] is None else datetime.strptime(data_dict['assessment_date'],'%Y-%m-%d').date()
+    if data_dict['assessment_date'] is None:
+        assessment_date = datetime.date()
+    else:
+        try:
+            assessment_date = datetime.strptime(data_dict['assessment_date'],'%Y-%m-%d').date()
+        except ValueError: 
+            assessment_date = datetime.strptime(data_dict['assessment_date'],'%Y-%m-%d %H:%M:%S').date()
     
     assessment_date_p = Paragraph('<font name=Helvetica-Bold color=#474646>{}</font>'.format(str(assessment_date)),styles['f1_leading'])
     assessment_date_header_p = Paragraph('<font color=#4e4e52 size=8>Assessment Date</font>',styles['f1_leading'])

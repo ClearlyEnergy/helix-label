@@ -33,7 +33,7 @@ pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
 CUSTOM_LGRAY = colors.Color(red=(242.0/255),green=(246.0/255),blue=(248.0/255))
 CUSTOM_DGRAY = colors.Color(red=(109.0/255),green=(111.0/255),blue=(106.0/255))
-CUSTOM_MGRAY = colors.Color(red=(217.0/255),green=(228.0/255),blue=(234.0/255))
+CUSTOM_MGRAY = colors.Color(red=(111.0/255),green=(111.0/255),blue=(106.0/255))
 CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
 CUSTOM_DGREEN = colors.Color(red=(65.0/255),green=(173.0/255),blue=(73.0/255))
 CUSTOM_MGREEN = colors.Color(red=(74.0/255),green=(151.0/255),blue=(93.0/255))
@@ -289,7 +289,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         tct.append([FUELIMAGES[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['solar_score'])), pc252), Paragraph("{:,}".format(int(data_dict['cons_solar'])) + ' kwh', pc253)],'',''])
         num_fuel += 1
         
-    cost_subTable = Table(tct, colWidths = [0.5*inch, 1.83*inch, 0.2*inch, 2.5*inch])
+    cost_subTable = Table(tct, colWidths = [0.5*inch, 1.83*inch, 0.2*inch, 2.0*inch])
     cost_subTableStyle = TableStyle([
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
     ])
@@ -298,11 +298,11 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     for num, fuel in enumerate(FUELS):
         if data_dict[fuel+'_score']!= 0:
             cost_subTableStyle.add('BACKGROUND',(2,row_ind),(-2,-num_fuel+row_ind),FUELCOLOR[num])
-            cost_subTableStyle.add('LINEBELOW', (0, row_ind), (-2, -num_fuel+row_ind), 1, CUSTOM_LGRAY),
+            cost_subTableStyle.add('LINEBELOW', (0, row_ind), (-2, -num_fuel+row_ind), 1, CUSTOM_MGRAY),
             row_ind += 1
     if data_dict['solar_score'] != 0:
         cost_subTableStyle.add('BACKGROUND',(2,num_fuel-1),(-2,-1),FUELCOLOR[-1])
-        cost_subTableStyle.add('LINEABOVE', (0, row_ind),(-1, -num_fuel+row_ind),1, CUSTOM_LGRAY)
+        cost_subTableStyle.add('LINEABOVE', (0, row_ind),(-1, -num_fuel+row_ind),1, CUSTOM_MGRAY)
         
     cost_subTable.setStyle(cost_subTableStyle)    
      
