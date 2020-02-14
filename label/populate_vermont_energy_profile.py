@@ -30,6 +30,7 @@ pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
+#pdfmetrics.registerFont(TTFont("IcoMoon", FONT_PATH+"/icomoon.ttf"))
 
 CUSTOM_LGRAY = colors.Color(red=(242.0/255),green=(246.0/255),blue=(248.0/255))
 CUSTOM_DGRAY = colors.Color(red=(109.0/255),green=(111.0/255),blue=(106.0/255))
@@ -44,6 +45,7 @@ CUSTOM_YELLOW = colors.Color(red=(255.0/255),green=(221.0/255),blue=(0.0/255))
 CUSTOM_LTEAL = colors.Color(red=(53.0/255),green=(196.0/255),blue=(229.0/255))
 CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(77.0/255),blue=(113.0/255))
 FUELS = ['elec', 'ng', 'ho', 'propane', 'wood_pellet', 'wood_cord']
+#FUELICONS = [u"",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
 FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
 FUELIMAGES = [Image(IMG_PATH+"/HomeEnergyProfile_icons-03.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-09.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-10.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-11.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-02.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-02.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-04.png",0.4*inch,0.4*inch)]
 FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood-Pellet', 'Wood-Cord']
@@ -368,13 +370,15 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     else:
         t_achieve = [t_achieve]
             
-    ratings_table = Table(t_achieve, colWidths = [2.7*inch, 2.7*inch])
-    ratings_table.setStyle(TableStyle([
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-        ('BACKGROUND',(0,0),(-1,-1),colors.white),
-     ]))
-    Story.append(ratings_table)    
+    t_achieve = []
+    if t_achieve:
+        ratings_table = Table(t_achieve, colWidths = [2.7*inch, 2.7*inch])
+        ratings_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+         ]))
+        Story.append(ratings_table)    
 
     estarr = []
     if data_dict['heater_estar']:
@@ -475,7 +479,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     features_table = Table([
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-05.png", 0.05*doc.width,0.05*doc.width), Paragraph('INSULATION & INFILTRATION',p2_r10),Paragraph('All cavities filled plus insulation covering framing, air sealing',p2_r11),Paragraph('Vermont energy code standards',p2_r12),Paragraph('Little to none',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-06.png", 0.05*doc.width,0.05*doc.width), Paragraph('HEATING & COOLING SYSTEMS',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Federal minimum standard efficiency',p2_r12),Paragraph('0-15+ years old, no annual maintenance',p2_r11)],
-        [Image(IMG_PATH+"/HomeEnergyProfile_icons-07.png", 0.05*doc.width,0.05*doc.width), Paragraph('LIGHTS & APPLIANCES',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Mix of incandescent and LED/CFL bulbs; mix of ENERGY STAR and conventional appliances',p2_r12),Paragraph('Incandescent bulbs, conventional appliances',p2_r11)],
+        [Image(IMG_PATH+"/HomeEnergyProfile_icons-07.png", 0.05*doc.width,0.05*doc.width), Paragraph('LIGHTS & APPLIANCES',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Mix of ENERGY STAR and conventional lights and appliances',p2_r12),Paragraph('Incandescent bulbs, conventional appliances',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-08.png", 0.05*doc.width,0.05*doc.width), Paragraph('RENEWABLE ENERGY',p2_r10),Paragraph('Sized to off-set all or most consumption',p2_r11),Paragraph('None',p2_r12),Paragraph('None',p2_r11)],
     ], colWidths = [0.05*doc.width, 0.275*doc.width, 0.225*doc.width, 0.225*doc.width, 0.225*doc.width])
     features_table.setStyle(features_table_style)
@@ -509,9 +513,8 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("<font name='InterstateBlack'>Vermont Department of Public Service:</font> <a href='www.energysaver.vermont.gov'>www.energysaver.vermont.gov</a>", pc_22))
     Story.append(Paragraph("<font name='InterstateBlack'>Vermont Gas Systems</font> <a href='www.vermontgas.com'>www.vermontgas.com</a>", pc_22))
     Story.append(Paragraph("<font name='InterstateBlack'>Vermont Weatherization Program</font> <a href='www.dcf.vermont.gov/oeo/weatherization'>www.dcf.vermont.gov/oeo/weatherization</a>", pc_22))
-    Story.append(Spacer(1,24))
-    Story.append(Paragraph("If you have questions about this profile,",  tf_standard))
-    Story.append(Paragraph("contact Efficiency Vermont at 888-921-5990 or info@efficiencyvermont.com",tf_standard_bold))
+    Story.append(Paragraph("<font name='InterstateBlack'>Vermont Energy Code</font> <a href='https://publicservice.vermont.gov/energy_efficiency/rbes'>https://publicservice.vermont.gov/energy_efficiency/rbes</a>", pc_22))
+    Story.append(Paragraph("If you have questions about this profile, <font name='InterstateBlack'>contact Efficiency Vermont at 888-921-5990 or info@efficiencyvermont.com</font>",  tf_standard))
     Story.append(FrameBreak)    
     
     p2_r3 = Frame(doc.leftMargin, doc.bottomMargin, doc.width, 0.18*doc.height, showBoundary=0, topPadding=20)
