@@ -375,13 +375,11 @@ def create_pdf(data_dict, out_file):
     # Story.append(f2_text3_p)
     # Story.append(Spacer(1,4))
 
-    propane_entry = '' if ('propane_percentage' not in data_dict)  else '{}% Propane'.format(round(data_dict['propane_percentage']))
-    fuel_oil_entry ='' if ('fuel_percentage' not in data_dict)  else '{}% Fuel Oil'.format(round(data_dict['fuel_percentage'])) 
+    fuel_entry = '' if ('fuel_percentage' not in data_dict)  else '{}% Fuel'.format(round(data_dict['fuel_percentage']))
     electric_percentage = 0 if 'electric_percentage' not in data_dict else data_dict['electric_percentage']
     data_f2=[[
             Paragraph('<font name=Helvetica size=8>{}% Electricity</font>'.format(str(round(electric_percentage))),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}</font>'.format( propane_entry ),styles['Normal']),
-            Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_oil_entry ),styles['Normal'])
+            Paragraph('<font name=Helvetica size=8>{}</font>'.format(fuel_entry ),styles['Normal'])
             ]]
 
 
@@ -396,7 +394,7 @@ def create_pdf(data_dict, out_file):
                                     ('ALIGN',(0,0),(-1,-1),'CENTER')])
 
     tbl1_frame_2.setStyle(tblStyle1_frame_2)
-    if 'base_score' not in data_dict:
+    if 'base_score' not in data_dict or not data_dict['base_score']:
         Story.append(Spacer(1,30))
         Story.append(f2_text3_p)
         Story.append(Spacer(1,4))
@@ -465,9 +463,9 @@ def create_pdf(data_dict, out_file):
     # Story.append(f3_text3_p)
     # Story.append(Spacer(1,4))
 
-    fuel_oil_percentage_f3 = 0 if 'fuel_percentage' not in data_dict else data_dict['fuel_percentage_co2']
+    fuel_percentage_f3 = 0 if 'fuel_percentage_co2' not in data_dict else data_dict['fuel_percentage_co2']
     electricity_percentage_f3 =0 if 'electric_percentage_co2'not in data_dict else data_dict['electric_percentage_co2']
-    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Fuel Oil</font>'.format(str(round(fuel_oil_percentage_f3))),styles['Normal']),
+    data_tbl2_f3=[[Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Fuel </font>'.format(str(round(fuel_percentage_f3))),styles['Normal']),
     Paragraph('<font name=Helvetica size=7.8  color=#16181a><strong>{}%</strong> Electricity</font>'.format(str(round(electricity_percentage_f3))),styles['Normal'])]]
 
 
@@ -483,7 +481,7 @@ def create_pdf(data_dict, out_file):
                                     ])
 
     tbl2_frame_3.setStyle(tblStyle2_frame_3)
-    if 'base_score' not in data_dict: 
+    if 'base_score' not in data_dict or not data_dict['base_score']: 
         Story.append(Spacer(1,40))
         Story.append(Spacer(1,9)) 
         Story.append(f3_text3_p)
@@ -491,7 +489,7 @@ def create_pdf(data_dict, out_file):
         Story.append(tbl2_frame_3)
 
     # THIS IS FOR COLUMN 3 IF HES IS IN THE DATA DICTIONERY
-    if 'base_score' in data_dict:
+    if 'base_score' in data_dict and data_dict['base_score']:
         col_head = lambda st: Paragraph('<font name=Helvetica size=8  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
         row_data = lambda st: Paragraph('<font name=Helvetica size=10  color=#ffffff><b> {}</b></font>'.format(st),styles['Centre'])
     
@@ -853,7 +851,7 @@ def create_pdf(data_dict, out_file):
 #setting HES background image
     hes_background =  IMG_PATH+"/hes_background.png"
     hes_box_path = IMG_PATH+'/hes_box.png'
-    if 'base_score' in data_dict:
+    if 'base_score' in data_dict and data_dict['base_score']:
         hes_image = Image(hes_background,page2_column_2.width*0.95,6*cm)#,hAlign='LEFT')
         hes_box = Image(hes_box_path,1.5*cm,1.5*cm)
 
@@ -924,6 +922,7 @@ if __name__ == '__main__':
         'co2_production_improved':7, 'co2_production_base': 13, 
         'conditioned_area': 2545.0, 'year_built': 1925.0, 
         'number_of_bedrooms': 5, 'name': 'Paul Eldrenkamp', 
-        'assessment_date': '2018-11-07', 'base_score': 4, 'improved_score': 7}
+        'assessment_date': '2018-11-07', 'base_score': None, 'improved_score': None,
+        'electric_percentage': 35, 'fuel_percentage': 65, 'electric_percentage_co2': 20, 'fuel_percentage_co2': 80}
     out_file = 'MAScorecard.pdf'
     create_pdf(data_dict, out_file) 
