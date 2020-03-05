@@ -513,18 +513,18 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         Story.append(Paragraph("Consider investing in heat pump technology or biomass burning", tf_standard, bulletText=unchecked.encode('UTF8')))
         num_action += 1
 
-    if data_dict['low_cost_action'].find('1'):
+    if data_dict['low_cost_action'].find("1") != -1:
         num_action += 1
         Story.append(Paragraph("Schedule a professional energy assessment to identify cost-saving energy upgrades and financial incentives", tf_standard, bulletText=unchecked.encode('UTF8')))
-    if data_dict['low_cost_action'].find('2'):
+    if data_dict['low_cost_action'].find("2") != -1:
         Story.append(Paragraph("Verify all appliances, lighting, mechanical equipment are ENERGY STAR® certified", tf_standard, bulletText=unchecked.encode('UTF8')))
         num_action += 1
-    if data_dict['low_cost_action'].find('3'):
+    if data_dict['low_cost_action'].find("3") != -1:
         Story.append(Paragraph("Schedule regular maintenance of heating/ac systems to optimize performance", tf_standard, bulletText=unchecked.encode('UTF8')))
         Story.append(Paragraph('Power down electronics completely to avoid “phantom electricity loads" or invest in an advanced power strip to do it for you', tf_standard, bulletText=unchecked.encode('UTF8')))
         Story.append(Paragraph("Remove dust behind and underneath the refrigerator at least once a year.  If you have a forced-air system, you can vacuum the vents and change air filters", tf_standard, bulletText=unchecked.encode('UTF8')))
         num_action += 3
-    if data_dict['low_cost_action'].find('4'):
+    if data_dict['low_cost_action'].find("4") != -1:
         Story.append(Paragraph("If still using old thermostats, update to programmable or smart thermostats", tf_standard, bulletText=unchecked.encode('UTF8')))    
         num_action += 1
     ### P2
@@ -624,7 +624,7 @@ if __name__ == '__main__':
         'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 1000.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
         'evt': None, 'leed': 'GOLD', 'ngbs': 'SILVER', 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': True, 'zerh': True, 'phius': True, 'author_name': 'John Doe',
-        'high_cost_action': 1, 'low_cost_action': '2345',   
+        'high_cost_action': 0, 'low_cost_action': "24",   
         'heater_estar': False, 'water_estar': False, 'ac_estar': True, 'fridge_estar': False, 'lighting_estar': False, 
         'washer_estar': False, 'dishwasher_estar': False, 'heater_type': 'pump', 'water_type': 'heatpump', 
         'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'has_storage': True, 'rating': 'Homeowner Verified', 'weatherization': 'diy'}
