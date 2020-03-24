@@ -592,7 +592,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph('<font name="InterstateBlack">Renewable Energy Vermont:</font> <a href="www.revermont.org" target="_blank">www.revermont.org</a>', pc_22))
     Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Saver:</font> <a href="www.energysaver.vermont.gov" target="_blank">www.energysaver.vermont.gov</a>', pc_22))
     Story.append(Paragraph('<font name="InterstateBlack">Vermont Gas Systems</font> <a href="www.vermontgas.com" target="_blank">www.vermontgas.com</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Weatherization Program</font> <a href="https://dcf.vermont.gov/benefits/weatherization" target="_blank">www.dcf.vermont.gov/oeo/weatherization</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Vermont Weatherization Program</font> <a href="https://dcf.vermont.gov/benefits/weatherization" target="_blank">https://dcf.vermont.gov/benefits/weatherization</a>', pc_22))
     Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Code</font> <a href="https://publicservice.vermont.gov/energy_efficiency/rbes" target="_blank">https://publicservice.vermont.gov/energy_efficiency/rbes</a>', pc_22))
     Story.append(Paragraph("If you have questions about this profile, <font name='InterstateBlack'>contact Efficiency Vermont at 888-921-5990 or info@efficiencyvermont.com</font>",  tf_standard))
     Story.append(FrameBreak)    
@@ -624,7 +624,7 @@ if __name__ == '__main__':
         'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 1000.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
         'evt': None, 'leed': 'GOLD', 'ngbs': 'SILVER', 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': True, 'zerh': True, 'phius': True, 'author_name': 'John Doe',
-        'high_cost_action': 0, 'low_cost_action': "24",   
+        'high_cost_action': 0, 'low_cost_action': "3",   
         'heater_estar': False, 'water_estar': False, 'ac_estar': True, 'fridge_estar': False, 'lighting_estar': False, 
         'washer_estar': False, 'dishwasher_estar': False, 'heater_type': 'pump', 'water_type': 'heatpump', 
         'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'has_storage': True, 'rating': 'Homeowner Verified', 'weatherization': 'diy'}
