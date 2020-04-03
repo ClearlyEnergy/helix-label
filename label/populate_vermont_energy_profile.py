@@ -551,14 +551,18 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Wedge and Table
-    y_offset = 0.1
-    p2_r1 = Frame(doc.leftMargin, doc.height*(1-y_offset), doc.width, 0.1*doc.height, showBoundary=0, topPadding=10)
+    y_offset = 0.2
+    p2_r1 = Frame(doc.leftMargin, doc.height*(1-y_offset), 0.3*doc.width, 0.2*doc.height, showBoundary=0, topPadding=10)
     Story.append(Paragraph('TOTAL ENERGY USE', pc202))
     Story.append(Spacer(1,12))
-    Story.append(Paragraph('Components of a home and associated efficiency values.',tf_standard))
-    pic = flowable_triangle(IMG_PATH+"/wedge2.png",2.33, -1.43, 1.43, 5.6,'')
+    p2_p1 = Paragraph('Below are features of homes with different levels of energy use to help guide your path to lower energy bills',tf_standard)
+    Story.append(p2_p1)
+    Story.append(FrameBreak)
+    p2_r1b = Frame(doc.leftMargin+0.3*doc.width, doc.height*(1-y_offset), 0.70*doc.width, 0.2*doc.height, showBoundary=0, topPadding=10)
+    pic = flowable_triangle(IMG_PATH+"/wedge3.png",0.12, -1.92, 2.1, 5.35,'')
     Story.append(pic)
     Story.append(FrameBreak)
+    
     y_offset = 0.45
     p2_r2 = Frame(doc.leftMargin, doc.height*(1-y_offset), doc.width, 0.26*doc.height, showBoundary=0, topPadding=10)
     features_table_style = TableStyle([
@@ -580,7 +584,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-06.png", 0.05*doc.width,0.05*doc.width), Paragraph('HEATING & COOLING SYSTEMS',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Federal minimum standard efficiency',p2_r12),Paragraph('0-15+ years old, no annual maintenance',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-07.png", 0.05*doc.width,0.05*doc.width), Paragraph('LIGHTS & APPLIANCES',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Mix of ENERGY STAR and conventional lights and appliances',p2_r12),Paragraph('Incandescent bulbs, conventional appliances',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-08.png", 0.05*doc.width,0.05*doc.width), Paragraph('RENEWABLE ENERGY',p2_r10),Paragraph('Sized to off-set all or most consumption',p2_r11),Paragraph('Some/None',p2_r12),Paragraph('None',p2_r11)],
-    ], colWidths = [0.05*doc.width, 0.275*doc.width, 0.225*doc.width, 0.225*doc.width, 0.225*doc.width])
+    ], colWidths = [0.05*doc.width, 0.275*doc.width, 0.245*doc.width, 0.198*doc.width, 0.232*doc.width])
     features_table.setStyle(features_table_style)
     Story.append(features_table)
     Story.append(FrameBreak)
@@ -604,13 +608,13 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(Spacer(1,12))
     Story.append(Paragraph('Additional Resources',pc_21))
     pc_22 = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_h, fontName = font_normal, textColor = CUSTOM_DGRAY, leading = 20)  
-    Story.append(Paragraph('<font name="InterstateBlack">Burlington Electric Department:</font> <link href="www.burlingtonelectric.com">www.burlingtonelectric.com</link>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Drive Electric Vermont:</font> <a href="www.driveelectricvt.com">www.driveelectricvt.com</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Efficiency Vermont:</font> <a href="www.efficiencyvermont.com">www.efficiencyvermont.com</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Go! Vermont:</font> <a href="www.connectingcommuters.org">www.connectingcommuters.org</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Renewable Energy Vermont:</font> <a href="www.revermont.org">www.revermont.org</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Saver:</font> <a href="www.energysaver.vermont.gov">www.energysaver.vermont.gov</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Gas Systems</font> <a href="www.vermontgas.com">www.vermontgas.com</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Burlington Electric Department:</font> <link href="http://www.burlingtonelectric.com/">www.burlingtonelectric.com</link>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Drive Electric Vermont:</font> <a href="https://www.driveelectricvt.com/">www.driveelectricvt.com</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Efficiency Vermont:</font> <a href="https://www.efficiencyvermont.com/">www.efficiencyvermont.com</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Go! Vermont:</font> <a href="https://www.connectingcommuters.org/">www.connectingcommuters.org</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Renewable Energy Vermont:</font> <a href="https://www.revermont.org/">www.revermont.org</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Saver:</font> <a href="https://energysaver.vermont.gov/">www.energysaver.vermont.gov</a>', pc_22))
+    Story.append(Paragraph('<font name="InterstateBlack">Vermont Gas Systems</font> <a href="https://www.vermontgas.com/">www.vermontgas.com</a>', pc_22))
     Story.append(Paragraph('<font name="InterstateBlack">Vermont Weatherization Program</font> <a href="https://dcf.vermont.gov/benefits/weatherization">dcf.vermont.gov/benefits/weatherization</a>', pc_22))
     Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Code</font> <a href="https://publicservice.vermont.gov/energy_efficiency/rbes">publicservice.vermont.gov/energy_efficiency/rbes</a>', pc_22))
     Story.append(FrameBreak)
@@ -624,7 +628,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_262, column_27, column_281, column_282, column_29]
-    page_2_frames = [p2_r1, p2_r2, p2_r21, p2_r22, p2_r3]
+    page_2_frames = [p2_r1, p2_r1b, p2_r2, p2_r21, p2_r22, p2_r3]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     templates.append(PageTemplate(frames=page_2_frames,id='secondPage'))
@@ -642,10 +646,10 @@ if __name__ == '__main__':
         'heatingfuel': 'Electric', 'ng_score': 1000.0, 'elec_score': 2000.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 1000, 'wood_pellet_score': 0, 'solar_score': -1000.0,
         'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 1000.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
-        'evt': None, 'leed': 'GOLD', 'ngbs': 'SILVER', 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': True, 'phius': True, 'author_name': 'John Doe',
+        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': True, 'phius': True, 'author_name': 'John Doe',
         'high_cost_action': 2, 'low_cost_action': "1234",   
         'heater_estar': False, 'water_estar': False, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
-        'washer_estar': False, 'dishwasher_estar': False, 'evcar': False, 
+        'washer_estar': False, 'dishwasher_estar': False, 'evcar': True, 
         'heater_type': 'pump', 'water_type': 'heatpump', 
         'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 1200.0}
     out_file = 'VTLabel.pdf'
