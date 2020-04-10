@@ -30,7 +30,6 @@ pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
-#pdfmetrics.registerFont(TTFont("IcoMoon", FONT_PATH+"/icomoon.ttf"))
 
 CUSTOM_LGRAY = colors.Color(red=(242.0/255),green=(246.0/255),blue=(248.0/255))
 CUSTOM_DGRAY = colors.Color(red=(109.0/255),green=(111.0/255),blue=(106.0/255))
@@ -68,8 +67,12 @@ class flowable_triangle(Flowable):
         self.canv.drawImage(self.img, self.offset_x*inch, self.offset_y*inch, height = self.height*inch, width=self.width*inch)
         self.canv.setFont("InterstateBlack", 7)
         self.canv.setFillColor(colors.gray)
-        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
-        self.canv.setFont("FontAwesome", 30)        
+        t = self.canv.beginText()
+#        t.setFont("FontAwesome", 30)
+        t.setTextOrigin(self.offset_x*inch, (self.offset_y-0.1)*inch)
+        t.textLines(self.text)
+        self.canv.drawText(t)
+#        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
 
 class flowable_text(Flowable):
     def __init__(self, offset_x, offset_y, text, font_size):
@@ -254,7 +257,11 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(txt)
     triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 0.62 + 40.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
-    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'40 High Performance Home')
+    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"40 \n High Performance Home")
+    Story.append(pic)
+    triangle2 = IMG_PATH+"/triangle2.png"
+    offset_x = 0.62 + 105.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
+    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'Avg. home built to 2020 Energy Code')
     Story.append(pic)
     txt = flowable_text(4.82, 0.44, str(int(data_dict['cons_mmbtu_max'])),7)
     Story.append(txt)
@@ -361,7 +368,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     column_27 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     
-    pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 12)
+    pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
     pc273 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal)
     
     ## CERTIFICATIONS
@@ -515,7 +522,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     # Take Action Details    
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.18*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
-    pc291 = ParagraphStyle('standard', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = 0, spaceAfter = 2, leading=10, backColor = 'white', bulletIndent = 0, firstLineIndent = 0, leftIndent = 14, rightIndent = 0)
+    pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
     num_action = 0
     if data_dict['high_cost_action'] == 1:
@@ -590,20 +597,21 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     y_offset = 0.80
-    p2_r21 = ColorFrame(doc.leftMargin, doc.height*(1-y_offset), (1/3)*doc.width-12, 0.36*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)    
+    p2_r21 = ColorFrame(doc.leftMargin, doc.height*(1-y_offset), (1/3)*doc.width-12, 0.38*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)    
     pc_21 = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_h, fontName = font_bold, textColor = CUSTOM_DTEAL, leading = 14)  
     Story.append(Paragraph('Expected Annual Energy Use',pc_21))
-    Story.append(Paragraph('All sources of energy used in this home (electricity plus fuels such as oil, gas, propane and/or wood) are converted to a common unit of energy called MMBtu, which stands for one million British Thermal Units. A low MMBtu identifies a home as energy efficient with lower energy costs and a smaller carbon footprint.', tf_standard))
-    Story.append(Spacer(1,12))
+    Story.append(Paragraph('All sources of energy used in this home (electricity plus oil, gas, propane and/or wood) are converted to a common unit called MMBtu: one million British Thermal Units. A low MMBtu identifies a home as energy efficient with lower energy costs and a smaller carbon footprint.', tf_standard))
+#    Story.append(Spacer(1,12))
     Story.append(Paragraph("1 MMBtu = ",tf_standard))
     Story.append(Paragraph("7 gal fuel oil",tf_standard,bulletText=u'\u2022'))
     Story.append(Paragraph("710 therms of natural gas",tf_standard,bulletText=u'\u2022'))
     Story.append(Paragraph("11 gal of propane",tf_standard,bulletText=u'\u2022'))
     Story.append(Paragraph("293 kWh of electricity",tf_standard,bulletText=u'\u2022'))
     Story.append(Paragraph(".05 cords of wood",tf_standard,bulletText=u'\u2022'))
+    Story.append(Paragraph("The averageexpected use of a new home built to the 2020 Vermont Energy Code is 105 MMBtus baed on a 2500sq.ft. home.", tf_standard))
     Story.append(FrameBreak)    
     
-    p2_r22 = Frame(doc.leftMargin + (1/3)*doc.width, doc.height*(1-y_offset), (2/3)*doc.width, 0.36*doc.height, showBoundary=0, topPadding=0)    
+    p2_r22 = Frame(doc.leftMargin + (1/3)*doc.width, doc.height*(1-y_offset), (2/3)*doc.width, 0.38*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     Story.append(Spacer(1,12))
     Story.append(Paragraph('Additional Resources',pc_21))
