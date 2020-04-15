@@ -608,7 +608,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("11 gal of propane",tf_standard,bulletText=u'\u2022'))
     Story.append(Paragraph("293 kWh of electricity",tf_standard,bulletText=u'\u2022'))
     Story.append(Paragraph(".05 cords of wood",tf_standard,bulletText=u'\u2022'))
-    Story.append(Paragraph("The averageexpected use of a new home built to the 2020 Vermont Energy Code is 105 MMBtus baed on a 2500sq.ft. home.", tf_standard))
+    Story.append(Paragraph("The average expected use of a new home built to the 2020 Vermont Energy Code is 105 MMBtus based on a 2500sq.ft. home.", tf_standard))
     Story.append(FrameBreak)    
     
     p2_r22 = Frame(doc.leftMargin + (1/3)*doc.width, doc.height*(1-y_offset), (2/3)*doc.width, 0.38*doc.height, showBoundary=0, topPadding=0)    
