@@ -42,7 +42,9 @@ CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255)
 CUSTOM_ORANGE = colors.Color(red=(217.0/255),green=(92.0/255),blue=(35.0/255))
 CUSTOM_YELLOW = colors.Color(red=(255.0/255),green=(221.0/255),blue=(0.0/255))
 CUSTOM_LTEAL = colors.Color(red=(53.0/255),green=(196.0/255),blue=(229.0/255))
-CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(77.0/255),blue=(113.0/255))
+#CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(77.0/255),blue=(113.0/255))
+CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(160.0/255),blue=(175.0/255))
+#00a0af
 FUELS = ['elec', 'ng', 'ho', 'propane', 'wood_pellet', 'wood_cord']
 #FUELICONS = [u"",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
 FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf1bb",u"\uf185"]
@@ -126,7 +128,7 @@ def pie_chart(data_dict):
     drawing.add(pie)
     return drawing
 
-def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
+def write_generic_energy_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
     font_xxl =30
@@ -160,7 +162,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/HomeEnergyProfile_icons-01.png"
+    vthep_logo = IMG_PATH+"/eelogo_wtext.png"
     im = Image(vthep_logo, 2.4*inch, 1.0*inch)
     Story.append(im)
     Story.append(FrameBreak)
@@ -620,20 +622,20 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(Spacer(1,12))
     Story.append(Paragraph('Additional Resources',pc_21))
     pc_22 = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_h, fontName = font_normal, textColor = CUSTOM_DGRAY, leading = 20)  
-    Story.append(Paragraph('<font name="InterstateBlack">Burlington Electric Department:</font> <link href="http://www.burlingtonelectric.com/">www.burlingtonelectric.com</link>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Drive Electric Vermont:</font> <a href="https://www.driveelectricvt.com/">www.driveelectricvt.com</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Efficiency Vermont:</font> <a href="https://www.efficiencyvermont.com/">www.efficiencyvermont.com</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Go! Vermont:</font> <a href="https://www.connectingcommuters.org/">www.connectingcommuters.org</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Renewable Energy Vermont:</font> <a href="https://www.revermont.org/">www.revermont.org</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Saver:</font> <a href="https://energysaver.vermont.gov/">www.energysaver.vermont.gov</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Gas Systems</font> <a href="https://www.vermontgas.com/">www.vermontgas.com</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Weatherization Program</font> <a href="https://dcf.vermont.gov/benefits/weatherization">dcf.vermont.gov/benefits/weatherization</a>', pc_22))
-    Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Code</font> <a href="https://publicservice.vermont.gov/energy_efficiency/rbes">publicservice.vermont.gov/energy_efficiency/rbes</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Burlington Electric Department:</font> <link href="http://www.burlingtonelectric.com/">www.burlingtonelectric.com</link>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Drive Electric Vermont:</font> <a href="https://www.driveelectricvt.com/">www.driveelectricvt.com</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Efficiency Vermont:</font> <a href="https://www.efficiencyvermont.com/">www.efficiencyvermont.com</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Go! Vermont:</font> <a href="https://www.connectingcommuters.org/">www.connectingcommuters.org</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Renewable Energy Vermont:</font> <a href="https://www.revermont.org/">www.revermont.org</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Saver:</font> <a href="https://energysaver.vermont.gov/">www.energysaver.vermont.gov</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Vermont Gas Systems</font> <a href="https://www.vermontgas.com/">www.vermontgas.com</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Vermont Weatherization Program</font> <a href="https://dcf.vermont.gov/benefits/weatherization">dcf.vermont.gov/benefits/weatherization</a>', pc_22))
+#    Story.append(Paragraph('<font name="InterstateBlack">Vermont Energy Code</font> <a href="https://publicservice.vermont.gov/energy_efficiency/rbes">publicservice.vermont.gov/energy_efficiency/rbes</a>', pc_22))
     Story.append(FrameBreak)
         
     p2_r3 = Frame(doc.leftMargin, doc.bottomMargin, doc.width, 0.18*doc.height, showBoundary=0, topPadding=10)
 #    Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
-    Story.append(Paragraph("For questions about this profile, <font name='InterstateBlack'>contact Efficiency Vermont at 888-921-5990 or info@efficiencyvermont.com</font>",  tf_standard))
+    Story.append(Paragraph("For questions about this profile, <font name='InterstateBlack'>contact ClearlyEnergy at info@clearlyenergy.com or NEEP at</font>",  tf_standard))
     Story.append(Paragraph('Home Energy Labeling eXchange (HELIX) Energy Estimate', tf_small_bold))
     Story.append(Paragraph('HELIX, sponsored by the Northeast Energy Efficiency Partnership, hosts third-party certified home energy data to be used by realtors and lenders to properly value energy efficiency. www.neep.org/home-energy-labeling-information-exchange-helix. Clearly Energy generates energy estimates based on homeowner inputs and publicly-available data (home age, size, heating system type and fuel) or an energy model from a professional who has visited the home. Standard assumptions are used for variable factors such as weather and occupancy. Average fuel prices are obtained from the U.S. Energy Information Administration and the VT Public Service Dept. Historic fuel bills can inform costs but are specific to prior occupancy and weather. www.clearlyenergy.com.',tf_small))
     Story.append(FrameBreak)    
@@ -664,6 +666,6 @@ if __name__ == '__main__':
         'washer_estar': False, 'dishwasher_estar': False, 'evcar': True, 
         'heater_type': 'pump', 'water_type': 'heatpump', 
         'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 1200.0}
-    out_file = 'VTLabel.pdf'
-    write_vermont_energy_profile_pdf(data_dict, out_file)
+    out_file = 'EnergyLabel.pdf'
+    write_generic_energy_profile_pdf(data_dict, out_file)
 

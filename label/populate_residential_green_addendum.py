@@ -77,14 +77,16 @@ data_dict = {
     'green_certification_date_verified': '01/01/20',
     'verification_attached': 'On',
     'green_certification_organization_url': 'ngbs.org',
-    'hers_rating': '57',
+    'hers_rating': '58',
     'hers_confirmed_rating': 'On',
+    'hers_estimated_savings': '1234',
     'hes_score': '6',
     'hes_official': 'On',
     'score_date_verified': '01/01/20',
     'score_version': 'v2.1',
 }
 
+### FIELD NAMES, DO NOT DELETE
 # indoor_air_plus, water_sense, energy_star, zerh,
 # ngbs_bronze, ngbs_silver, ngbs_gold, ngbs_emerald
 # living_building_certified
