@@ -497,7 +497,7 @@ def write_generic_energy_profile_pdf(data_dict, output_pdf_path):
     if data_dict['has_audit']:
         t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> Professional energy audit''', pc272)])
     else:
-        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> Generated a Vermont Home Energy Profile.''', pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> Generated a Home Energy Profile.''', pc272)])
     num_line += 1
     if t_achieve and num_line < 5:
         ratings_table = Table(t_achieve, colWidths = [5.4*inch])
