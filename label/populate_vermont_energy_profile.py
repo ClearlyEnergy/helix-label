@@ -260,11 +260,11 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(txt)
     triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 0.62 + 40.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
-    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"40 \n High Performance Home")
+    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"High Performance \n Home")
     Story.append(pic)
     triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 0.62 + 105.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
-    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'Avg. home built to 2020 Energy Code')
+    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'Avg. home built to \n 2020 Energy Code')
     Story.append(pic)
     txt = flowable_text(4.82, 0.44, str(int(data_dict['cons_mmbtu_max'])),7)
     Story.append(txt)
