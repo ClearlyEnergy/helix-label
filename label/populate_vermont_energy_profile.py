@@ -200,6 +200,13 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         text_c114 = Paragraph(data_dict['author_company'],pc14)
     else:
         text_c114 = Paragraph(data_dict['author_name'],pc14)
+    if 'hers_score' in data_dict and data_dict['hers_score']:
+        text_c114b = Paragraph('Source: RESNET HERS Rating', pc14)
+    elif 'hes_score' in data_dict and data_dict['hes_score']:
+        text_c114b = Paragraph('Source: Dept. of Energy Home Energy Score', pc14)
+    else:
+        text_c114b = None
+    
     text_c115 = Paragraph("Brought to you by a collaboration of Vermont Residential Energy Labeling Stakeholders, HELIX and ClearlyEnergy", tf_small)
     text_c116 = Paragraph("*Annual energy costs include heating, cooling and electricity", tf_small)
     
@@ -222,6 +229,8 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c112)
     Story.append(text_c113)
     Story.append(text_c114)
+    if text_c114b:
+        Story.append(text_c114b)
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(text_c115)
@@ -661,7 +670,7 @@ if __name__ == '__main__':
         'heatingfuel': 'Electric', 'ng_score': 1000.0, 'elec_score': 2000.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 1000, 'wood_pellet_score': 0, 'solar_score': -1000.0,
         'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 1000.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
-        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': True, 'phius': True, 'author_name': 'John Doe', 'author_company': 'CertCo',
+        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': True, 'phius': True, 'author_name': 'John Doe', 'author_company': None,
         'high_cost_action': 2, 'low_cost_action': "1234",   
         'heater_estar': False, 'water_estar': False, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
         'washer_estar': False, 'dishwasher_estar': False, 'evcar': True, 
