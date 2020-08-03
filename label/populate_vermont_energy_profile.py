@@ -560,13 +560,13 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     if data_dict['low_cost_action'].find("4") != -1:
         Story.append(Paragraph("If still using old thermostats, update to programmable or smart thermostats", pc291, bulletText=unchecked.encode('UTF8')))    
         num_action += 1
-    if data_dict['low_cost_action'].find("3") != -1 or num_action < 8:
+    if data_dict['low_cost_action'].find("3") != -1 or num_action < 7:
         Story.append(Paragraph("Schedule regular maintenance of heating/ac systems to optimize performance", pc291, bulletText=unchecked.encode('UTF8')))
         num_action += 1
-        if num_action < 8:
+        if num_action < 7:
             Story.append(Paragraph('Power down electronics completely to avoid “phantom electricity loads" or invest in an advanced power strip to do it for you', pc291, bulletText=unchecked.encode('UTF8')))
             num_action += 2
-        if num_action < 8:
+        if num_action < 7:
             Story.append(Paragraph("Remove dust behind and underneath the refrigerator at least once a year.  If you have a forced-air system, you can vacuum the vents and change air filters", pc291, bulletText=unchecked.encode('UTF8')))
             num_action += 2
     ### P2
