@@ -54,7 +54,7 @@ FUELCOLOR = [CUSTOM_ELECGREEN, CUSTOM_ORANGE, CUSTOM_DTEAL, CUSTOM_LTEAL, CUSTOM
 
 
 class flowable_triangle(Flowable):
-    def __init__(self, imgdata, offset_x, offset_y, height, width, text):
+    def __init__(self, imgdata, offset_x, offset_y, height, width, text, side='right'):
         Flowable.__init__(self)
         self.img = ImageReader(imgdata)
         self.offset_x = offset_x
@@ -62,6 +62,7 @@ class flowable_triangle(Flowable):
         self.height = height
         self.width = width
         self.text = text
+        self.side = side
 
     def draw(self):
         self.canv.drawImage(self.img, self.offset_x*inch, self.offset_y*inch, height = self.height*inch, width=self.width*inch)
@@ -69,7 +70,10 @@ class flowable_triangle(Flowable):
         self.canv.setFillColor(colors.gray)
         t = self.canv.beginText()
 #        t.setFont("FontAwesome", 30)
-        t.setTextOrigin(self.offset_x*inch, (self.offset_y-0.1)*inch)
+        if self.side == 'right':
+            t.setTextOrigin(self.offset_x*inch, (self.offset_y-0.1)*inch)
+        elif self.side == 'left':
+            t.setTextOrigin((self.offset_x-0.4)*inch, (self.offset_y-0.1)*inch)            
         t.textLines(self.text)
         self.canv.drawText(t)
 #        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
@@ -269,7 +273,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     Story.append(txt)
     triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 0.62 + 40.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
-    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"High Performance \n Home")
+    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"High Performance \n Home","left")
     Story.append(pic)
     triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 0.62 + 105.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
