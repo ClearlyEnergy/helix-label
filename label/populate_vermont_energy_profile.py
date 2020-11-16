@@ -131,6 +131,7 @@ def pie_chart(data_dict):
     return drawing
 
 def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
+    print(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
     font_xxl =30
@@ -301,7 +302,12 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     column_24 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.09*doc.height, showBoundary=0, topPadding=10)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=0, spaceAfter=0, hAlign='CENTER', vAlign='TOP', dash=None))
     if data_dict['bill'] > 0:
-        text_c240 = Paragraph("The breakdown of fuel usage is calculated from homeowner provided fuel and electricity costs of " +'$'+"{:,}".format(int(data_dict['bill'])) + " adjusted for weather, settings and occupancy.", tf_standard)
+        if 'hers_score' in data_dict and data_dict['hers_score']:
+            text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " +'$'+"{:,}".format(int(data_dict['bill'])), tf_standard)
+        elif 'hes_score' in data_dict and data_dict['hes_score']:
+            text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " +'$'+"{:,}".format(int(data_dict['bill'])), tf_standard)        
+        else:
+            text_c240 = Paragraph("The breakdown of fuel usage is calculated from homeowner provided fuel and electricity costs of " +'$'+"{:,}".format(int(data_dict['bill'])) + " adjusted for weather, settings and occupancy.", tf_standard)
     else:
         text_c240 = Paragraph("Estimate includes electricity and fuels used to heat your home for a year.", tf_standard)
 
@@ -439,11 +445,11 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     t_achieve = []
     if data_dict['has_solar'] and num_line < 4:
         if data_dict['solar_ownership'] == 'owned':
-            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of owned photovoltaic solar on site', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of owned solar photovoltaic on site', pc273)])
         elif data_dict['solar_ownership'] == 'third':
-            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of leased photovoltaic solar', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"Home has " + str(data_dict['capacity']) + 'KW of leased solar photovoltaic estimated to generate ' + str(int(data_dict['cons_solar'])) + 'kWh/yr', pc273)]) 
         else:
-            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of photovoltaic solar on site', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of solar photovoltaic on site', pc273)])
         num_line +=1 
     if data_dict['water_solar'] and num_line < 4:
         t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has solar hot water", pc273)])
@@ -676,14 +682,14 @@ if __name__ == '__main__':
         'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
         'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 120, 'cons_mmbtu_max':254, 'cons_mmbtu_min': 90.566712,
         'heatingfuel': 'Electric', 'ng_score': 1000.0, 'elec_score': 2000.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 1000, 'wood_pellet_score': 0, 'solar_score': -1000.0,
-        'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 1000.0,
+        'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 12340.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
         'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': True, 'phius': True, 'author_name': 'John Doe', 'author_company': None,
         'high_cost_action': 2, 'low_cost_action': "1234",   
         'heater_estar': False, 'water_estar': False, 'water_solar': True, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
         'washer_estar': False, 'dishwasher_estar': False, 'evcharger': True, 
         'heater_type': 'pump', 'water_type': 'heatpump', 
-        'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 1200.0}
+        'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'solar_ownership': 'third','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 1200.0}
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
 
