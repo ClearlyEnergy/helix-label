@@ -71,9 +71,13 @@ class flowable_triangle(Flowable):
         t = self.canv.beginText()
 #        t.setFont("FontAwesome", 30)
         if self.side == 'right':
-            t.setTextOrigin(self.offset_x*inch, (self.offset_y-0.1)*inch)
+            t.setTextOrigin((self.offset_x)*inch, (self.offset_y-0.1)*inch)
         elif self.side == 'left':
-            t.setTextOrigin((self.offset_x-0.4)*inch, (self.offset_y-0.1)*inch)            
+            t.setTextOrigin((self.offset_x-0.4)*inch, (self.offset_y-0.1)*inch)
+        elif self.side == 'low':
+            t.setTextOrigin((self.offset_x)*inch, (self.offset_y-0.3)*inch)
+        elif self.side == 'high':
+            t.setTextOrigin((self.offset_x)*inch, (self.offset_y+0.1)*inch)
         t.textLines(self.text)
         self.canv.drawText(t)
 #        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
@@ -277,10 +281,18 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     offset_x = 0.62 + 40.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
     pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"High Performance \n Home","left")
     Story.append(pic)
+    triangle = IMG_PATH+"/triangle2.png"
+    offset_x = 0.62 + data_dict['cons_mmbtu_avg']/data_dict['cons_mmbtu_max']*(4.82-0.62)
+    if offset_x < 4.3:
+        pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Avg. home \n built in " + str(int(data_dict['yearbuilt'])),"right")
+        Story.append(pic)
     triangle2 = IMG_PATH+"/triangle2.png"
     offset_x = 0.62 + 105.0/data_dict['cons_mmbtu_max']*(4.82-0.62)
     if offset_x < 4.2:
-        pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'Avg. home built to \n 2020 Energy Code')
+        if (data_dict['cons_mmbtu_avg'] - 105.0)/data_dict['cons_mmbtu_max'] > 0.15 and (105.0 - 40.0)/data_dict['cons_mmbtu_max'] > 0.15:
+            pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'Avg. home built to \n 2020 Energy Code', 'left')
+        else:
+            pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,'Avg. home built to 2020 Energy Code','high')
         Story.append(pic)
     txt = flowable_text(4.82, 0.44, str(int(data_dict['cons_mmbtu_max'])),7)
     Story.append(txt)
@@ -684,7 +696,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 if __name__ == '__main__':
     data_dict = {
         'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
-        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 83, 'cons_mmbtu_max':254, 'cons_mmbtu_min': 90.566712,
+        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 125, 'cons_mmbtu_avg': 120, 'cons_mmbtu_max':160, 'cons_mmbtu_min': 90.566712,
         'heatingfuel': 'Electric', 'ng_score': 745.0, 'elec_score': 2355.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 245, 'wood_pellet_score': 0, 'solar_score': -1000.0,
         'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 3340.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
