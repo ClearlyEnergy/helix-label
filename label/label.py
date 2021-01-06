@@ -31,6 +31,12 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
+    def energy_first_mortgaga(self, data_dict, aws_bucket=''):
+        out_file = self.out_path + '/GreenAddendum.pdf'
+        write_energy_first_mortgage_pdf(data_dict, out_file)
+        out_filename = self._write_S3(out_file, aws_bucket)
+        return out_filename
+
     def vermont_energy_profile(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/VTLabel.pdf'
         write_vermont_energy_profile_pdf(data_dict, out_file)
