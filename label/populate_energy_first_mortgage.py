@@ -174,13 +174,13 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     
     Story.append(FrameBreak)
 
-    approval_frame = Frame(document.leftMargin,document.height-0.32*document.height,document.width,0.16*document.height, showBoundary=0)
+    approval_frame = Frame(document.leftMargin,document.height-0.34*document.height,document.width,0.20*document.height, showBoundary=0)
     approval_header_p = Paragraph("<font name=Helvetica-Bold size=11>Customer Approval</font>",styles['Heading2'])
     Story.append(approval_header_p)
     approval_text1 = '''<font name=Helvetica size=8>I certify that I meet the eligibility requirements of this loan program, that all information submitted as part of this form is correct to the best of my knowledge and that I accept the Terms & Conditions. I agree to allow VSECU to share project information with Energy Future Group.</font>'''
     approval_text1_p = Paragraph(approval_text1, styles['line-height'])
     Story.append(approval_text1_p)
-    Story.append(Spacer(1, 30))
+    Story.append(Spacer(1, 24))
     
     signature_table = Table([['Customer Signature','','Date']], colWidths = [3.0*inch, 1.0*inch,3.0*inch])
     signature_tableStyle = TableStyle([
@@ -190,15 +190,17 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     ])
     signature_table.setStyle(signature_tableStyle)       
     Story.append(signature_table)
+    Story.append(Spacer(1,24))
+    Story.append(signature_table)
     Story.append(FrameBreak)
 
-    agreement_frame = Frame(document.leftMargin,document.height-0.48*document.height,document.width,0.16*document.height, showBoundary=0)
+    agreement_frame = Frame(document.leftMargin,document.height-0.48*document.height,document.width,0.14*document.height, showBoundary=0)
     agreement_header_p = Paragraph("<font name=Helvetica-Bold size=11>Contractor Agreement</font>",styles['Heading2'])
     Story.append(agreement_header_p)
     agreement_text1 = '''<font name=Helvetica size=8>I certify that I have provided an accurate scope of work and price quote that meets the EnergyFirst Mortgage Program requirements. I agree to report project information to VSECU and Energy Futures Group.</font>'''
     agreement_text1_p = Paragraph(agreement_text1, styles['line-height'])
     Story.append(agreement_text1_p)
-    Story.append(Spacer(1, 30))
+    Story.append(Spacer(1, 20))
     
     signature_table = Table([['Contractor Signature','','Date']], colWidths = [3.0*inch, 1.0*inch,3.0*inch])
     signature_tableStyle = TableStyle([
@@ -259,7 +261,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
       #populate story with paragraphs    
     document.build(Story)
 
-# Run with:  python3 -m label.populate_energy_first_mortgate
+# Run with:  python3 -m label.populate_energy_first_mortgage
 if __name__ == '__main__':
     data_dict ={'address_line_1': '34 Somerset Rd', 'address_line_2': None, 'city': 'Montpelier', 'state': 'VT', 'postal_code': '05602', 
     'hes_pre': 5, 'hes_post': 10, 'cost_pre': 3000, 'cost_post': 1000, 

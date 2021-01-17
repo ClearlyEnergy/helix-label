@@ -1,7 +1,8 @@
+from label.generic_energy_profile import write_generic_energy_profile_pdf
 from label.populate_residential_green_addendum import write_green_addendum_pdf
 from label.populate_vermont_energy_profile import write_vermont_energy_profile_pdf
 from label.populate_massachusetts_home_scorecard import create_pdf
-from label.generic_energy_profile import write_generic_energy_profile_pdf
+from label.populate_energy_first_mortgage import write_energy_first_mortgage_pdf
 import os
 import os.path
 import boto3
@@ -31,8 +32,8 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
-    def energy_first_mortgaga(self, data_dict, aws_bucket=''):
-        out_file = self.out_path + '/GreenAddendum.pdf'
+    def energy_first_mortgage(self, data_dict, aws_bucket=''):
+        out_file = self.out_path + '/ProjectSummary.pdf'
         write_energy_first_mortgage_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
