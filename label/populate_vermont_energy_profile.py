@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python label/populate_vermont_energy_profile.py
+# run with python3 -m label.populate_vermont_energy_profile
 
 import os
 import time
@@ -174,6 +174,10 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     im = Image(vthep_logo, 2.4*inch, 1.0*inch)
     Story.append(im)
     Story.append(FrameBreak)
+    
+    total_score = 0.0
+    for fuel in ['ng','elec','ho','propane','wood_cord','wood_pellet']:
+        total_score += data_dict[fuel+'_score']
 
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
@@ -181,7 +185,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = font_xxl, fontName = font_bold, textColor = colors.white)
     pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = font_s, fontName = font_bold, textColor = colors.white, spaceBefore=26)
     text_c101 = Paragraph("THIS HOME'S EXPECTED ANNUAL ENERGY COST*", pc101)
-    text_c102 = Paragraph('$'+str(int(data_dict['score'])), pc102)
+    text_c102 = Paragraph('$'+str(int(total_score)), pc102)
     text_c103 = Paragraph(data_dict['rating'], pc103)
     Story.append(text_c101)
     Story.append(text_c102)
@@ -313,7 +317,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     # Expected Cost
     y_offset += 0.02
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
-    text_c231 = Paragraph('$'+str(int(data_dict['score'])), pc201)
+    text_c231 = Paragraph('$'+str(int(total_score)), pc201)
     Story.append(text_c231)
     Story.append(FrameBreak)
     
@@ -348,7 +352,12 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     pc253 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = font_t, textColor = CUSTOM_DGRAY, fontName = font_normal,  spaceBefore = 0)
     tct1 = Paragraph("<font name='InterstateBlack'>The breakdown of energy usage is an estimate </font><font name='Helvetica'>based on the energy sources used in this home</font>", pc251) 
     tct = []
-    data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
+    if data_dict['has_solar']:
+        if data_dict['solar_ownership'] == 'owned':
+            data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
+        elif data_dict['solar_ownership'] == 'third':
+            data_dict['cons_elec'] = data_dict['cons_elec'] + data_dict['cons_solar']            
+    
     num_fuel = 0
     for num, fuel in enumerate(FUELS):
         if data_dict[fuel+'_score'] != 0:
@@ -644,7 +653,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     
     features_table = Table([
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-05.png", 0.05*doc.width,0.05*doc.width), Paragraph('INSULATION & AIR LEAKAGE',p2_r10),Paragraph('All cavities filled plus insulation covering framing, air sealing',p2_r11),Paragraph('Vermont energy code standards',p2_r12),Paragraph('Little to none',p2_r11)],
-        [Image(IMG_PATH+"/HomeEnergyProfile_icons-06.png", 0.05*doc.width,0.05*doc.width), Paragraph('HEATING & COOLING SYSTEMS',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Federal minimum standard efficiency',p2_r12),Paragraph('0-15+ years old, no annual maintenance',p2_r11)],
+        [Image(IMG_PATH+"/HomeEnergyProfile_icons-06.png", 0.05*doc.width,0.05*doc.width), Paragraph('HEATING & COOLING SYSTEMS',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Federal minimum standard efficiency',p2_r12),Paragraph('15+ years old, no annual maintenance',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-07.png", 0.05*doc.width,0.05*doc.width), Paragraph('LIGHTS & APPLIANCES',p2_r10),Paragraph('ENERGY STAR Certified or better',p2_r11),Paragraph('Mix of ENERGY STAR and conventional lights and appliances',p2_r12),Paragraph('Incandescent bulbs, conventional appliances',p2_r11)],
         [Image(IMG_PATH+"/HomeEnergyProfile_icons-08.png", 0.05*doc.width,0.05*doc.width), Paragraph('RENEWABLE ENERGY',p2_r10),Paragraph('Sized to off-set all or most consumption',p2_r11),Paragraph('Some/None',p2_r12),Paragraph('None',p2_r11)],
     ], colWidths = [0.05*doc.width, 0.275*doc.width, 0.245*doc.width, 0.198*doc.width, 0.232*doc.width])
@@ -708,9 +717,9 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 if __name__ == '__main__':
     data_dict = {
         'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
-        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 125, 'cons_mmbtu_avg': 120, 'cons_mmbtu_max':160, 'cons_mmbtu_min': 90.566712,
-        'heatingfuel': 'Electric', 'ng_score': 745.0, 'elec_score': 2355.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 245, 'wood_pellet_score': 0, 'solar_score': -1000.0,
-        'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 3340.0,
+        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 60, 'cons_mmbtu': 3, 'cons_mmbtu_avg': 120, 'cons_mmbtu_max':160, 'cons_mmbtu_min': 0,
+        'heatingfuel': 'Electric', 'ng_score': 0.0, 'elec_score': 60.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 0.0, 'wood_pellet_score': 0, 'solar_score': 2110.0,
+        'cons_elec': 12129.0, 'cons_ng': 0.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 0.0, 'cons_solar': -11000.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
         'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': False, 'phius': False,
         'high_cost_action': 2, 'low_cost_action': "1234",   
@@ -718,7 +727,7 @@ if __name__ == '__main__':
         'washer_estar': False, 'dishwasher_estar': False, 'evcharger': True, 
         'heater_type': 'pump', 'water_type': 'heatpump', 
         'has_audit': False, 'auditor': 'Joe', 'third_party': None, 'author_name': 'John Doe', 'author_company': 'Audit Corp 1',
-        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'third','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 2345.0}
+        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 2345.0}
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
 
