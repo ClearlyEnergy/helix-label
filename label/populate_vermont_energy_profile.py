@@ -331,9 +331,9 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     column_24 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.09*doc.height, showBoundary=0, topPadding=10)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=0, spaceAfter=0, hAlign='CENTER', vAlign='TOP', dash=None))
     if data_dict['bill'] > 0:
-        if 'hers_score' in data_dict and data_dict['hers_score']:
+        if data_dict['certified_bill'] and 'hers_score' in data_dict and data_dict['hers_score']:
             text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " +'$'+"{:,}".format(int(data_dict['bill'])), tf_standard)
-        elif 'hes_score' in data_dict and data_dict['hes_score']:
+        elif data_dict['certified_bill'] and 'hes_score' in data_dict and data_dict['hes_score']:
             text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " +'$'+"{:,}".format(int(data_dict['bill'])), tf_standard)        
         else:
             text_c240 = Paragraph("The breakdown of fuel usage is calculated from homeowner provided fuel and electricity costs of " +'$'+"{:,}".format(int(data_dict['bill'])) + " adjusted for weather, settings and occupancy.", tf_standard)
@@ -355,7 +355,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     if data_dict['has_solar']:
         if data_dict['solar_ownership'] == 'owned':
             data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
-        elif data_dict['solar_ownership'] == 'third':
+        else:
             data_dict['cons_elec'] = data_dict['cons_elec'] + data_dict['cons_solar']            
     
     num_fuel = 0
