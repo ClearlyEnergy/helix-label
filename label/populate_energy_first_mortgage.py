@@ -29,7 +29,6 @@ IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
 def write_energy_first_mortgage_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
     address_line_1 = data_dict['address_line_1']
-    address_line_2 = '' if data_dict['address_line_2'] is None else data_dict['address_line_2']
     city=data_dict['city']
     state = data_dict['state']
     postal_code= data_dict['postal_code']
@@ -104,13 +103,16 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     #iterate through measures
     item_num = 1
     cost_sum = 0
-    for name, value in data_dict['measures'].items():
-        c3 = Paragraph("${:,}".format(int(value)), cell_left)
-        work_subtable = Table([[item_num, name, c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
-        work_subtable.setStyle(customer_tableStyle)
-        Story.append(work_subtable)
-        item_num += 1
-        cost_sum += value
+    for x in range(1,8):
+        if 'measure_cost_'+str(x) in data_dict and data_dict['measure_name_'+str(x)] is not None:
+            item_name = data_dict['measure_name_'+str(x)]
+            item_value = data_dict['measure_cost_'+str(x)]
+            c3 = Paragraph("${:,}".format(int(item_value)), cell_left)
+            work_subtable = Table([[x, item_name, c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
+            work_subtable.setStyle(customer_tableStyle)
+            Story.append(work_subtable)
+            item_num += 1
+            cost_sum += item_value
     c3 = Paragraph("${:,}".format(int(cost_sum)), cell_left)
     work_subtable = Table([['', 'Total', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
     work_subtable.setStyle(customer_tableStyle)
@@ -159,18 +161,29 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     h14 = Paragraph('<font name=Helvetica-Bold><strong>Improvement</strong></font>',styles['Normal'])
     h21 = Paragraph('<font name=Helvetica-Bold><strong>Annual Energy Cost</strong></font>',styles['Normal'])
     h31 = Paragraph('<font name=Helvetica-Bold><strong>US DOE Home Energy Score (1-10)</strong></font>',styles['Normal'])
-    c22 = Paragraph('$'+str(int(data_dict['cost_pre'])), cell_center)
-    c23 = Paragraph('$'+str(int(data_dict['cost_post'])), cell_center)
-    c24 = Paragraph('$'+str(int(data_dict['cost_pre'] - data_dict['cost_post'])), cell_center)
+    if 'hes_pre' in data_dict:
+        c22 = Paragraph('$'+str(int(data_dict['cost_pre'])), cell_center)
+        c23 = Paragraph('$'+str(int(data_dict['cost_post'])), cell_center)
+        c24 = Paragraph('$'+str(int(data_dict['cost_pre'] - data_dict['cost_post'])), cell_center)
     
-    savings_table = Table([['',h12,h13,h14], [h21, c22, c23,c24], [h31, data_dict['hes_pre'],data_dict['hes_post'],data_dict['hes_post']-data_dict['hes_pre']]], colWidths = [2.0*inch, 1.8*inch, 1.8*inch, 1.8*inch])
-    savings_tableStyle = TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-        ('ALIGN', (1,1), (-1,-1), 'CENTER'),
-        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
-    ])
-    savings_table.setStyle(savings_tableStyle)       
-    Story.append(savings_table)
+        savings_table = Table([['',h12,h13,h14], [h21, c22, c23,c24], [h31, data_dict['hes_pre'],data_dict['hes_post'],data_dict['hes_post']-data_dict['hes_pre']]], colWidths = [2.0*inch, 1.8*inch, 1.8*inch, 1.8*inch])
+        savings_tableStyle = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('ALIGN', (1,1), (-1,-1), 'CENTER'),
+            ('GRID',(0,0),(-1,-1),0.5,colors.gray),
+        ])
+        savings_table.setStyle(savings_tableStyle)       
+        Story.append(savings_table)
+    else:
+        savings_table = Table([['',h12,h13,h14], [h21, '', '', ''], [h31, '', '', '']], colWidths = [2.0*inch, 1.8*inch, 1.8*inch, 1.8*inch])
+        savings_tableStyle = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('ALIGN', (1,1), (-1,-1), 'CENTER'),
+            ('GRID',(0,0),(-1,-1),0.5,colors.gray),
+        ])
+        savings_table.setStyle(savings_tableStyle)       
+        Story.append(savings_table)
+        
     
     Story.append(FrameBreak)
 
@@ -263,13 +276,14 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
 
 # Run with:  python3 -m label.populate_energy_first_mortgage
 if __name__ == '__main__':
-    data_dict ={'address_line_1': '34 Somerset Rd', 'address_line_2': None, 'city': 'Montpelier', 'state': 'VT', 'postal_code': '05602', 
+    data_dict ={'address_line_1': '34 Somerset Rd', 'city': 'Montpelier', 'state': 'VT', 'postal_code': '05602', 
     'hes_pre': 5, 'hes_post': 10, 'cost_pre': 3000, 'cost_post': 1000, 
     'coach_name': 'Richard Faesy', 'coach_phone': '444-444-4444', 
     'originator_name': 'Joe Banker', 'originator_phone': '555-555-5555',
     'contractor_name': 'Gabrielle Contractor', 'contractor_company': 'Contractor Co.', 'contractor_phone': '123-456-7890', 
     'customer_name': 'Handy Andy', 'customer_phone': '111-111-1111', 'customer_email': 'handy@andy.com', 
-    'measures': {'Solar Photovoltaic': 25000, 'Garage Insulation': 2345}, 'mortgage': 100000} 
+    'measure_name_1': 'Solar Photovoltaic', 'measure_value_1': 25000, 'measure_name_2': 'Garage Insulation', 'measure_value_2': 2345, 
+    'mortgage': 100000} 
     out_file = 'EFMLabel.pdf'
     write_energy_first_mortgage_pdf(data_dict, out_file) 
   
