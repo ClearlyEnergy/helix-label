@@ -44,7 +44,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     cell_center = ParagraphStyle('cell_center', alignment = TA_CENTER)
     cell_left = ParagraphStyle('cell_center', alignment = TA_LEFT)
     
-    header_frame = Frame(document.leftMargin,document.height-0.10*document.height,document.width,0.10*document.height, showBoundary=1)
+    header_frame = Frame(document.leftMargin,document.height-0.10*document.height,document.width,0.10*document.height, showBoundary=0)
     hp1 = Paragraph('''<font name=Helvetica size=18>EnergyFirst Mortgage Program Summary Form</font>''',styles['Heading1'])
     Story.append(hp1)
     hp2 = Paragraph("<font name=helvetica size=9><i>This Form summarizes the scope of work and cost for the energy improvements for the subject property and serves as the agreement between all parties to enable the EnergyFirst Mortgage to proceed.</i></font>",styles['line-height'])          
@@ -57,7 +57,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
         ('FONTSIZE', (0, 0), (-1, -1), 9),
     ])
 
-    customer_frame = Frame(document.leftMargin,document.height-0.25*document.height,document.width,0.15*document.height, showBoundary=1)
+    customer_frame = Frame(document.leftMargin,document.height-0.25*document.height,document.width,0.15*document.height, showBoundary=0)
     customer_header_p = Paragraph("<font name=Helvetica-Bold size=11>Customer</font>",styles['Heading2'])
     Story.append(customer_header_p)
     customer_table = Table([['Name',data_dict['customer_name']],['Property Address (street, city, zip, state)',''],['Mailing Address (street, city, zip, state)','']], colWidths = [2.5*inch, 5.0*inch], hAlign = 'LEFT')
@@ -68,7 +68,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     Story.append(customer_subtable)
     Story.append(FrameBreak)
     
-    contractor_frame = Frame(document.leftMargin,document.height-0.37*document.height,document.width,0.12*document.height, showBoundary=1)
+    contractor_frame = Frame(document.leftMargin,document.height-0.37*document.height,document.width,0.12*document.height, showBoundary=0)
     contractor_header_p = Paragraph("<font name=Helvetica-Bold size=11>Contractor</font>",styles['Heading2'])
     Story.append(contractor_header_p)
     contractor_table = Table([['Name',data_dict['contractor_name']],['Company Name',data_dict['contractor_company']],['Phone #',data_dict['contractor_phone']]], colWidths = [2.5*inch, 5.0*inch], hAlign = 'LEFT')
@@ -76,7 +76,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     Story.append(contractor_table)
     Story.append(FrameBreak)
     
-    originator_frame = Frame(document.leftMargin,document.height-0.47*document.height,document.width,0.10*document.height, showBoundary=1)
+    originator_frame = Frame(document.leftMargin,document.height-0.47*document.height,document.width,0.10*document.height, showBoundary=0)
     originator_header_p = Paragraph("<font name=Helvetica-Bold size=11>VSECU Originator</font>",styles['Heading2'])
     Story.append(originator_header_p)
     originator_table = Table([['Name',data_dict['originator_name']],['Phone #',data_dict['originator_phone']]], colWidths = [2.5*inch, 5.0*inch], hAlign = 'LEFT')
@@ -84,7 +84,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     Story.append(originator_table)
     Story.append(FrameBreak)
     
-    coach_frame = Frame(document.leftMargin,document.height-0.57*document.height,document.width,0.10*document.height, showBoundary=1)
+    coach_frame = Frame(document.leftMargin,document.height-0.57*document.height,document.width,0.10*document.height, showBoundary=0)
     coach_header_p = Paragraph("<font name=Helvetica-Bold size=11>Energy Coach (Energy Futures Group)</font>",styles['Heading2'])
     Story.append(coach_header_p)
     coach_table = Table([['Name',data_dict['coach_name']],['Phone #',data_dict['coach_phone']]], colWidths = [2.5*inch, 5.0*inch], hAlign = 'LEFT')
@@ -92,7 +92,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     Story.append(coach_table)
     Story.append(FrameBreak)
 
-    work_frame = Frame(document.leftMargin,document.height-0.94*document.height,document.width,0.37*document.height, showBoundary=1)
+    work_frame = Frame(document.leftMargin,document.height-0.94*document.height,document.width,0.37*document.height, showBoundary=0)
     work_header_p = Paragraph("<font name=Helvetica-Bold size=12>Scope of Work</font>",styles['Heading2'])
     Story.append(work_header_p)
     work_text = Paragraph("<font name=helvetica size=9><i>Energy improvement and energy barrier remediation measures agreed to by the contractor and borrower(s) that will total at least 10% of the mortgage amount.</i></font>",styles['line-height'])          
@@ -146,7 +146,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
                                    
                                     ])
     footer_table.setStyle(footer_table_style)
-    footer_frame = Frame(document.leftMargin,document.height-0.999*document.height,document.width,0.06*document.height, showBoundary=1)
+    footer_frame = Frame(document.leftMargin,document.height-0.999*document.height,document.width,0.06*document.height, showBoundary=0)
     Story.append(footer_table)
     
     #### SETTING UP FRAMES FOR PAGE 2
@@ -247,12 +247,10 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     terms_text6 = '''<font name=Helvetica size=8><strong>Information Release:</strong> The enrollee hereby authorizes VSECU and EFG to release information for the purpose of assisting real estate appraisers and realtors in the development of accurate home appraisals. Requests by enrollees to withhold such release will be honored, providing such notification is received prior to completion of HERS documentation.</font>'''
     terms_text6_p = Paragraph(terms_text6, styles['line-height'])
     Story.append(terms_text6_p)
-    terms_header_p2 = Paragraph("<font name=Helvetica-Bold size=11>Other Comments</font>",styles['Heading2'])
-    Story.append(terms_header_p2)
     #add line    
     Story.append(FrameBreak)
         
-    page2_internal_frame = ColorFrame(document.leftMargin,document.height-0.94*document.height,document.width,0.06*document.height, showBoundary=0,background='#f2f1ef')
+    page2_internal_frame = ColorFrame(document.leftMargin,document.height-0.94*document.height,document.width,0.06*document.height, showBoundary=0, background='#f2f1ef')
     f1_header1 = "<font name=Helvetica-Bold size=11>For Internal Use</font>"
     f1_header1_p = Paragraph(f1_header1,styles['Heading2'])
     Story.append(f1_header1_p)
@@ -262,11 +260,28 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     # Story.append(Spacer(1,8))
     Story.append(footer_table)
     
+    #### SETTING UP FRAMES FOR PAGE 3
+    page3_notes = ColorFrame(document.leftMargin,document.height-0.88*document.height,document.width,0.88*document.height, showBoundary=0)
+    Story.append(NextPageTemplate('thirdPage'))
+    Story.append(FrameBreak)
+    terms_header_p2 = Paragraph("<font name=Helvetica-Bold size=11>Project Notes</font>",styles['Heading2'])
+    Story.append(terms_header_p2)
+    notes_text1 = '''<font name=Helvetica size=8>'''+data_dict['notes']+'''.</font>'''
+    notes_text1_p = Paragraph(notes_text1, styles['line-height'])
+    Story.append(notes_text1_p)
+    Story.append(FrameBreak)
+    page3_footer_frame = Frame(document.leftMargin,document.height-0.999*document.height,document.width,0.06*document.height, showBoundary=0)
+    # Story.append(Spacer(1,8))
+    Story.append(footer_table)
+    
+    
     page_1_frames = [header_frame, customer_frame, contractor_frame, originator_frame, coach_frame, work_frame, footer_frame]
     page_2_frames = [energy_savings_frame, approval_frame, agreement_frame, page2_terms, page2_internal_frame, page2_footer_frame]
+    page_3_frames = [page3_notes, page3_footer_frame]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     templates.append(PageTemplate(frames=page_2_frames,id='secondPage'))
+    templates.append(PageTemplate(frames=page_3_frames,id='thirdPage'))
     document.addPageTemplates(templates)
 
     style = styles["Normal"]
@@ -283,7 +298,7 @@ if __name__ == '__main__':
     'contractor_name': 'Gabrielle Contractor', 'contractor_company': 'Contractor Co.', 'contractor_phone': '123-456-7890', 
     'customer_name': 'Handy Andy', 'customer_phone': '111-111-1111', 'customer_email': 'handy@andy.com', 
     'measure_name_1': 'Solar Photovoltaic', 'measure_value_1': 25000, 'measure_name_2': 'Garage Insulation', 'measure_value_2': 2345, 
-    'mortgage': 100000} 
+    'mortgage': 100000, 'notes': 'Some text on the details of the project'} 
     out_file = 'EFMLabel.pdf'
     write_energy_first_mortgage_pdf(data_dict, out_file) 
   
