@@ -117,18 +117,19 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     work_subtable = Table([['', 'Total', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
     work_subtable.setStyle(customer_tableStyle)
     Story.append(work_subtable)
-    c3 = Paragraph("${:,}".format(int(data_dict['mortgage'])), cell_left)
-    work_subtable = Table([['', 'Total Mortgage Loan Amount', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
-    work_tableStyle = TableStyle([
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-        ('FONTSIZE', (0, 0), (-1, -1), 9),
-    ])
-    work_subtable.setStyle(work_tableStyle)
-    Story.append(work_subtable)
-    c3 = Paragraph("{:,.1f}%".format(100.0 * cost_sum / data_dict['mortgage']), cell_left)
-    work_subtable = Table([['', 'Energy Improvement Package Cost as a Percent of Total Loan Amount:', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
-    work_subtable.setStyle(work_tableStyle)
-    Story.append(work_subtable)
+    if 'mortgage' in data_dict:
+        c3 = Paragraph("${:,}".format(int(data_dict['mortgage'])), cell_left)
+        work_subtable = Table([['', 'Total Mortgage Loan Amount', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
+        work_tableStyle = TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('FONTSIZE', (0, 0), (-1, -1), 9),
+        ])
+        work_subtable.setStyle(work_tableStyle)
+        Story.append(work_subtable)
+        c3 = Paragraph("{:,.1f}%".format(100.0 * cost_sum / data_dict['mortgage']), cell_left)
+        work_subtable = Table([['', 'Energy Improvement Package Cost as a Percent of Total Loan Amount:', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
+        work_subtable.setStyle(work_tableStyle)
+        Story.append(work_subtable)
     Story.append(FrameBreak)
     
     #  FOOTER FRAME
