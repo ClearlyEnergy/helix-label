@@ -117,7 +117,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     work_subtable = Table([['', 'Total', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
     work_subtable.setStyle(customer_tableStyle)
     Story.append(work_subtable)
-    if 'mortgage' in data_dict:
+    if 'mortgage' in data_dict and data_dict['mortgage']:
         c3 = Paragraph("${:,}".format(int(data_dict['mortgage'])), cell_left)
         work_subtable = Table([['', 'Total Mortgage Loan Amount', c3]], colWidths = [0.5*inch, 5.0*inch, 2.0*inch], hAlign = 'LEFT')
         work_tableStyle = TableStyle([
@@ -162,12 +162,17 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     h14 = Paragraph('<font name=Helvetica-Bold><strong>Improvement</strong></font>',styles['Normal'])
     h21 = Paragraph('<font name=Helvetica-Bold><strong>Annual Energy Cost</strong></font>',styles['Normal'])
     h31 = Paragraph('<font name=Helvetica-Bold><strong>US DOE Home Energy Score (1-10)</strong></font>',styles['Normal'])
-    if 'hes_pre' in data_dict:
+    if 'cost_pre' in data_dict and data_dict['cost_pre']:
         c22 = Paragraph('$'+str(int(data_dict['cost_pre'])), cell_center)
         c23 = Paragraph('$'+str(int(data_dict['cost_post'])), cell_center)
         c24 = Paragraph('$'+str(int(data_dict['cost_pre'] - data_dict['cost_post'])), cell_center)
-    
-        savings_table = Table([['',h12,h13,h14], [h21, c22, c23,c24], [h31, data_dict['hes_pre'],data_dict['hes_post'],data_dict['hes_post']-data_dict['hes_pre']]], colWidths = [2.0*inch, 1.8*inch, 1.8*inch, 1.8*inch])
+    else:
+        c22 = ''
+        c23 = ''
+        c24 = ''
+        
+    if 'hes_pre' in data_dict:
+        savings_table = Table([['',h12,h13,h14], [h21, c22, c23,c24], [h31, int(data_dict['hes_pre']),int(data_dict['hes_post']),int(data_dict['hes_post']-data_dict['hes_pre'])]], colWidths = [2.0*inch, 1.8*inch, 1.8*inch, 1.8*inch])
         savings_tableStyle = TableStyle([
             ('ALIGN', (0,0), (-1,-1), 'LEFT'),
             ('ALIGN', (1,1), (-1,-1), 'CENTER'),
@@ -293,7 +298,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
 # Run with:  python3 -m label.populate_energy_first_mortgage
 if __name__ == '__main__':
     data_dict ={'address_line_1': '34 Somerset Rd', 'city': 'Montpelier', 'state': 'VT', 'postal_code': '05602', 
-    'hes_pre': 5, 'hes_post': 10, 'cost_pre': 3000, 'cost_post': 1000, 
+    'hes_pre': 5, 'hes_post': 10, 'cost_pre': None, 'cost_post': None, 
     'coach_name': 'Richard Faesy', 'coach_phone': '444-444-4444', 
     'originator_name': 'Joe Banker', 'originator_phone': '555-555-5555',
     'contractor_name': 'Gabrielle Contractor', 'contractor_company': 'Contractor Co.', 'contractor_phone': '123-456-7890', 
