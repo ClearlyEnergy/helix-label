@@ -490,7 +490,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         num_line +=1                 
     if data_dict['has_storage'] and num_line < 4:
         t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has electric battery storage on site", pc273)])
-        num_line +=1         
+        num_line +=1
     if data_dict['evcharger'] and num_line < 4:
         t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has an electric vehicle charger", pc273)])
         num_line +=1         

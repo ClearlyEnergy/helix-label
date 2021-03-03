@@ -289,9 +289,15 @@ def write_generic_energy_profile_pdf(data_dict, output_pdf_path):
     column_24 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.09*doc.height, showBoundary=0, topPadding=10)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=0, spaceAfter=0, hAlign='CENTER', vAlign='TOP', dash=None))
     if data_dict['bill'] > 0:
-        text_c240 = Paragraph("The breakdown of fuel usage is calculated from homeowner provided fuel and electricity costs of " +'$'+"{:,}".format(int(data_dict['bill'])) + " adjusted for weather, settings and occupancy. Back-up heating sources may alter actual costs depending on how much they are used:", tf_standard)
+        print(data_dict)
+        if data_dict['certified_bill'] and 'hers_score' in data_dict and data_dict['hers_score']:
+            text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " +'$'+"{:,}".format(int(data_dict['bill'])), tf_standard)
+        elif data_dict['certified_bill'] and 'hes_score' in data_dict and data_dict['hes_score']:
+            text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " +'$'+"{:,}".format(int(data_dict['bill'])), tf_standard)        
+        else:
+            text_c240 = Paragraph("The breakdown of fuel usage is calculated from homeowner provided fuel and electricity costs of " +'$'+"{:,}".format(int(data_dict['bill'])) + " adjusted for weather, settings and occupancy.", tf_standard)
     else:
-        text_c240 = Paragraph("Estimate includes electricity and the primary fuel used to heat your home for a year. Back-up heating sources may alter actual costs depending on how much they are used:", tf_standard)
+        text_c240 = Paragraph("Estimate includes electricity and fuels used to heat your home for a year.", tf_standard)
 
     Story.append(text_c240)
     Story.append(FrameBreak)
@@ -305,7 +311,12 @@ def write_generic_energy_profile_pdf(data_dict, output_pdf_path):
     pc253 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = font_t, textColor = CUSTOM_DGRAY, fontName = font_normal,  spaceBefore = 0)
     tct1 = Paragraph("<font name='InterstateBlack'>The breakdown of energy usage is an estimate </font><font name='Helvetica'>based on the energy sources used in this home</font>", pc251) 
     tct = []
-    data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
+    if data_dict['has_solar']:
+        if data_dict['solar_ownership'] == 'owned':
+            data_dict['elec_score'] = data_dict['solar_score'] + data_dict['elec_score']
+        else:
+            data_dict['cons_elec'] = data_dict['cons_elec'] + data_dict['cons_solar']            
+    
     num_fuel = 0
     for num, fuel in enumerate(FUELS):
         if data_dict[fuel+'_score'] != 0:
@@ -427,17 +438,20 @@ def write_generic_energy_profile_pdf(data_dict, output_pdf_path):
     t_achieve = []
     if data_dict['has_solar'] and num_line < 4:
         if data_dict['solar_ownership'] == 'owned':
-            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of owned photovoltaic solar on site', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of owned solar photovoltaic on site', pc273)])
         elif data_dict['solar_ownership'] == 'third':
-            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of leased photovoltaic solar on site', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"Home has " + str(data_dict['capacity']) + 'KW of leased solar photovoltaic estimated to generate ' + str(int(data_dict['cons_solar'])) + 'kWh/yr', pc273)]) 
         else:
-            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of photovoltaic solar on site', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has " + str(data_dict['capacity']) + 'KW of solar photovoltaic on site', pc273)])
         num_line +=1 
+    if data_dict['water_solar'] and num_line < 4:
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has solar hot water", pc273)])
+        num_line +=1                 
     if data_dict['has_storage'] and num_line < 4:
         t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has electric battery storage on site", pc273)])
-        num_line +=1         
-    if data_dict['evcar'] and num_line < 4:
-        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has an electric vehicle", pc273)])
+        num_line +=1
+    if data_dict['evcharger'] and num_line < 4:
+        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This home has an electric vehicle charger", pc273)])
         num_line +=1         
     if 'weatherization' in data_dict and data_dict['weatherization'] and num_line < 4:
         num_line += 1
@@ -655,20 +669,21 @@ def write_generic_energy_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_vermont_energy_profile
+# Run with:  python3 -m label.generic_energy_profile
 if __name__ == '__main__':
     data_dict = {
         'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
-        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 2345.0, 'cons_mmbtu': 120, 'cons_mmbtu_max':254, 'cons_mmbtu_min': 90.566712,
-        'heatingfuel': 'Electric', 'ng_score': 1000.0, 'elec_score': 2000.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 1000, 'wood_pellet_score': 0, 'solar_score': -1000.0,
-        'cons_elec': 12129.0, 'cons_ng': 45.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 2345.0, 'cons_wood_pellet': 0.0, 'cons_solar': 1000.0,
+        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 60, 'cons_mmbtu': 3, 'cons_mmbtu_avg': 120, 'cons_mmbtu_max':160, 'cons_mmbtu_min': 0,
+        'heatingfuel': 'Electric', 'ng_score': 0.0, 'elec_score': 60.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 0.0, 'wood_pellet_score': 0, 'solar_score': 2110.0,
+        'cons_elec': 12129.0, 'cons_ng': 0.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 0.0, 'cons_solar': -11000.0,
         'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
-        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': True, 'phius': True, 'author_name': 'John Doe', 'author_company': None,
+        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': False, 'phius': False, 'certified_bill': None,
         'high_cost_action': 2, 'low_cost_action': "1234",   
-        'heater_estar': False, 'water_estar': False, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
-        'washer_estar': False, 'dishwasher_estar': False, 'evcar': True, 
+        'heater_estar': False, 'water_estar': False, 'water_solar': True, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
+        'washer_estar': False, 'dishwasher_estar': False, 'evcharger': True, 
         'heater_type': 'pump', 'water_type': 'heatpump', 
-        'has_audit': False, 'auditor': 'Joe', 'has_solar': True, 'capacity': 10.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 1200.0}
+        'has_audit': False, 'auditor': 'Joe', 'third_party': None, 'author_name': 'John Doe', 'author_company': 'Audit Corp 1',
+        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': 2345.0}
     out_file = 'EnergyLabel.pdf'
     write_generic_energy_profile_pdf(data_dict, out_file)
 
