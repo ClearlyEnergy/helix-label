@@ -164,10 +164,12 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     h31 = Paragraph('<font name=Helvetica-Bold><strong>US DOE Home Energy Score (1-10)</strong></font>',styles['Normal'])
     if 'cost_pre' in data_dict and data_dict['cost_pre']:
         c22 = Paragraph('$'+str(int(data_dict['cost_pre'])), cell_center)
+    else:
+        c22 = ''
+    if 'cost_post' in data_dict and data_dict['cost_post']:
         c23 = Paragraph('$'+str(int(data_dict['cost_post'])), cell_center)
         c24 = Paragraph('$'+str(int(data_dict['cost_pre'] - data_dict['cost_post'])), cell_center)
     else:
-        c22 = ''
         c23 = ''
         c24 = ''
         
