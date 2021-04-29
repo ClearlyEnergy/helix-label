@@ -699,14 +699,69 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
     month = datetime.datetime.now().strftime('%B %Y')
     Story.append(Paragraph('HELIX, sponsored by the Northeast Energy Efficiency Partnership, hosts third-party certified home energy data to be used by realtors and lenders to properly value energy efficiency. www.neep.org/home-energy-labeling-information-exchange-helix. Clearly Energy generates energy estimates based on homeowner inputs and publicly-available data (home age, size, heating system type and fuel) or an energy model from a professional who has visited the home. Standard assumptions are used for variable factors such as weather and occupancy. Average fuel prices are obtained from the U.S. Energy Information Administration and the VT Public Service Dept. Historic fuel bills can inform costs but are specific to prior occupancy and weather',tf_small_squished))
     Story.append(Paragraph('Version: ' + month, tf_small_right))
-    Story.append(FrameBreak)    
-    
+
+### Optional Page 3
+    if data_dict['comments']:
+        ### P3
+        Story.append(NextPageTemplate('thirdPage'))
+        Story.append(FrameBreak)
+        p3_c11 = Frame(doc.leftMargin, doc.height*(0.9), doc.width/3-12, 0.13*doc.height, showBoundary=0)
+        Story.append(im)
+        Story.append(FrameBreak)
+        p3_c12 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
+        Story.append(text_c101)
+        Story.append(text_c102)
+        Story.append(text_c103)
+        Story.append(FrameBreak)
+        # Text Column
+        p3_c13 = ColorFrame(doc.leftMargin, doc.bottomMargin, doc.width/3-12, 0.72*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)
+        Story.append(text_c11)
+        Story.append(Spacer(1,16))
+        Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
+        Story.append(text_c12)
+        Story.append(text_c13)
+        Story.append(text_c14)
+        Story.append(text_c15)
+        Story.append(text_c16)
+        Story.append(text_c17)
+        Story.append(text_c18)
+        Story.append(text_c19)
+        Story.append(Spacer(1,16))
+        Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
+        Story.append(text_c110)
+        Story.append(text_c111)
+        Story.append(text_c112)
+        Story.append(text_c113)
+        Story.append(text_c114)
+        if text_c114b:
+            Story.append(text_c114b)
+        if text_c114c:
+            Story.append(text_c114c)
+        Story.append(Spacer(1,16))
+        Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
+        Story.append(text_c115)
+        Story.append(text_c116)
+        Story.append(FrameBreak)
+        # Column 2
+        p3_c21 = Frame(doc.leftMargin+doc.width/3, doc.height*0.96, (2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
+        text_p31 = Paragraph("COMMENTS:", pc13)
+        Story.append(text_p31)
+        Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
+        Story.append(FrameBreak)
+        p3_c22 = Frame(doc.leftMargin+doc.width/3, doc.height*0.03, (2/3)*doc.width, 0.93*doc.height, showBoundary=0, topPadding=10)
+        text_p32 = Paragraph(data_dict["comments"], tf_standard)
+        Story.append(text_p32)
+        Story.append(FrameBreak)
+        
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_262, column_27, column_281, column_282, column_29]
     page_2_frames = [p2_r1, p2_r1b, p2_r2, p2_r21, p2_r22, p2_r3]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     templates.append(PageTemplate(frames=page_2_frames,id='secondPage'))
+    if data_dict['comments']:
+        page_3_frames = [p3_c11, p3_c12, p3_c13, p3_c21, p3_c22]
+        templates.append(PageTemplate(frames=page_3_frames,id='thirdPage'))
     doc.addPageTemplates(templates)
     style = styles["Normal"]
 
@@ -727,7 +782,9 @@ if __name__ == '__main__':
         'washer_estar': False, 'dishwasher_estar': False, 'evcharger': True, 
         'heater_type': 'pump', 'water_type': 'heatpump', 
         'has_audit': False, 'auditor': 'Joe', 'third_party': None, 'author_name': 'John Doe', 'author_company': 'Audit Corp 1',
-        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': '3000ccf, 15000kwh, 1500gal', 'certified_bill': False}
+        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': '3000ccf, 15000kwh, 1500gal', 'certified_bill': False, 
+        'comments': ''
+    }
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
 

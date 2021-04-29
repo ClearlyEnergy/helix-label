@@ -64,28 +64,6 @@ def write_green_addendum_pdf(input_pdf_path, data_dict, output_pdf_path):
 
 # sample data dictionary
 
-
-data_dict = {
-    'street': '296 Highland Ave',
-    'street_2': '296 Highland Ave',
-    'street_3': '296 Highland Ave',
-    'city': 'Cambridge',
-    'state': 'MA',
-    'zip': '02139',
-    'ngbs_silver': 'On',
-    'leed_platinum': 'On',
-    'green_certification_date_verified': '01/01/20',
-    'verification_attached': 'On',
-    'green_certification_organization_url': 'ngbs.org',
-    'hers_rating': '58',
-    'hers_confirmed_rating': 'On',
-    'hers_estimated_savings': '1234',
-    'hes_score': '6',
-    'hes_official': 'On',
-    'score_date_verified': '01/01/20',
-    'score_version': 'v2.1',
-}
-
 ### FIELD NAMES, DO NOT DELETE
 # indoor_air_plus, water_sense, energy_star, zerh,
 # ngbs_bronze, ngbs_silver, ngbs_gold, ngbs_emerald
@@ -102,7 +80,7 @@ data_dict = {
 
 # hers_rating, hers_sampling_rating, hers_projected_rating, hers_confirmed_rating, hers_estimated_savings, hers_rate
 # hes_score, hes_official, hes_unofficial, hes_estimated_savings, hes_rate
-# score_date_verified, score_version, score_
+# score_date_verified, score_version
 
 
 # energy_improvement_description, cost_of_energy_improvement
@@ -115,8 +93,29 @@ data_dict = {
 # solar_fixed_mount, solar_tracking_mount
 # same with _2
 
-
+# Run with:  python3 -m label.populate_residential_green_addendum
 if __name__ == '__main__':
+    data_dict = {
+        'street': '296 Highland Ave',
+        'street_2': '296 Highland Ave',
+        'street_3': '296 Highland Ave',
+        'city': 'Cambridge',
+        'state': 'MA',
+        'zip': '02139',
+        'ngbs_silver': 'On',
+        'leed_platinum': 'On',
+        'green_certification_date_verified': '01/01/20',
+        'verification_attached': 'On',
+        'green_certification_organization_url': 'ngbs.org',
+        'hers_rating': '58',
+        'hers_confirmed_rating': 'On',
+        'hers_estimated_savings': '1234',
+        'hes_score': '6',
+        'hes_official': 'On',
+        'score_date_verified': '01/01/20',
+        'score_version': 'v2.1',
+    }
+    
     module_path = os.path.abspath(os.path.dirname(__file__))
     in_path = os.path.normpath(os.path.join(module_path, "./templates/"))
     out_path = os.path.normpath(os.path.join(module_path, "./tmp/"))
