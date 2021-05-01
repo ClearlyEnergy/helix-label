@@ -28,12 +28,6 @@ IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
 
 def write_energy_first_mortgage_pdf(data_dict, out_file):
     ''' creates the pdf using frames '''
-    address_line_1 = data_dict['address_line_1']
-    city=data_dict['city']
-    state = data_dict['state']
-    postal_code= data_dict['postal_code']
-#    address = '<font  name=Times-Roman size=9 color=#4e4e52>{}{}, {}, {}, {}</font>'.format(address_line_1,address_line_2,city,state,postal_code)
-#    address_p = Paragraph(address,styles['Normal'])
     now = datetime.datetime.now()
     year = '{:02d}'.format(now.year)
     
@@ -60,7 +54,7 @@ def write_energy_first_mortgage_pdf(data_dict, out_file):
     customer_frame = Frame(document.leftMargin,document.height-0.25*document.height,document.width,0.15*document.height, showBoundary=0)
     customer_header_p = Paragraph("<font name=Helvetica-Bold size=11>Customer</font>",styles['Heading2'])
     Story.append(customer_header_p)
-    customer_table = Table([['Name',data_dict['customer_name']],['Property Address (street, city, zip, state)',''],['Mailing Address (street, city, zip, state)','']], colWidths = [2.5*inch, 5.0*inch], hAlign = 'LEFT')
+    customer_table = Table([['Name',data_dict['customer_name']],['Property Address (street, city, zip, state)',data_dict['address_line_1']+', '+data_dict['city'] + ' ' + data_dict['state']+ ' ' + data_dict['postal_code']],['Mailing Address (street, city, zip, state)','']], colWidths = [2.5*inch, 5.0*inch], hAlign = 'LEFT')
     customer_table.setStyle(customer_tableStyle)
     Story.append(customer_table)
     customer_subtable = Table([['Phone #',data_dict['customer_phone'],'Email',data_dict['customer_email']]], colWidths = [1.75*inch, 2.0*inch, 1.75*inch, 2.0*inch], hAlign = 'LEFT')
