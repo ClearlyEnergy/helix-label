@@ -336,7 +336,7 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         elif data_dict['certified_bill'] and 'hes_score' in data_dict and data_dict['hes_score']:
             text_c240 = Paragraph("The breakdown of fuel usage is calculated from a third-party certification of costs of " + data_dict['bill'], tf_standard)        
         else:
-            text_c240 = Paragraph("Annuel fuel usage and costs are calculated from homeowner provided bill data of " + data_dict['bill'] + ", adjusted for weather, settings and occupancy.", tf_standard)
+            text_c240 = Paragraph("Annual fuel usage and costs are calculated from homeowner provided bill data of " + data_dict['bill'] + ", adjusted for weather, settings and occupancy.", tf_standard)
     else:
         text_c240 = Paragraph("Estimate includes electricity and fuels used to heat your home for a year.", tf_standard)
 
