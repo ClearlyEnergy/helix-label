@@ -50,6 +50,12 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
+    def beam_profile(self, data_dict, object_id, out_path=''):
+        out_path = out_path if out_path else self.out_path
+        out_file = f'{out_path}/{object_id}_profile.pdf'
+        write_generic_energy_profile_pdf(data_dict, out_file)
+        return out_file
+
     def massachusetts_energy_scorecard(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/MAScorecard.pdf'
         create_pdf(data_dict, out_file)
