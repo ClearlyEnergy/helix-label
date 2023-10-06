@@ -7,9 +7,9 @@ Installation
 ------------
 
 - git clone https://github.com/ClearlyEnergy/helix-label.git
-- pip install .
+- pip3 install .
 
 Test Coverage
 -------------
 
-- python setup.py test
+- python3 setup.py test

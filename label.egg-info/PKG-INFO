@@ -6,22 +6,6 @@ Home-page: https://github.com/ClearlyEnergy/helix-hes.git
 Author: ClearlyEnergy
 Author-email: info@clearlyenergy.com
 License: MIT
-Description: HELIX-LABEL
-        ===========
-        
-        PDF Label Generator for HELIX
-        
-        Installation
-        ------------
-        
-        - git clone https://github.com/ClearlyEnergy/helix-label.git
-        - pip install .
-        
-        Test Coverage
-        -------------
-        
-        - python setup.py test
-        
 Keywords: seed label generation
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
@@ -36,3 +20,21 @@ Classifier: Programming Language :: Python :: 3.4
 Classifier: Programming Language :: Python :: 3.5
 Provides-Extra: dev
 Provides-Extra: test
+
+HELIX-LABEL
+===========
+
+PDF Label Generator for HELIX
+
+Installation
+------------
+
+- git clone https://github.com/ClearlyEnergy/helix-label.git
+- pip3 install .
+
+Test Coverage
+-------------
+
+- python setup.py test
+
+
