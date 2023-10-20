@@ -1,8 +1,13 @@
 from label.generic_energy_profile import write_generic_energy_profile_pdf
+from label.populate_beam_profile import write_beam_profile_pdf
 from label.populate_residential_green_addendum import write_green_addendum_pdf
 from label.populate_vermont_energy_profile import write_vermont_energy_profile_pdf
 from label.populate_massachusetts_home_scorecard import create_pdf
 from label.populate_energy_first_mortgage import write_energy_first_mortgage_pdf
+from label.populate_beam_orlando import write_orlando_profile_pdf
+from label.populate_beam_cambridge import write_cambridge_profile_pdf
+from label.populate_beam_madison import write_madison_profile_pdf
+
 import os
 import os.path
 import boto3
@@ -50,10 +55,15 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
-    def beam_profile(self, data_dict, object_id, out_path=''):
+    def beam_profile(self, data_dict, object_id, out_path='', organization_name=''):
+        org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
+                           'City of Orlando': write_orlando_profile_pdf,
+                           }
+        fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
+
         out_path = out_path if out_path else self.out_path
         out_file = f'{out_path}/{object_id}_profile.pdf'
-        write_generic_energy_profile_pdf(data_dict, out_file)
+        fn(data_dict, out_file)
         return out_file
 
     def massachusetts_energy_scorecard(self, data_dict, aws_bucket=''):
