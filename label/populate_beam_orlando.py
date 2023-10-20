@@ -317,8 +317,6 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
             num_fuel+=1
     if data_dict['onSiteRenewableSystemGeneration'] != 0:
         num_fuel+=1
-        
-    print(data_dict)
             
     for num, fuel in enumerate(FUELS):
         if data_dict['energyCost'+fuel] != 0:

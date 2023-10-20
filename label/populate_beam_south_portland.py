@@ -43,8 +43,7 @@ CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255)
 CUSTOM_ORANGE = colors.Color(red=(217.0/255),green=(92.0/255),blue=(35.0/255))
 CUSTOM_YELLOW = colors.Color(red=(255.0/255),green=(221.0/255),blue=(0.0/255))
 CUSTOM_LTEAL = colors.Color(red=(53.0/255),green=(196.0/255),blue=(229.0/255))
-#CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(77.0/255),blue=(113.0/255)) ## This is the color to customize
-CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(0.0/255),blue=(0.0/255))
+CUSTOM_DTEAL = colors.Color(red=(54.0/255),green=(109.0/255),blue=(238.0/255)) ## This is the color to customize
 FUELS = ['ElectricityGridPurchase', 'NaturalGas', 'FuelOil', 'Propane',  'Wood']
 #FUELICONS = [u"",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf185"]
 FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf185"]
@@ -136,7 +135,7 @@ def map_scores(property_type):
             espm_score_mapping[row['Category']] = row
     return espm_score_mapping[property_type]
 
-def write_madison_profile_pdf(data_dict, output_pdf_path):
+def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
     font_xxl =30
@@ -171,9 +170,9 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     
     ### P1
     # Logo
-    column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/city_of_madison_logo.webp"
-    im = Image(vthep_logo, 1.1*inch, 1.1*inch)
+    column_10 = Frame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
+    vthep_logo = IMG_PATH+"/south_portland.jpg"
+    im = Image(vthep_logo, 2.0*inch, 0.654*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -448,13 +447,11 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=unchecked.encode('UTF8')))
-    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=unchecked.encode('UTF8')))
-    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=unchecked.encode('UTF8')))
-    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=unchecked.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=unchecked.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=unchecked.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=unchecked.encode('UTF8')))
+    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades.", pc291, bulletText=unchecked.encode('UTF8')))
+    Story.append(Paragraph("Perform regular building envelope maintenance.", pc291, bulletText=unchecked.encode('UTF8')))
+    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems.", pc291, bulletText=unchecked.encode('UTF8')))
+    Story.append(Paragraph('Look into energy efficiency incentives and rebates available to commercial properties through <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/">Efficiency Maine</link></font>.', pc291, bulletText=unchecked.encode('UTF8')))
+    Story.append(Paragraph('Identify other state and federal incentives through the <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">Database of State Incentives for Renewables & Efficiency (DSIRE)</link></font>.', pc291, bulletText=unchecked.encode('UTF8')))    
                         
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -466,10 +463,10 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_madison
+# Run with:  python3 -m label.populate_beam_south_portland
 if __name__ == '__main__':
     data_dict = {
-        'street': '1 STATE STREET', 'city': 'MADISON', 'state': 'WI', 'zipcode': '53704', 
+        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
         'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
         'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
         'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
@@ -482,5 +479,7 @@ if __name__ == '__main__':
         'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
-    out_file = 'Madison_BEAM_Profile.pdf'
-    write_madison_profile_pdf(data_dict, out_file)
+    out_file = 'South_Portland_BEAM_Profile.pdf'
+    write_south_portland_profile_pdf(data_dict, out_file)
+
+

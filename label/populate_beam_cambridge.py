@@ -317,8 +317,6 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
             num_fuel+=1
     if data_dict['onSiteRenewableSystemGeneration'] != 0:
         num_fuel+=1
-        
-    print(data_dict)
             
     for num, fuel in enumerate(FUELS):
         if data_dict['energyCost'+fuel] != 0:
@@ -468,7 +466,7 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_madison_orlando
+# Run with:  python3 -m label.populate_beam_cambridge
 if __name__ == '__main__':
     data_dict = {
         'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
@@ -486,27 +484,3 @@ if __name__ == '__main__':
     }
     out_file = 'Cambridge_BEAM_Profile.pdf'
     write_cambridge_profile_pdf(data_dict, out_file)
-    
-## To resolve
-# Wedge
-# cons_mmbtu_max, high performance home
-## Questions
-# Include ENERGY STAR certification?
-
-
-#siteEnergyUseNaturalGasTherms
-#siteEnergyUseDistrictSteam
-#siteEnergyUseDistrictHotWater
-#siteEnergyUseDistrictChilledWater
-#siteEnergyUseCoalAnthracite
-#siteEnergyUseCoalBituminous
-#siteEnergyUseCoke
-
-#energyCostDistrictSteam
-#energyCostDistrictHotWater
-#energyCostDistrictChilledWater
-#energyCostCoalAnthracite
-#energyCostCoalBituminous
-#energyCostCoke
-
-
