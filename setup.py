@@ -9,6 +9,16 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+
+def get_requirements():
+    with open(path.join(path.dirname(__file__), "requirements.txt")) as r:
+        requirements_list = [req.strip() for req in r.readlines()]
+
+    requirements_list.append("setuptools")
+    requirements_list.append("pytz")
+    return requirements_list
+
+
 # Get the long description from the README file
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
@@ -74,7 +84,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['peppercorn'],
+    install_requires=get_requirements(),
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
@@ -84,7 +94,7 @@ setup(
         'dev': ['check-manifest'],
         'test': ['coverage'],
     },
-    
+
     test_suite='nose.collector',
     tests_require=['nose'],
 
