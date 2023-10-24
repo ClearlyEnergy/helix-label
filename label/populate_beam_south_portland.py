@@ -129,7 +129,9 @@ def pie_chart(data_dict):
     
 def map_scores(property_type):
     espm_score_mapping = {}
-    with open('label/utils/energy_star_score.csv', 'r') as f:
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, 'utils/energy_star_score.csv')
+    with open(filename, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
             espm_score_mapping[row['Category']] = row
