@@ -19,7 +19,7 @@ from reportlab.lib.validators import Auto
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Flowable, Frame, FrameBreak, HRFlowable, Image, NextPageTemplate, PageBreak, PageTemplate,Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle  
-from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Highlights
 import datetime
 
 #Adding Arial Unicode for checkboxes
@@ -377,19 +377,9 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     column_27 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     
-    pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
-    pc273 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal)
-    
-    ## CERTIFICATIONS
+    ## HIGHLIGHTS: CERTIFICATIONS, SOLAR & EV, GENERAL
     num_line = 0
-    t_cert = []
-    if 'energyStarCertificationYears' in data_dict and data_dict['energyStarCertificationYears']:
-        t_cert.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> EPA ENERGYSTAR® Certified Building''', pc272)])
-        
-    t_cert.append(Paragraph("", pc272))
-    t_cert = [t_cert]
-    num_line += 1
-             
+    t_cert, num_line = Highlights.cert_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)             
     if t_cert:
         ratings_table = Table(t_cert, colWidths = [2.7*inch, 2.7*inch])
         ratings_table.setStyle(TableStyle([
@@ -399,15 +389,7 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(ratings_table)   
         
-    ## SOLAR & WEATHERIZATION
-    t_achieve = []
-    if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line < 4:
-        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + 'KWh of solar or wind on site', pc273)])
-        num_line +=1
-        
-    if (data_dict['numberOfLevelOneEvChargingStations'] > 0 or data_dict['numberOfLevelTwoEvChargingStations'] > 0 or data_dict['numberOfDcFastEvChargingStations'] > 0) and num_line < 4:
-        t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"This building has an electric vehicle charging on-site", pc273)])
-        num_line +=1         
+    t_achieve, num_line = Highlights.solar_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.1*inch])
         achieve_table.setStyle(TableStyle([
@@ -416,11 +398,7 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(achieve_table)
     
-    ## General comments
-    t_achieve = []
-    t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui_2022'])+"%", pc272)])
-    t_achieve.append([Paragraph('''<img src="'''+check_img+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec_2022'])+"%", pc272)])
-    num_line += 1
+    t_achieve, num_line = Highlights.general_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
     if t_achieve and num_line < 5:
         ratings_table = Table(t_achieve, colWidths = [5.4*inch])
         ratings_table.setStyle(TableStyle([
