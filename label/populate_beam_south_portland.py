@@ -2,10 +2,8 @@
 #! /usr/bin/python
 # run with python3 -m label.populate_madison_orlando
 
-import csv
 import os
 import time
-from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.charts.legends import Legend
 from reportlab.graphics.charts.textlabels import Label
 from reportlab.graphics.shapes import Drawing, Rect
@@ -19,7 +17,7 @@ from reportlab.lib.validators import Auto
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Flowable, Frame, FrameBreak, HRFlowable, Image, NextPageTemplate, PageBreak, PageTemplate,Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle  
-from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Highlights
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Charts, Scores, Highlights, flowable_text, flowable_triangle
 import datetime
 
 #Adding Arial Unicode for checkboxes
@@ -54,89 +52,8 @@ FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'ton']
 FUELCOLOR = [CUSTOM_ELECGREEN, CUSTOM_ORANGE, CUSTOM_DTEAL, CUSTOM_LTEAL, CUSTOM_MGREEN]
 
 
-class flowable_triangle(Flowable):
-    def __init__(self, imgdata, offset_x, offset_y, height, width, text, side='right'):
-        Flowable.__init__(self)
-        self.img = ImageReader(imgdata)
-        self.offset_x = offset_x
-        self.offset_y = offset_y
-        self.height = height
-        self.width = width
-        self.text = text
-        self.side = side
 
-    def draw(self):
-        self.canv.drawImage(self.img, self.offset_x*inch, self.offset_y*inch, height = self.height*inch, width=self.width*inch)
-        self.canv.setFont("InterstateBlack", 7)
-        self.canv.setFillColor(colors.gray)
-        t = self.canv.beginText()
-#        t.setFont("FontAwesome", 30)
-        if self.side == 'right':
-            t.setTextOrigin((self.offset_x)*inch, (self.offset_y-0.1)*inch)
-        elif self.side == 'left':
-            t.setTextOrigin((self.offset_x-0.4)*inch, (self.offset_y-0.1)*inch)
-        elif self.side == 'low':
-            t.setTextOrigin((self.offset_x)*inch, (self.offset_y-0.3)*inch)
-        elif self.side == 'high':
-            t.setTextOrigin((self.offset_x)*inch, (self.offset_y+0.1)*inch)
-        t.textLines(self.text)
-        self.canv.drawText(t)
-#        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
-
-class flowable_text(Flowable):
-    def __init__(self, offset_x, offset_y, text, font_size):
-        Flowable.__init__(self)
-        self.offset_x = offset_x
-        self.offset_y = offset_y
-        self.text = text
-        self.font_size = font_size
-        
-    def draw(self):
-        self.canv.setFont("InterstateBlack", self.font_size)
-        self.canv.setFillColor(colors.gray)
-        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)        
     
-def pie_chart(data_dict):
-    drawing = Drawing(width=1.0*inch, height=1.0*inch)
-    data = []
-    labels = []
-    order = []
-
-    for num, fuel in enumerate(FUELS):
-        if data_dict['energyCost'+fuel] > 0:
-            data.append(int(data_dict['energyCost'+fuel]))
-#            txt += FUELLABEL[num]
-            labels.append(FUELICONS[num])
-            order.append(num)
-    pie = Pie()
-    pie.sideLabels = False
-    pie.x = 5
-    pie.y = 10
-    pie.width = 1.0*inch
-    pie.height = 1.0*inch
-    pie.data = data
-#    pie.labels = labels
-    pie.slices.strokeColor = colors.white
-    pie.slices.strokeWidth = 0.01
-    pie.simpleLabels = 0
-    for i in range(len(data)):
-        pie.slices[i].labelRadius = 0.5
-        pie.slices[i].fillColor = FUELCOLOR[order[i]]
-        pie.slices[i].fontName = 'FontAwesome'
-        pie.slices[i].fontSize = 16
-    drawing.add(pie)
-    return drawing
-    
-def map_scores(property_type):
-    espm_score_mapping = {}
-    dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, 'utils/energy_star_score.csv')
-    with open(filename, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            espm_score_mapping[row['Category']] = row
-    return espm_score_mapping[property_type]
-
 def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
@@ -179,13 +96,9 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Cost Box
-    column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = font_h, fontName = font_bold, textColor=colors.white, leading=14)
-    pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = font_xxl, fontName = font_bold, textColor = colors.white)
-    pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = font_s, fontName = font_bold, textColor = colors.white, spaceBefore=26)
-    text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
-    text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
-    text_c103 = Paragraph('50=median, 75=high performer', pc103)
+    column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', colors, font_s, font_h, font_xxl, font_bold, TA_CENTER)
+    
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -243,13 +156,11 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c220)
     
     # Wedge - start at 0.62 end at 4.82
-    espm_score_mapping = {}
-    with open('label/utils/energy_star_score.csv', 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            espm_score_mapping[row['Category']] = row
-    espm_score_mapping = map_scores(data_dict['systemDefinedPropertyType'])
-    site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))])
+    espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
+    if data_dict['energy_star_score']:
+        site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))])
+    else:
+        site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50'])
             
     median_site_use = data_dict['propGrossFloorArea'] * data_dict['medianSiteIntensity'] / 1000.0
     wedge_img = IMG_PATH+"/wedge.png"
@@ -354,11 +265,10 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
      
     Story.append(cost_subTable)
     Story.append(FrameBreak)
-    pie = pie_chart(data_dict)
+    pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR)
     column_253 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset), (3/10)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=10)        
     Story.append(pie)
     Story.append(FrameBreak)    
-    
     
     # Energy Highlights Header
     y_offset += 0.03
@@ -368,7 +278,6 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c261)
     Story.append(FrameBreak)
 
-    
     # Energy Highlights Details
     y_offset += 0.17
     column_27 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
@@ -385,7 +294,17 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
         Story.append(ratings_table)   
-        
+            
+    t_achieve, num_line = Highlights.general_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
+    if t_achieve:
+        ratings_table = Table(t_achieve, colWidths = [5.4*inch])
+        ratings_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+         ]))
+        Story.append(ratings_table)
+
     t_achieve, num_line = Highlights.solar_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.1*inch])
@@ -394,27 +313,15 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
         Story.append(achieve_table)
-    
-    t_achieve = Highlights.general_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
-    num_line += 1
-    if t_achieve and num_line < 5:
-        ratings_table = Table(t_achieve, colWidths = [5.4*inch])
-        ratings_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'TOP'),
-            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(ratings_table)      
+     
     Story.append(FrameBreak)
-    
-        
+
     # Take Action Header
     y_offset += 0.0
     column_281 = ColorFrame(doc.leftMargin+doc.width/3, doc.bottomMargin+0.17*doc.height+10, (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, bottomPadding=10)    
     text_c281 = Paragraph('Take Action!', pc261)
     Story.append(text_c281)
     Story.append(FrameBreak)
-    
     
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = font_t, fontName = font_bold, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
@@ -458,6 +365,7 @@ if __name__ == '__main__':
         'cons_solar': -11000.0,
         'estar_wh': True,
         'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1,
+        'totalGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
     out_file = 'South_Portland_BEAM_Profile.pdf'

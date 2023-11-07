@@ -2,10 +2,8 @@
 #! /usr/bin/python
 # run with python3 -m label.populate_madison_orlando
 
-import csv
 import os
 import time
-from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.charts.legends import Legend
 from reportlab.graphics.charts.textlabels import Label
 from reportlab.graphics.shapes import Drawing, Rect
@@ -19,7 +17,7 @@ from reportlab.lib.validators import Auto
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Flowable, Frame, FrameBreak, HRFlowable, Image, NextPageTemplate, PageBreak, PageTemplate,Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle  
-from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Highlights
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Charts, Scores, Highlights, flowable_text, flowable_triangle
 import datetime
 
 #Adding Arial Unicode for checkboxes
@@ -53,90 +51,6 @@ FUELIMAGESSMALL = [Image(IMG_PATH+"/HomeEnergyProfile_icons-03.png",0.3*inch,0.3
 FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood']
 FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'ton']
 FUELCOLOR = [CUSTOM_ELECGREEN, CUSTOM_ORANGE, CUSTOM_DTEAL, CUSTOM_LTEAL, CUSTOM_MGREEN]
-
-
-class flowable_triangle(Flowable):
-    def __init__(self, imgdata, offset_x, offset_y, height, width, text, side='right'):
-        Flowable.__init__(self)
-        self.img = ImageReader(imgdata)
-        self.offset_x = offset_x
-        self.offset_y = offset_y
-        self.height = height
-        self.width = width
-        self.text = text
-        self.side = side
-
-    def draw(self):
-        self.canv.drawImage(self.img, self.offset_x*inch, self.offset_y*inch, height = self.height*inch, width=self.width*inch)
-        self.canv.setFont("InterstateBlack", 7)
-        self.canv.setFillColor(colors.gray)
-        t = self.canv.beginText()
-#        t.setFont("FontAwesome", 30)
-        if self.side == 'right':
-            t.setTextOrigin((self.offset_x)*inch, (self.offset_y-0.1)*inch)
-        elif self.side == 'left':
-            t.setTextOrigin((self.offset_x-0.4)*inch, (self.offset_y-0.1)*inch)
-        elif self.side == 'low':
-            t.setTextOrigin((self.offset_x)*inch, (self.offset_y-0.3)*inch)
-        elif self.side == 'high':
-            t.setTextOrigin((self.offset_x)*inch, (self.offset_y+0.1)*inch)
-        t.textLines(self.text)
-        self.canv.drawText(t)
-#        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)
-
-class flowable_text(Flowable):
-    def __init__(self, offset_x, offset_y, text, font_size):
-        Flowable.__init__(self)
-        self.offset_x = offset_x
-        self.offset_y = offset_y
-        self.text = text
-        self.font_size = font_size
-        
-    def draw(self):
-        self.canv.setFont("InterstateBlack", self.font_size)
-        self.canv.setFillColor(colors.gray)
-        self.canv.drawString(self.offset_x*inch, (self.offset_y-0.1)*inch, self.text)        
-    
-def pie_chart(data_dict):
-    drawing = Drawing(width=1.0*inch, height=1.0*inch)
-    data = []
-    labels = []
-    order = []
-
-    for num, fuel in enumerate(FUELS):
-        if data_dict['energyCost'+fuel] > 0:
-            data.append(int(data_dict['energyCost'+fuel]))
-#            txt += FUELLABEL[num]
-            labels.append(FUELICONS[num])
-            order.append(num)
-    pie = Pie()
-    pie.sideLabels = False
-    pie.x = 5
-    pie.y = 10
-    pie.width = 1.0*inch
-    pie.height = 1.0*inch
-    pie.data = data
-#    pie.labels = labels
-    pie.slices.strokeColor = colors.white
-    pie.slices.strokeWidth = 0.01
-    pie.simpleLabels = 0
-    for i in range(len(data)):
-        pie.slices[i].labelRadius = 0.5
-        pie.slices[i].fillColor = FUELCOLOR[order[i]]
-        pie.slices[i].fontName = 'FontAwesome'
-        pie.slices[i].fontSize = 16
-    drawing.add(pie)
-    return drawing
-    
-def map_scores(property_type):
-    espm_score_mapping = {}
-    dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, 'utils/energy_star_score.csv')
-    with open(filename, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            espm_score_mapping[row['Category']] = row
-    return espm_score_mapping[property_type]
 
 def write_madison_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
@@ -244,14 +158,7 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c220)
     
     # Wedge - start at 0.62 end at 4.82
-    espm_score_mapping = {}
-    dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, 'utils/energy_star_score.csv')
-    with open(filename, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            espm_score_mapping[row['Category']] = row
-    espm_score_mapping = map_scores(data_dict['systemDefinedPropertyType'])
+    espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
     site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))])
             
     median_site_use = data_dict['propGrossFloorArea'] * data_dict['medianSiteIntensity'] / 1000.0
@@ -357,7 +264,7 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
      
     Story.append(cost_subTable)
     Story.append(FrameBreak)
-    pie = pie_chart(data_dict)
+    pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR)
     column_253 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset), (3/10)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=10)        
     Story.append(pie)
     Story.append(FrameBreak)    
@@ -461,6 +368,7 @@ if __name__ == '__main__':
         'cons_solar': -11000.0,
         'estar_wh': True,
         'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1,
+        'totalGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
     out_file = 'Madison_BEAM_Profile.pdf'
