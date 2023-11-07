@@ -34,25 +34,11 @@ pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 def write_lexington_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
-    FONT_XL = 24
-    FONT_LL = 16
-    FONT_L = 14
-    FONT_ML = 12
-    FONT_H = 10
-    FONT_T = 9
-    FONT_S = 8
     font_normal = 'InterstateLight'
     font_bold = 'InterstateBlack'
     checked = u"\u2713"
     unchecked = u"\u2752"
     check_img = IMG_PATH+"/HomeEnergyProfile_icons-13.png"
-    leq = u"\u2264"
-    geq = u"\u2265"
-    registered = u"\u00AE"
-    space = u"\u0009"
-    page2 = False
-    
-    colors_lgreen = ''
 
     Story=[]
     #Standard text formats

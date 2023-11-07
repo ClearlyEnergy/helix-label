@@ -39,13 +39,6 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     checked = u"\u2713"
     unchecked = u"\u2752"
     check_img = IMG_PATH+"/HomeEnergyProfile_icons-13.png"
-    leq = u"\u2264"
-    geq = u"\u2265"
-    registered = u"\u00AE"
-    space = u"\u0009"
-    page2 = False
-    
-    colors_lgreen = ''
 
     Story=[]
     #Standard text formats

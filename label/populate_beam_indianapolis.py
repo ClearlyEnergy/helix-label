@@ -34,25 +34,11 @@ pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 def write_indianapolis_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
-    FONT_XL = 24
-    FONT_LL = 16
-    FONT_L = 14
-    FONT_ML = 12
-    FONT_H = 10
-    FONT_T = 9
-    font_s = 8
     font_normal = 'InterstateLight'
     font_bold = 'InterstateBlack'
     checked = u"\u2713"
     unchecked = u"\u2752"
     check_img = IMG_PATH+"/HomeEnergyProfile_icons-13.png"
-    leq = u"\u2264"
-    geq = u"\u2265"
-    registered = u"\u00AE"
-    space = u"\u0009"
-    page2 = False
-    
-    colors_lgreen = ''
 
     Story=[]
     #Standard text formats
@@ -301,7 +287,6 @@ def write_indianapolis_profile_pdf(data_dict, output_pdf_path):
     text_c281 = Paragraph('Take Action!', pc261)
     Story.append(text_c281)
     Story.append(FrameBreak)
-    
     
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = font_bold, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
