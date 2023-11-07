@@ -5,11 +5,13 @@ from reportlab.graphics.charts.piecharts import Pie
 from reportlab.graphics.shapes import Drawing, Rect
 from reportlab.lib.colors import toColor
 from reportlab.lib import colors
+from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib.utils import ImageReader
-from reportlab.platypus import Flowable, SimpleDocTemplate, Frame, Image
+from reportlab.platypus import Flowable, SimpleDocTemplate, Frame, Image, Table, TableStyle
 from reportlab.platypus import Paragraph
+from label.utils.constants import *
 
 
 class ColorFrameSimpleDocTemplate(SimpleDocTemplate, object):
@@ -156,6 +158,62 @@ class Charts():
         drawing.add(pie)
         return drawing
     
+class Tables():
+    def cost_table(data_dict):
+        pc251 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = FONT_BOLD,  spaceBefore = 0)
+        pc252 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = FONT_BOLD,  spaceBefore = -12)
+        pc253 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = FONT_NORMAL,  spaceBefore = 0)
+
+        tct = []
+    
+        data_dict['siteEnergyUseFuelOil'] = data_dict['siteEnergyUseDiesel'] + data_dict['siteEnergyUseFuelOil1'] + data_dict['siteEnergyUseFuelOil2'] + data_dict['siteEnergyUseFuelOil4'] + data_dict['siteEnergyUseFuelOil5And6']
+        data_dict['siteEnergyUsePropane'] += data_dict['siteEnergyUseKerosene']
+        data_dict['energyCostFuelOil'] = data_dict['energyCostDiesel'] + data_dict['energyCostFuelOil1'] + data_dict['energyCostFuelOil2'] + data_dict['energyCostFuelOil4'] + data_dict['energyCostFuelOil5And6']
+        data_dict['energyCostPropane'] += data_dict['energyCostKerosene']
+
+        num_fuel = 0
+        for num, fuel in enumerate(FUELS):
+            if data_dict['energyCost'+fuel] != 0:
+                data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/data_dict['siteEnergyUse'+fuel]
+                num_fuel+=1
+        if data_dict['onSiteRenewableSystemGeneration'] != 0:
+            num_fuel+=1
+            
+        for num, fuel in enumerate(FUELS):
+            if data_dict['energyCost'+fuel] != 0:
+                pc251.textColor = FUELCOLOR[num]
+                if num_fuel > 3:
+                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
+                else:
+                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
+
+        if data_dict['onSiteRenewableSystemGeneration'] != 0:
+            pc251.textColor = FUELCOLOR[-1]
+            if num_fuel > 3:
+                tct.append([FUELIMAGESSMALL[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['energyCostElectricityOnsiteSolarWind'])), pc252), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)],''])
+            else:
+                tct.append([FUELIMAGES[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['energyCostElectricityOnsiteSolarWind'])), pc252), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)],''])
+        
+        cost_subTable = Table(tct, colWidths = [0.5*inch, 1.83*inch, 0.2*inch, 2.0*inch])
+        cost_subTableStyle = TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ])
+
+        row_ind = 0
+        for num, fuel in enumerate(FUELS):
+            if data_dict['energyCost'+fuel]!= 0:
+                cost_subTableStyle.add('BACKGROUND',(2,row_ind),(-1,-num_fuel+row_ind),FUELCOLOR[num])
+                if num_fuel != 1:
+                    cost_subTableStyle.add('LINEBELOW', (0, row_ind), (-2, -num_fuel+row_ind), 1, CUSTOM_MGRAY),
+                row_ind += 1
+        if data_dict['onSiteRenewableSystemGeneration'] != 0:
+            cost_subTableStyle.add('BACKGROUND',(2,num_fuel-1),(-1,-1),FUELCOLOR[-1])
+            cost_subTableStyle.add('LINEABOVE', (0, row_ind),(-1, -num_fuel+row_ind),1, CUSTOM_MGRAY)
+        
+        cost_subTable.setStyle(cost_subTableStyle)    
+        
+        return cost_subTable
+
 class Scores():
     
     def map_scores(property_type):
@@ -183,12 +241,14 @@ class Highlights():
             pc101 = ParagraphStyle('column_1', alignment = alignment, fontSize = font_h, fontName = font_bold, textColor=colors.white, leading=14)
             pc102 = ParagraphStyle('column_1', alignment = alignment, fontSize = font_xxl, fontName = font_bold, textColor = colors.white)
             pc103 = ParagraphStyle('column_2', alignment = alignment, fontSize = font_s, fontName = font_bold, textColor = colors.white, spaceBefore=26)
-            text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
             if data_dict['energy_star_score']:
+                text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
                 text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
+                text_c103 = Paragraph('50=median, 75=high performer', pc103)
             else:
-                text_c102 = Paragraph('No score', pc102)                
-            text_c103 = Paragraph('50=median, 75=high performer', pc103)
+                text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
+                text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
+                text_c103 = Paragraph('MMBtu', pc103)
         else:
             text_c101 = Paragraph("TBD", pc101)
             text_c102 = Paragraph('value', pc102)
@@ -196,9 +256,9 @@ class Highlights():
         
         return text_c101, text_c102, text_c103
         
-    def cert_commercial(data_dict, font_size, font_normal, font_color, icon, alignment, num_line):
+    def cert_commercial(data_dict, font_size, font_normal, font_color, icon, num_line):
         t_cert = []
-        pc272 = ParagraphStyle('body_left', alignment = alignment, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
+        pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         if 'energyStarCertificationYears' in data_dict and data_dict['energyStarCertificationYears']:
             t_cert.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> EPA ENERGYSTAR® Certified Building''', pc272)])
         
@@ -208,11 +268,11 @@ class Highlights():
 
         return t_cert, num_line
 
-    def general_commercial(data_dict, font_size, font_normal, font_color, icon, alignment, num_line):
+    def general_commercial(data_dict, font_size, font_normal, font_color, icon, num_line):
         t_achieve = []
-        pc272 = ParagraphStyle('body_left', alignment = alignment, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
+        pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas consumption was: " + str(data_dict['totalGHGEmissions'])+" metric tons CO2e", pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas consumption was: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
         num_line += 1
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(data_dict['site_total'])+" MMBTU/ft2", pc272)])
         num_line += 1
@@ -231,10 +291,10 @@ class Highlights():
 
         return t_achieve, num_line
 
-    def solar_commercial(data_dict, font_size, font_normal, font_color, icon, alignment, num_line):
+    def solar_commercial(data_dict, font_size, font_normal, font_color, icon, num_line):
         t_achieve = []
-        pc272 = ParagraphStyle('body_left', alignment = alignment, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
-        pc273 = ParagraphStyle('body_left', alignment = alignment, textColor = font_color, fontSize = font_size, fontName = font_normal)
+        pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
+        pc273 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal)
         if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site', pc273)])
             num_line +=1

@@ -41,4 +41,11 @@ FONT_H = 10
 FONT_T = 9
 FONT_S = 8
 
+FONT_NORMAL = 'InterstateLight'
+FONT_BOLD = 'InterstateBlack'
+CHECK = u"\u2713"
+UNCHECKED = u"\u2752"
+CHECK_IMG = IMG_PATH+"/HomeEnergyProfile_icons-13.png"
+
+
 
