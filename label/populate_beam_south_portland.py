@@ -17,6 +17,7 @@ from reportlab.lib.validators import Auto
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Flowable, Frame, FrameBreak, HRFlowable, Image, NextPageTemplate, PageBreak, PageTemplate,Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle  
+from label.utils.constants import *
 from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Charts, Scores, Highlights, flowable_text, flowable_triangle
 import datetime
 
@@ -29,42 +30,10 @@ pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
-
-CUSTOM_LGRAY = colors.Color(red=(242.0/255),green=(246.0/255),blue=(248.0/255))
-CUSTOM_DGRAY = colors.Color(red=(109.0/255),green=(111.0/255),blue=(106.0/255))
-CUSTOM_MGRAY = colors.Color(red=(111.0/255),green=(111.0/255),blue=(106.0/255))
-CUSTOM_LGREEN = colors.Color(red=(209.0/255),green=(229.0/255),blue=(202.0/255))
-CUSTOM_DGREEN = colors.Color(red=(65.0/255),green=(173.0/255),blue=(73.0/255))
-CUSTOM_MGREEN = colors.Color(red=(74.0/255),green=(151.0/255),blue=(93.0/255))
-CUSTOM_ELECGREEN = colors.Color(red=(113.0/255),green=(168.0/255),blue=(80.0/255))
-CUSTOM_LORANGE = colors.Color(red=(242.0/255),green=(151.0/255),blue=(152.0/255))
-CUSTOM_ORANGE = colors.Color(red=(217.0/255),green=(92.0/255),blue=(35.0/255))
-CUSTOM_YELLOW = colors.Color(red=(255.0/255),green=(221.0/255),blue=(0.0/255))
-CUSTOM_LTEAL = colors.Color(red=(53.0/255),green=(196.0/255),blue=(229.0/255))
-CUSTOM_DTEAL = colors.Color(red=(54.0/255),green=(109.0/255),blue=(238.0/255)) ## This is the color to customize
-FUELS = ['ElectricityGridPurchase', 'NaturalGas', 'FuelOil', 'Propane',  'Wood']
-#FUELICONS = [u"",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf185"]
-FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf185"]
-FUELIMAGES = [Image(IMG_PATH+"/HomeEnergyProfile_icons-03.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-09.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-10.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-11.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-02.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-02.png",0.4*inch,0.4*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-04.png",0.4*inch,0.4*inch)]
-FUELIMAGESSMALL = [Image(IMG_PATH+"/HomeEnergyProfile_icons-03.png",0.3*inch,0.3*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-09.png",0.3*inch,0.3*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-10.png",0.3*inch,0.3*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-11.png",0.3*inch,0.3*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-02.png",0.3*inch,0.3*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-02.png",0.3*inch,0.3*inch), Image(IMG_PATH+"/HomeEnergyProfile_icons-04.png",0.3*inch,0.3*inch)]
-FUELLABEL = ['Electric', 'Natural Gas', 'Heating Oil', 'Propane', 'Wood']
-FUELUNIT = ['kwh', 'ccf', 'gal', 'gal', 'ton']
-FUELCOLOR = [CUSTOM_ELECGREEN, CUSTOM_ORANGE, CUSTOM_DTEAL, CUSTOM_LTEAL, CUSTOM_MGREEN]
-
-
-
     
 def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
-    font_xxl =30
-    font_xl = 24
-    font_ll = 16
-    font_l = 14
-    font_ml = 12
-    font_h = 10
-    font_t = 9
-    font_s = 8
     font_normal = 'InterstateLight'
     font_bold = 'InterstateBlack'
     checked = u"\u2713"
@@ -80,12 +49,12 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
 
     Story=[]
     #Standard text formats
-    tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_h, fontName = font_normal, textColor = CUSTOM_DGRAY, leading = 14)  
-    tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_h, fontName = font_bold, textColor = CUSTOM_DGRAY, leading = 14)  
-    tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_s, fontName = font_normal, textColor = CUSTOM_DGRAY, spaceBefore = 12, spaceAfter = 12)  
-    tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_s, fontName = font_normal, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = font_s, fontName = font_normal, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    tf_small_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = font_s, fontName = font_bold, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
+    tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = font_normal, textColor = CUSTOM_DGRAY, leading = 14)  
+    tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = font_bold, textColor = CUSTOM_DGRAY, leading = 14)  
+    tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = font_normal, textColor = CUSTOM_DGRAY, spaceBefore = 12, spaceAfter = 12)  
+    tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = font_normal, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
+    tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = FONT_S, fontName = font_normal, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
+    tf_small_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = font_bold, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
     
     ### P1
     # Logo
@@ -97,7 +66,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', colors, font_s, font_h, font_xxl, font_bold, TA_CENTER)
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', colors, FONT_S, FONT_H, FONT_XXL, font_bold, TA_CENTER)
     
     Story.append(text_c101)
     Story.append(text_c102)
@@ -106,9 +75,9 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
 
     # Text Column
     column_12 = ColorFrame(doc.leftMargin, doc.bottomMargin, doc.width/3-12, 0.72*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)
-    pc12 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = font_ml, fontName = font_bold, textColor = CUSTOM_DTEAL, leading = 14, spaceBefore = 16)
-    pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = font_h, fontName = font_bold, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
-    pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = font_t, fontName = font_normal, textColor = CUSTOM_DGRAY, leading = 12)
+    pc12 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_ML, fontName = font_bold, textColor = CUSTOM_DTEAL, leading = 14, spaceBefore = 16)
+    pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = font_bold, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
+    pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = font_normal, textColor = CUSTOM_DGRAY, leading = 12)
     
     Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. It also highlights energy upgrades and improvements made to increase the building’s efficiency. The profile includes further recommendations that can help to achieve more efficiency and energy costs savings.", tf_standard))
     Story.append(Spacer(1,16))
@@ -138,13 +107,13 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     y_offset = 0.04
     # Expected Usage Total
     column_211 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding = 5)    
-    pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = font_ll, fontName = font_bold, textColor = colors.white)
+    pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = font_bold, textColor = colors.white)
     text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
     Story.append(text_c201)
     Story.append(FrameBreak)
     
     column_212 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
-    pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = font_l, fontName = font_bold, textColor = CUSTOM_DTEAL)
+    pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = font_bold, textColor = CUSTOM_DTEAL)
     text_c202 = Paragraph('Annual Energy Usage', pc202)
     Story.append(text_c202)
     Story.append(FrameBreak)
@@ -190,7 +159,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     # Cost
     y_offset += 0.02
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
-    pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = font_ll, fontName = font_bold, textColor = colors.white)
+    pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = font_bold, textColor = colors.white)
     text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
     Story.append(text_c231)
     Story.append(FrameBreak)
@@ -212,9 +181,9 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     column_252 = Frame(doc.leftMargin+doc.width/3+(1/5)*(2/3)*doc.width, doc.height*(1-y_offset), (1/2)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=0)    
     
-    pc251 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = font_t, textColor = CUSTOM_DGRAY, fontName = font_bold,  spaceBefore = 0)
-    pc252 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = font_t, textColor = CUSTOM_DGRAY, fontName = font_bold,  spaceBefore = -12)
-    pc253 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = font_t, textColor = CUSTOM_DGRAY, fontName = font_normal,  spaceBefore = 0)
+    pc251 = ParagraphStyle('body_left', alignment = TA_LEFT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = font_bold,  spaceBefore = 0)
+    pc252 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = font_bold,  spaceBefore = -12)
+    pc253 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = font_normal,  spaceBefore = 0)
     tct = []
     
     data_dict['siteEnergyUseFuelOil'] = data_dict['siteEnergyUseDiesel'] + data_dict['siteEnergyUseFuelOil1'] + data_dict['siteEnergyUseFuelOil2'] + data_dict['siteEnergyUseFuelOil4'] + data_dict['siteEnergyUseFuelOil5And6']
@@ -273,7 +242,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     # Energy Highlights Header
     y_offset += 0.03
     column_261 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset)+10, (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    pc261 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = font_t, fontName = font_bold, textColor = colors.white)
+    pc261 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_T, fontName = font_bold, textColor = colors.white)
     text_c261 = Paragraph('Insights & Trends', pc261)
     Story.append(text_c261)
     Story.append(FrameBreak)
@@ -285,7 +254,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     
     ## HIGHLIGHTS: CERTIFICATIONS, SOLAR & EV, GENERAL
     num_line = 0
-    t_cert, num_line = Highlights.cert_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)             
+    t_cert, num_line = Highlights.cert_commercial(data_dict, FONT_T, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)             
     if t_cert:
         ratings_table = Table(t_cert, colWidths = [2.7*inch, 2.7*inch])
         ratings_table.setStyle(TableStyle([
@@ -295,7 +264,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(ratings_table)   
             
-    t_achieve, num_line = Highlights.general_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
     if t_achieve:
         ratings_table = Table(t_achieve, colWidths = [5.4*inch])
         ratings_table.setStyle(TableStyle([
@@ -305,7 +274,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(ratings_table)
 
-    t_achieve, num_line = Highlights.solar_commercial(data_dict, font_t, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
+    t_achieve, num_line = Highlights.solar_commercial(data_dict, FONT_T, font_normal, CUSTOM_DGRAY, check_img, TA_LEFT, num_line)
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.1*inch])
         achieve_table.setStyle(TableStyle([
@@ -323,7 +292,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c281)
     Story.append(FrameBreak)
     
-    pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = font_t, fontName = font_bold, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
+    pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = font_bold, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
     column_282 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.bottomMargin+0.17*doc.height, (3/4)*(2/3)*doc.width, 0.06*doc.height, showBoundary=0, topPadding=10)    
     text_c282 = Paragraph('The following actions can help you save money on your energy costs for years to come', pc262)
@@ -333,7 +302,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     # Take Action Details    
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
-    pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = font_t, fontName = font_normal,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
+    pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = font_normal,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
     Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades.", pc291, bulletText=unchecked.encode('UTF8')))
     Story.append(Paragraph("Perform regular building envelope maintenance.", pc291, bulletText=unchecked.encode('UTF8')))
@@ -355,7 +324,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
 if __name__ == '__main__':
     data_dict = {
         'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Enclosed Mall', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
         'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
         'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
         'energyCost': 10000.0, 
@@ -364,7 +333,7 @@ if __name__ == '__main__':
         'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
         'cons_solar': -11000.0,
         'estar_wh': True,
-        'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1,
+        'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': -0.1,
         'totalGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }

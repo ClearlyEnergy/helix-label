@@ -159,6 +159,10 @@ class Charts():
 class Scores():
     
     def map_scores(property_type):
+        category_map = {
+            'Convenience Store with Gas Station': 'Retail Store', 'Enclosed Mall': 'Retail Store', 'Lifestyle Center': 'Retail Store', 'Strip Mall': 'Retail Store', 'Supermarket/Grocery Store': 'Retail Store', 'Vehicle Dealership': 'Retail Store', 'Wholesale Club/Supercenter': 'Retail Store', 'Other - Mall': 'Retail Store'
+        }
+
         espm_score_mapping = {}
         dirname = os.path.dirname(__file__)
         filename = os.path.join(dirname, 'energy_star_score.csv')
@@ -166,7 +170,11 @@ class Scores():
             reader = csv.DictReader(f)
             for row in reader:
                 espm_score_mapping[row['Category']] = row
-        return espm_score_mapping[property_type]
+        if property_type in espm_score_mapping:
+            ret_vals = espm_score_mapping[property_type]
+        else:
+            ret_vals = espm_score_mapping[category_map[property_type]]
+        return ret_vals
 
 class Highlights():
     
@@ -211,7 +219,7 @@ class Highlights():
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" MMBTU/ft2", pc272)])
         num_line += 1
         if 'yoy_percent_change_site_eui_2022' in data_dict:
-            if abs(data_dict['yoy_percent_change_site_eui_2022']) > 0:
+            if data_dict['yoy_percent_change_site_eui_2022'] and abs(data_dict['yoy_percent_change_site_eui_2022']) > 0:
                 if num_line <= 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui_2022'])+" %", pc272)])
                     num_line += 1
