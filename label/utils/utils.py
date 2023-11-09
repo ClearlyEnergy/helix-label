@@ -218,7 +218,20 @@ class Scores():
     
     def map_scores(property_type):
         category_map = {
-            'Convenience Store with Gas Station': 'Retail Store', 'Enclosed Mall': 'Retail Store', 'Lifestyle Center': 'Retail Store', 'Strip Mall': 'Retail Store', 'Supermarket/Grocery Store': 'Retail Store', 'Vehicle Dealership': 'Retail Store', 'Wholesale Club/Supercenter': 'Retail Store', 'Other - Mall': 'Retail Store'
+            'Convenience Store with Gas Station': 'Retail Store', 'Enclosed Mall': 'Retail Store', 'Lifestyle Center': 'Retail Store', 'Strip Mall': 'Retail Store', 'Supermarket/Grocery Store': 'Retail Store', 'Vehicle Dealership': 'Retail Store', 'Wholesale Club/Supercenter': 'Retail Store', 'Other - Mall': 'Retail Store',
+            'Bank Branch': 'Office', 'Financial Office': 'Office',
+            'Adult Education': 'K-12 School', 'College/University': 'K-12 School', 'Pre-school/Daycare': 'K-12 School', 'Vocational School': 'K-12 School', 'Other - Education': 'K-12 School',
+            'Aquarium': 'Hotel', 'Bar/Nightclub': 'Hotel', 'Bowling Alley': 'Hotel', 'Casino': 'Hotel', 'Convention Center': 'Hotel', 'Fitness Center/Health Club/Gym': 'Hotel', 'Ice/Curling Rink': 'Hotel', 'Indoor Arena': 'Hotel', 'Movie Theater': 'Hotel', 'Museum': 'Hotel', 'Performing Arts': 'Hotel', 'Race Track': 'Hotel', 'Roller Rink': 'Hotel', 'Social/Meeting Hall': 'Hotel', 'Stadium (Closed)': 'Hotel', 'Stadium (Open)': 'Hotel', 'Zoo': 'Hotel', 'Other - Entertainment/Public Assembly': 'Hotel', 'Other - Recreation': 'Hotel', 'Other - Stadium': 'Hotel',
+            'Bar/Nightclub': 'Hotel', 'Convenience Store with Gas Station': 'Convenience Store without Gas Station', 'Fast Food Restaurant': 'Hotel', 'Food Sales': 'Hotel', 'Food Service': 'Hotel', 'Restaurant': 'Hotel', 'Supermarket/Grocery Store': 'Hotel', 'Wholesale Club/Supercenter': 'Hotel', 'Other - Restaurant/Bar': 'Hotel',
+            'Ambulatory Surgical Center': 'Hospital (General Medical & Surgical)','Outpatient Rehabilitation/Physical Therapy': 'Medical Office', 'Residential Care Facility': 'Senior Living Community', 'Urgent Care/Clinic/Other Outpatient': 'Medical Office', 'Other - Specialty Hospital': 'Hospital (General Medical & Surgical)', 
+            'Barracks': 'Multifamily Housing', 'Prison/Incarceration': 'Residence Hall/Dormitory', 'Other - Lodging/Residential': 'Multifamily Housing',
+            'Manufacturing/Industrial Plant': 'Wastewater Treatment Plant',
+            'Mixed Use Property': 'Office', 'Veterinary Office': 'Medical Office', 'Parking': 'Warehouse', 'Courthouse': 'Office', 'Fire Station': 'Office', 'Library': 'Office', 'Mailing Center/Post Office': 'Office', 'Police Station': 'Office', 'Prison/Incarceration': 'Office', 'Social/Meeting Hall': 'Office', 'Transportation Terminal/Station': 'Office', 'Other - Public Services': 'Office',
+            'Laboratory': 'Data Center', 'Other - Technology/Science': 'Data Center',
+            'Personal Services (Health/Beauty, Dry Cleaning, etc.)': 'Retail Store', 'Repair Services (Vehicle, Shoe, Locksmith, etc.)': 'Retail Store', 'Other - Services': 'Retail Store',
+            'Drinking Water Treatment & Distribution': 'Wastewater Treatment Plant', 'Energy/Power Station': 'Wastewater Treatment Plant', 'Other - Utility': 'Wastewater Treatment Plant',
+            'Self-Storage Facility': 'Warehouse', 'Distribution Center': 'Warehouse', 'Non-Refrigerated Warehouse': 'Warehouse', 'Refrigerated Warehouse': 'Warehouse',
+            'Other': 'Office'
         }
 
         espm_score_mapping = {}
@@ -233,6 +246,9 @@ class Scores():
         else:
             ret_vals = espm_score_mapping[category_map[property_type]]
         return ret_vals
+        
+        
+        
 
 class Highlights():
     
