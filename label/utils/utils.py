@@ -157,6 +157,39 @@ class Charts():
             pie.slices[i].fontSize = 16
         drawing.add(pie)
         return drawing
+        
+    # Wedge (start at 0.62; end at 4.82)
+    def wedge(data_dict, ):
+        espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
+        if data_dict['energy_star_score']:
+            site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
+            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
+        else:
+            site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50']))
+            site_min = 0.0
+            
+        wedge_img = IMG_PATH+"/wedge.png"
+        triangle = IMG_PATH+"/triangle.png"
+        triangle2 = IMG_PATH+"/triangle2.png"
+        wedge = Image(wedge_img, 5.0*inch, 2.25*inch)
+        # triangle for actual building consumption
+        offset_x = 0.53+data_dict['site_total']/site_max*(4.75-0.53)
+        pic = flowable_triangle(triangle,offset_x, 1.78, 0.2, 0.288,'')
+        txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
+        # triangle for net zero building, set at zero bar along with text
+        pic2 = flowable_triangle(triangle2, 0.62, 0.44, 0.08, 0.138,"Net zero \n building","left")
+        # if median is available, add it in as triangle on line
+        pic3 = None
+        if data_dict['medianSiteIntensity'] and data_dict['propGrossFloorArea']:
+            median_site_use = data_dict['propGrossFloorArea'] * data_dict['medianSiteIntensity'] / 1000.0
+            offset_x = 0.62 + median_site_use/site_max*(4.82-0.62)
+            if offset_x < 4.3:
+                pic3 = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Median building","right")
+        offset_x = 0.62 + 105.0/site_max*(4.82-0.62)
+        # text for maximum reference
+        txt2 = flowable_text(4.82, 0.44, str(int(site_max)),7)
+    
+        return wedge, txt, txt2, pic, pic2, pic3
     
 class Tables():
     def cost_table(data_dict):
@@ -277,10 +310,10 @@ class Highlights():
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         if 'energyStarCertificationYears' in data_dict and data_dict['energyStarCertificationYears']:
             t_cert.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> EPA ENERGYSTAR® Certified Building''', pc272)])
+            num_line += 1
         
         t_cert.append(Paragraph("", pc272))
         t_cert = [t_cert]
-        num_line += 1
 
         return t_cert, num_line
 
@@ -288,20 +321,20 @@ class Highlights():
         t_achieve = []
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas consumption was: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions was: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
         num_line += 1
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(data_dict['site_total'])+" MMBTU/ft2", pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['site_total']))+" MMBTU/ft2", pc272)])
         num_line += 1
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" MMBTU/ft2", pc272)])
-        num_line += 1
+        if data_dict['medianSiteIntensity']:
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" MMBTU/ft2", pc272)])
+            num_line += 1
         if 'yoy_percent_change_site_eui_2022' in data_dict:
             if data_dict['yoy_percent_change_site_eui_2022'] and abs(data_dict['yoy_percent_change_site_eui_2022']) > 0:
-                if num_line <= 5:
+                if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui_2022'])+" %", pc272)])
                     num_line += 1
-                if num_line <= 5:
+                if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec_2022'])+" %", pc272)])
-                    num_line += 1
 #Can you vertically center the “Take Action!” label?
 #Can you add Building Type under Building Information and pull the Primary Property Use field?
 

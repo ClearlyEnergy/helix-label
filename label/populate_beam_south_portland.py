@@ -109,38 +109,15 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
     text_c220 = Paragraph("The building energy use with 0 being a net zero building", tf_standard)
     Story.append(text_c220)
     
-    # Wedge - start at 0.62 end at 4.82
-    espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
-    if data_dict['energy_star_score']:
-        site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
-    else:
-        site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50']))
-    print(site_max)
-            
-    wedge_img = IMG_PATH+"/wedge.png"
-    wedge = Image(wedge_img, 5.0*inch, 2.25*inch)
+    # Wedge
+    wedge, txt, txt2, pic, pic2, pic3 = Charts.wedge(data_dict)
     Story.append(wedge)
-    triangle = IMG_PATH+"/triangle.png"
-    offset_x = 0.53+data_dict['site_total']/site_max*(4.75-0.53)
-    pic = flowable_triangle(triangle,offset_x, 1.78, 0.2, 0.288,'')
     Story.append(pic)
-    txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
     Story.append(txt)
-    triangle2 = IMG_PATH+"/triangle2.png"
-    offset_x = 0.62 + 40.0/site_max*(4.82-0.62)
-    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Net zero \n building","left")
-    Story.append(pic)
-    triangle = IMG_PATH+"/triangle2.png"
-    if data_dict['medianSiteIntensity'] and data_dict['propGrossFloorArea']:
-        median_site_use = data_dict['propGrossFloorArea'] * data_dict['medianSiteIntensity'] / 1000.0
-        offset_x = 0.62 + median_site_use/site_max*(4.82-0.62)
-        if offset_x < 4.3:
-            pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Median building","right")
-            Story.append(pic)
-    triangle2 = IMG_PATH+"/triangle2.png"
-    offset_x = 0.62 + 105.0/site_max*(4.82-0.62)
-    txt = flowable_text(4.82, 0.44, str(int(site_max)),7)
-    Story.append(txt)
+    Story.append(pic2)
+    if pic3:
+        Story.append(pic3)
+    Story.append(txt2)
     Story.append(FrameBreak)
     
     # Cost
@@ -202,17 +179,7 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
         Story.append(ratings_table)   
-            
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_achieve:
-        ratings_table = Table(t_achieve, colWidths = [5.4*inch])
-        ratings_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'TOP'),
-            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(ratings_table)
-
+        
     t_achieve, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.1*inch])
@@ -221,7 +188,16 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
         Story.append(achieve_table)
-     
+    
+    t_solar, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    if t_achieve:
+        solar_table = Table(t_solar, colWidths = [5.4*inch])
+        solar_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+         ]))
+        Story.append(solar_table)      
     Story.append(FrameBreak)
 
     # Take Action Header
@@ -261,23 +237,10 @@ def write_south_portland_profile_pdf(data_dict, output_pdf_path):
 
 # Run with:  python3 -m label.populate_beam_south_portland
 if __name__ == '__main__':
-#    data_dict = {
-#        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-#        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-#        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
-#        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
-#        'energyCost': 10000.0, 
-#        'energyCostElectricityOnsiteSolarWind': 2110.0,
-#        'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
-#        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
-#        'cons_solar': -11000.0,
-#        'estar_wh': True,
-#        'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': -0.1,
-#        'totalLocationBasedGHGEmissions': 150,
-#        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-#    }
+    data_dict = {'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 50, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0, 'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0, 'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'energyCost': 10000.0, 'energyCostElectricityOnsiteSolarWind': 2110.0, 'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0, 'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'cons_solar': -11000.0, 'estar_wh': True, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': -0.1, 'totalLocationBasedGHGEmissions': 150, 'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0}
     
-    data_dict = {'street': '220 VIRGINIA AVE', 'city': 'South Portland', 'state': 'ME', 'zipcode': '04106', 'year_built': 1991, 'year_ending': 'N/A', 'systemDefinedPropertyType': 'Laboratory', 'propGrossFloorArea': 212000.0, 'energy_star_score': None, 'site_total': 17844.3429, 'medianSiteIntensity': 63.1, 'percentBetterThanSiteIntensityMedian': -41.3, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': None, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0, 'onSiteRenewableSystemGeneration': 0, 'siteEnergyUseElectricityGridPurchase': 3563328.8, 'siteEnergyUseElectricityGridPurchaseKwh': 1044351.8, 'siteEnergyUseNaturalGas': 4281014.1, 'siteEnergyUseKerosene': 0, 'siteEnergyUsePropane': 0, 'siteEnergyUseDiesel': 0, 'siteEnergyUseFuelOil1': 0, 'siteEnergyUseFuelOil2': 0, 'siteEnergyUseFuelOil4': 0, 'siteEnergyUseFuelOil5And6': 0, 'siteEnergyUseWood': 0, 'energyCost': 272755.54, 'energyCostElectricityOnsiteSolarWind': 0, 'energyCostElectricityGridPurchase': 211913.96, 'energyCostNaturalGas': 60841.58, 'energyCostKerosene': 0, 'energyCostPropane': 0, 'energyCostDiesel': 0, 'energyCostFuelOil1': 0, 'energyCostFuelOil2': 0, 'energyCostFuelOil4': 0, 'energyCostFuelOil5And6': 0, 'energyCostWood': 0, 'totalLocationBasedGHGEmissions': 485.1, 'siteEnergyUseFuelOil': 0, 'energyCostFuelOil': 0, 'energyRateElectricityGridPurchase': 0.059470784733645685, 'energyRateNaturalGas': 0.014211955059900411}
+#    data_dict = {'property_name': 'My Property', 'street': '220 VIRGINIA AVE', 'city': 'South Portland', 'state': 'ME', 'zipcode': '04106', 'year_built': 1991, 'year_ending': '2022', 'systemDefinedPropertyType': 'Laboratory', 'propGrossFloorArea': 212000.0, 'energy_star_score': None, 'site_total': 17844.3429, 'medianSiteIntensity': None, 'percentBetterThanSiteIntensityMedian': -41.3, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': None, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0, 'onSiteRenewableSystemGeneration': 0, 'siteEnergyUseElectricityGridPurchase': 3563328.8, 'siteEnergyUseElectricityGridPurchaseKwh': 1044351.8, 'siteEnergyUseNaturalGas': 4281014.1, 'siteEnergyUseKerosene': 0, 'siteEnergyUsePropane': 0, 'siteEnergyUseDiesel': 0, 'siteEnergyUseFuelOil1': 0, 'siteEnergyUseFuelOil2': 0, 'siteEnergyUseFuelOil4': 0, 'siteEnergyUseFuelOil5And6': 0, 'siteEnergyUseWood': 0, 'energyCost': 272755.54, 'energyCostElectricityOnsiteSolarWind': 0, 'energyCostElectricityGridPurchase': 211913.96, 'energyCostNaturalGas': 60841.58, 'energyCostKerosene': 0, 'energyCostPropane': 0, 'energyCostDiesel': 0, 'energyCostFuelOil1': 0, 'energyCostFuelOil2': 0, 'energyCostFuelOil4': 0, 'energyCostFuelOil5And6': 0, 'energyCostWood': 0, 'totalLocationBasedGHGEmissions': 485.1, 'siteEnergyUseFuelOil': 0, 'energyCostFuelOil': 0, 'energyRateElectricityGridPurchase': 0.059470784733645685, 'energyRateNaturalGas': 0.014211955059900411}
+#    data_dict = {'street': 'N/A', 'city': 'South Portland', 'state': 'ME', 'zipcode': '04106', 'year_built': 1970, 'year_ending': '2022', 'systemDefinedPropertyType': 'Parking', 'propGrossFloorArea': 174000.0, 'energy_star_score': None, 'site_total': 30.9121, 'medianSiteIntensity': None, 'percentBetterThanSiteIntensityMedian': None, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': None, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0, 'onSiteRenewableSystemGeneration': 0, 'siteEnergyUseElectricityGridPurchase': 30912.1, 'siteEnergyUseElectricityGridPurchaseKwh': 9059.8, 'siteEnergyUseNaturalGas': 0, 'siteEnergyUseKerosene': 0, 'siteEnergyUsePropane': 0, 'siteEnergyUseDiesel': 0, 'siteEnergyUseFuelOil1': 0, 'siteEnergyUseFuelOil2': 0, 'siteEnergyUseFuelOil4': 0, 'siteEnergyUseFuelOil5And6': 0, 'siteEnergyUseWood': 0, 'energyCost': 1183.56, 'energyCostElectricityOnsiteSolarWind': 0, 'energyCostElectricityGridPurchase': 1183.56, 'energyCostNaturalGas': 0, 'energyCostKerosene': 0, 'energyCostPropane': 0, 'energyCostDiesel': 0, 'energyCostFuelOil1': 0, 'energyCostFuelOil2': 0, 'energyCostFuelOil4': 0, 'energyCostFuelOil5And6': 0, 'energyCostWood': 0, 'totalLocationBasedGHGEmissions': 2.2}
     out_file = 'South_Portland_BEAM_Profile.pdf'
     write_south_portland_profile_pdf(data_dict, out_file)
 

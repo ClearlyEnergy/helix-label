@@ -19,6 +19,7 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
+CUSTOM_DTEAL = colors.Color(red=(120.0/255),green=(162.0/255),blue=(47.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
@@ -105,33 +106,15 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     text_c220 = Paragraph("The building energy use with 0 being a net zero building", tf_standard)
     Story.append(text_c220)
     
-    # Wedge - start at 0.62 end at 4.82
-    espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
-    site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))])
-            
-    median_site_use = data_dict['propGrossFloorArea'] * data_dict['medianSiteIntensity'] / 1000.0
-    wedge_img = IMG_PATH+"/wedge.png"
-    wedge = Image(wedge_img, 5.0*inch, 2.25*inch)
+    # Wedge
+    wedge, txt, txt2, pic, pic2, pic3 = Charts.wedge(data_dict)
     Story.append(wedge)
-    triangle = IMG_PATH+"/triangle.png"
-    offset_x = 0.53+data_dict['site_total']/site_max*(4.75-0.53)
-    pic = flowable_triangle(triangle,offset_x, 1.78, 0.2, 0.288,'')
     Story.append(pic)
-    txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
     Story.append(txt)
-    triangle2 = IMG_PATH+"/triangle2.png"
-    offset_x = 0.62 + 40.0/site_max*(4.82-0.62)
-    pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Net zero \n building","left")
-    Story.append(pic)
-    triangle = IMG_PATH+"/triangle2.png"
-    offset_x = 0.62 + median_site_use/site_max*(4.82-0.62)
-    if offset_x < 4.3:
-        pic = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Median building","right")
-        Story.append(pic)
-    triangle2 = IMG_PATH+"/triangle2.png"
-    offset_x = 0.62 + 105.0/site_max*(4.82-0.62)
-    txt = flowable_text(4.82, 0.44, str(int(site_max)),7)
-    Story.append(txt)
+    Story.append(pic2)
+    if pic3:
+        Story.append(pic3)
+    Story.append(txt2)
     Story.append(FrameBreak)
     
     # Cost
@@ -203,17 +186,16 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(achieve_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_achieve and num_line < 5:
-        ratings_table = Table(t_achieve, colWidths = [5.4*inch])
-        ratings_table.setStyle(TableStyle([
+    t_solar, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    if t_achieve:
+        solar_table = Table(t_solar, colWidths = [5.4*inch])
+        solar_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('ALIGN', (0,0), (-1,-1), 'LEFT'),
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
-        Story.append(ratings_table)      
+        Story.append(solar_table)      
     Story.append(FrameBreak)
-    
         
     # Take Action Header
     y_offset += 0.0
