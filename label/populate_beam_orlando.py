@@ -176,24 +176,24 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(ratings_table)   
         
-    t_achieve, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_achieve:
-        achieve_table = Table(t_achieve, colWidths = [5.1*inch])
-        achieve_table.setStyle(TableStyle([
+    t_solar, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    if t_solar:
+        solar_table = Table(t_solar, colWidths = [5.1*inch])
+        solar_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
-        Story.append(achieve_table)
+        Story.append(solar_table)
     
-    t_solar, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
     if t_achieve:
-        solar_table = Table(t_solar, colWidths = [5.4*inch])
-        solar_table.setStyle(TableStyle([
+        achieve_table = Table(t_achieve, colWidths = [5.4*inch])
+        achieve_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('ALIGN', (0,0), (-1,-1), 'LEFT'),
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
-        Story.append(solar_table)      
+        Story.append(achieve_table)      
     Story.append(FrameBreak)
         
     # Take Action Header

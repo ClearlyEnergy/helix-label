@@ -169,9 +169,12 @@ class Charts():
         if data_dict['energy_star_score']:
             site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
             site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
+            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
+            site_median = round(float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
         else:
             site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50']))
             site_min = 0.0
+            site_median = round(float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping['50']))
             
         wedge_img = IMG_PATH+"/wedge.png"
         triangle = IMG_PATH+"/triangle.png"
@@ -185,11 +188,9 @@ class Charts():
         pic2 = flowable_triangle(triangle2, 0.62, 0.44, 0.08, 0.138,"Net zero \n building","left")
         # if median is available, add it in as triangle on line
         pic3 = None
-        if data_dict['medianSiteIntensity'] and data_dict['propGrossFloorArea']:
-            median_site_use = data_dict['propGrossFloorArea'] * data_dict['medianSiteIntensity'] / 1000.0
-            offset_x = 0.62 + median_site_use/site_max*(4.82-0.62)
-            if offset_x < 4.3:
-                pic3 = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Median building","right")
+        offset_x = 0.62 + site_median/site_max*(4.75-0.53)
+        if offset_x < 4.3:
+            pic3 = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Median building","left")
         offset_x = 0.62 + 105.0/site_max*(4.82-0.62)
         # text for maximum reference
         txt2 = flowable_text(4.82, 0.44, str(int(site_max)),7)
@@ -365,9 +366,15 @@ class Highlights():
         num_line += 1
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['site_total']))+" MMBTU/ft2", pc272)])
         num_line += 1
-        if data_dict['medianSiteIntensity']:
+        
+        if data_dict['percentBetterThanSiteIntensityMedian']:
+            better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the national median", pc272)])
+            num_line += 1
+        elif data_dict['medianSiteIntensity']:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" MMBTU/ft2", pc272)])
             num_line += 1
+
         if 'yoy_percent_change_site_eui_2022' in data_dict:
             if data_dict['yoy_percent_change_site_eui_2022'] and abs(data_dict['yoy_percent_change_site_eui_2022']) > 0:
                 if num_line < 5:
