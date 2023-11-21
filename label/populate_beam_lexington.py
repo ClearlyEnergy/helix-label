@@ -49,7 +49,7 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', colors, FONT_S, FONT_H, FONT_XXL, FONT_BOLD, TA_CENTER)
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE')
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -119,13 +119,11 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     
     # Cost
     y_offset += 0.02
+    text_c231, text_c232 = Highlights.cost_box(data_dict)
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
-    pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-    text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
+    column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     Story.append(text_c231)
     Story.append(FrameBreak)
-    column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
-    text_c232 = Paragraph('Annual Energy Cost', pc202)
     Story.append(text_c232)
     Story.append(FrameBreak)
     

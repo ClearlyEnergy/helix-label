@@ -134,11 +134,16 @@ class Charts():
         order = []
 
         for num, fuel in enumerate(fuels):
-            if data_dict['energyCost'+fuel] > 0:
+            if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] > 0):
                 data.append(int(data_dict['energyCost'+fuel]))
-    #            txt += FUELLABEL[num]
                 labels.append(fuel_icons[num])
                 order.append(num)
+        if not order: #check fuel unit conversions
+            for num, fuel in enumerate(fuels):
+                if (data_dict['siteEnergyUse'+fuel] is not None) and (data_dict['siteEnergyUse'+fuel] > 0):
+                    data.append(int(data_dict['siteEnergyUse'+fuel]))
+                    labels.append(fuel_icons[num])
+                    order.append(num)
         pie = Pie()
         pie.sideLabels = False
         pie.x = 5
@@ -199,33 +204,56 @@ class Tables():
 
         tct = []
     
-        data_dict['siteEnergyUseFuelOil'] = data_dict['siteEnergyUseDiesel'] + data_dict['siteEnergyUseFuelOil1'] + data_dict['siteEnergyUseFuelOil2'] + data_dict['siteEnergyUseFuelOil4'] + data_dict['siteEnergyUseFuelOil5And6']
-        data_dict['siteEnergyUsePropane'] += data_dict['siteEnergyUseKerosene']
-        data_dict['energyCostFuelOil'] = data_dict['energyCostDiesel'] + data_dict['energyCostFuelOil1'] + data_dict['energyCostFuelOil2'] + data_dict['energyCostFuelOil4'] + data_dict['energyCostFuelOil5And6']
-        data_dict['energyCostPropane'] += data_dict['energyCostKerosene']
+        oil_list = ['Diesel', 'FuelOil1', 'FuelOil2', 'FuelOil4', 'FuelOil5And6']
+        data_dict['siteEnergyUseFuelOil'] = 0.0
+        data_dict['energyCostFuelOil'] = 0.0
+        for oil in oil_list:
+            if data_dict['siteEnergyUse'+oil] is not None:
+                data_dict['siteEnergyUseFuelOil'] += data_dict['siteEnergyUse'+oil]
+            if data_dict['energyCost'+oil] is not None:
+                data_dict['energyCostFuelOil'] += data_dict['energyCost'+oil]
+        propane_list = ['Propane', 'Kerosene']
+        for propane in propane_list:
+            if data_dict['siteEnergyUse'+propane] is not None:
+                data_dict['siteEnergyUsePropane'] += data_dict['siteEnergyUse'+propane]
+            if data_dict['energyCost'+propane] is not None:
+                data_dict['energyCostPropane'] += data_dict['energyCost'+propane]
 
         num_fuel = 0
         for num, fuel in enumerate(FUELS):
-            if data_dict['energyCost'+fuel] != 0:
+            if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
                 data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/data_dict['siteEnergyUse'+fuel]
                 num_fuel+=1
-        if data_dict['onSiteRenewableSystemGeneration'] != 0:
+            elif data_dict['siteEnergyUse'+fuel]:
+                num_fuel+=1
+        if data_dict['onSiteRenewableSystemGeneration'] != 0.0:
             num_fuel+=1
             
         for num, fuel in enumerate(FUELS):
-            if data_dict['energyCost'+fuel] != 0:
+            if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
                 pc251.textColor = FUELCOLOR[num]
                 if num_fuel > 3:
                     tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
                 else:
                     tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
+            elif (data_dict['siteEnergyUse'+fuel] is not None) and (data_dict['siteEnergyUse'+fuel] != 0.0):
+                if num_fuel > 3:
+                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253),]])
+                else:
+                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253)], ''])
 
-        if data_dict['onSiteRenewableSystemGeneration'] != 0:
+        if (data_dict['onSiteRenewableSystemGeneration'] is not None) and (data_dict['onSiteRenewableSystemGeneration'] != 0):
             pc251.textColor = FUELCOLOR[-1]
-            if num_fuel > 3:
-                tct.append([FUELIMAGESSMALL[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['energyCostElectricityOnsiteSolarWind'])), pc252), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)],''])
+            if (data_dict['energyCostElectricityOnsiteSolarWind'] is not None) and (data_dict['energyCostElectricityOnsiteSolarWind'] != 0.0):
+                if num_fuel > 3:
+                    tct.append([FUELIMAGESSMALL[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['energyCostElectricityOnsiteSolarWind'])), pc252), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)],''])
+                else:
+                    tct.append([FUELIMAGES[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['energyCostElectricityOnsiteSolarWind'])), pc252), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)],''])
             else:
-                tct.append([FUELIMAGES[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph('$'+"{:,}".format(int(-1.0*data_dict['energyCostElectricityOnsiteSolarWind'])), pc252), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)],''])
+                if num_fuel > 3:
+                    tct.append([FUELIMAGESSMALL[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)]])
+                else:
+                    tct.append([FUELIMAGES[-1],[Paragraph("<font name='FontAwesome'>"+FUELICONS[-1]+"</font> Solar", pc251), Paragraph("{:,}".format(int(data_dict['onSiteRenewableSystemGeneration'])) + ' kwh', pc253)]])
         
         cost_subTable = Table(tct, colWidths = [0.5*inch, 1.83*inch, 0.2*inch, 2.0*inch])
         cost_subTableStyle = TableStyle([
@@ -285,11 +313,11 @@ class Scores():
 
 class Highlights():
     
-    def score_box(data_dict, category, colors, font_s, font_h, font_xxl, font_bold, alignment):
+    def score_box(data_dict, category):
         if category == 'ESTAR_SCORE':
-            pc101 = ParagraphStyle('column_1', alignment = alignment, fontSize = font_h, fontName = font_bold, textColor=colors.white, leading=14)
-            pc102 = ParagraphStyle('column_1', alignment = alignment, fontSize = font_xxl, fontName = font_bold, textColor = colors.white)
-            pc103 = ParagraphStyle('column_2', alignment = alignment, fontSize = font_s, fontName = font_bold, textColor = colors.white, spaceBefore=26)
+            pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor=colors.white, leading=14)
+            pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_XXL, fontName = FONT_BOLD, textColor = colors.white)
+            pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_S, fontName = FONT_BOLD, textColor = colors.white, spaceBefore=26)
             if data_dict['energy_star_score']:
                 text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
                 text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
@@ -304,6 +332,18 @@ class Highlights():
             text_c103 = Paragraph('range', pc103)
         
         return text_c101, text_c102, text_c103
+        
+    def cost_box(data_dict):
+        pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
+        pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL)
+        if data_dict['energyCost']:
+            text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
+            text_c232 = Paragraph('Annual Energy Cost', pc202)
+        else:
+            percent_electric = 100.0 * data_dict['siteEnergyUseElectricityGridPurchase'] / data_dict['site_total']
+            text_c231 = Paragraph('{:,.0f}%'.format(percent_electric), pc231)
+            text_c232 = Paragraph('Electrified', pc202)
+        return text_c231, text_c232
         
     def cert_commercial(data_dict, font_size, font_normal, font_color, icon, num_line):
         t_cert = []

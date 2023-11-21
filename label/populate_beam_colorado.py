@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_madison_orlando
+# run with python3 -m label.populate_beam_orlando
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,14 +19,14 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(38.0/255),green=(86.0/255),blue=(145.0/255))
+CUSTOM_DTEAL = colors.Color(red=(35.0/255),green=(92.0/255),blue=(55.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_beam_profile_pdf(data_dict, output_pdf_path):
+def write_colorado_profile_pdf(data_dict, output_pdf_path):
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
 
@@ -42,8 +42,8 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/beamlogo.png"
-    im = Image(vthep_logo, 2.5*inch, 0.91*inch)
+    vthep_logo = IMG_PATH+"/colorado.jpeg"
+    im = Image(vthep_logo, 1.1*inch, 1.1*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -61,7 +61,7 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
-    Story.append(Paragraph("Thank you for your compliance with Lexington’s Building Energy Use Disclosure (BEU-D) bylaw. This Building Energy Profile details your building’s energy use compared to the other buildings in Lexington that fall under the bylaw’s reporting requirement. It also highlights actions you can take to achieve more efficiency and energy cost savings.", tf_standard))
+    Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. It also highlights energy upgrades and improvements made to increase the building’s efficiency. The profile includes further recommendations that can help to achieve more efficiency and energy costs savings.", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -141,7 +141,7 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     column_252 = Frame(doc.leftMargin+doc.width/3+(1/5)*(2/3)*doc.width, doc.height*(1-y_offset), (1/2)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=0)    
     
     # Cost Table
-    cost_subTable = Tables.cost_table(data_dict)     
+    cost_subTable = Tables.cost_table(data_dict)
     Story.append(cost_subTable)
     Story.append(FrameBreak)
     pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR)
@@ -195,7 +195,6 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)      
     Story.append(FrameBreak)
-    
         
     # Take Action Header
     y_offset += 0.0
@@ -203,7 +202,8 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     text_c281 = Paragraph('Take Action!', pc261)
     Story.append(text_c281)
     Story.append(FrameBreak)
-
+    
+    
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
     column_282 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.bottomMargin+0.17*doc.height, (3/4)*(2/3)*doc.width, 0.06*doc.height, showBoundary=0, topPadding=10)    
@@ -216,13 +216,13 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Schedule a Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/en/business/programs-and-services/building-energy-assessments">Building Energy Assessment</link></font> to identify cost-saving upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Use Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/business/rebates-and-incentives">rebates and incentives</link></font> for insulation, HVAC, lighting, water heating.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Take advantage of <font name="InterstateLight" color=blue><link href="https://www.whitehouse.gov/cleanenergy/clean-energy-tax-provisions/">federal tax credits or direct pay rebates</link></font> for energy upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Consult <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">DSIRE</link></font> for all available incentives for renewables and energy efficiency.', pc291, bulletText=UNCHECKED.encode('UTF8')))    
-    Story.append(Paragraph('Take advantage of Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/en/business/programs-and-services/building-energy-assessments">programs and technical support</link></font> to help save energy.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Install solar panels on the roof or over parking lots.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Finance improvements with the <font name="InterstateLight" color=blue><link href="https://www.massdevelopment.com/what-we-offer/key-initiatives/pace">Property Assessed Clean Energy (PACE)</link></font> program.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=UNCHECKED.encode('UTF8')))
                         
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -234,11 +234,11 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_profile
+# Run with:  python3 -m label.populate_beam_colorado
 if __name__ == '__main__':
     data_dict = {
-        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+        'street': '1 MAIN ST', 'city': 'LEADVILLE', 'state': 'CO', 'zipcode': '80461', 
+        'year_built': 1983, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
         'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
         'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
         'energyCost': 10000.0, 
@@ -247,25 +247,9 @@ if __name__ == '__main__':
         'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
         'cons_solar': -11000.0,
         'estar_wh': True,
-        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
+        'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1,
         'totalLocationBasedGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
-#no costs data example
-#    data_dict = {
-#        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-#        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-#        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
-#        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
-#        'energyCost': None, 
-#        'energyCostElectricityOnsiteSolarWind': None,
-#        'energyCostElectricityGridPurchase': None, 'energyCostNaturalGas': None, 'energyCostKerosene': None, 'energyCostPropane': None,
-#        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
-#        'cons_solar': -11000.0,
-#        'estar_wh': True,
-#        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
-#        'totalLocationBasedGHGEmissions': 150,
-#        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-#    }
-    out_file = 'BEAM_Profile.pdf'
-    write_beam_profile_pdf(data_dict, out_file)
+    out_file = 'Colorado_BEAM_Profile.pdf'
+    write_colorado_profile_pdf(data_dict, out_file)
