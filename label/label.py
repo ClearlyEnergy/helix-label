@@ -9,6 +9,7 @@ from label.populate_beam_cambridge import write_cambridge_profile_pdf
 from label.populate_beam_madison import write_madison_profile_pdf
 from label.populate_beam_lexington import write_lexington_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
+from label.utils.utils import validate_data_dict
 
 import os
 import os.path
@@ -67,8 +68,13 @@ class Label:
 
         out_path = out_path if out_path else self.out_path
         out_file = f'{out_path}/{object_id}_profile.pdf'
-        fn(data_dict, out_file)
-        return out_file
+
+        is_data_valid, msg = validate_data_dict(data_dict)
+        if is_data_valid:
+            fn(data_dict, out_file)
+            return out_file, ''
+        else:
+            return '', f'Errors for {object_id}: ' + msg
 
     def massachusetts_energy_scorecard(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/MAScorecard.pdf'

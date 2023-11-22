@@ -409,9 +409,21 @@ class Highlights():
         if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site', pc273)])
             num_line +=1
-        
+
         if (data_dict['numberOfLevelOneEvChargingStations'] > 0 or data_dict['numberOfLevelTwoEvChargingStations'] > 0 or data_dict['numberOfDcFastEvChargingStations'] > 0) and num_line <= 5:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building has an electric vehicle charging on-site", pc273)])
             num_line +=1
 
         return t_achieve, num_line
+
+
+def validate_data_dict(data_dict: dict) -> bool:
+    is_valid = True
+    msg = ''
+
+    # Check that site_total exists and has data -> meaning it has energy usage by (mmbtu)
+    if not data_dict.get('site_total', None):
+        is_valid = False
+        msg += 'No site_total found or is Zero; '
+
+    return is_valid, msg
