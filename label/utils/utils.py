@@ -165,12 +165,15 @@ class Charts():
         
     # Wedge (start at 0.62; end at 4.82)
     def wedge(data_dict, ):
-        espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
+        if data_dict['systemDefinedPropertyType'] and data_dict['systemDefinedPropertyType'] != 'N/A':
+            espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
+        else:
+            espm_score_mapping = Scores.map_scores('Office')
         if data_dict['energy_star_score']:
-            site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
-            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
-            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
-            site_median = round(float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping[str(int(data_dict['energy_star_score']))]))
+            site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
+            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
+            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
+            site_median = round(float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
         else:
             site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50']))
             site_min = 0.0
@@ -223,7 +226,8 @@ class Tables():
         num_fuel = 0
         for num, fuel in enumerate(FUELS):
             if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
-                data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/data_dict['siteEnergyUse'+fuel]
+                data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/(data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num])
+                print(data_dict['energyRate'+fuel])
                 num_fuel+=1
             elif data_dict['siteEnergyUse'+fuel]:
                 num_fuel+=1
@@ -231,17 +235,20 @@ class Tables():
             num_fuel+=1
             
         for num, fuel in enumerate(FUELS):
+            cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
             if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
                 pc251.textColor = FUELCOLOR[num]
                 if num_fuel > 3:
-                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
+                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
                 else:
-                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
-            elif (data_dict['siteEnergyUse'+fuel] is not None) and (data_dict['siteEnergyUse'+fuel] != 0.0):
+                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
+            elif (cons is not None) and (cons != 0.0):
                 if num_fuel > 3:
-                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253),]])
+                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253),]])
                 else:
-                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(data_dict['siteEnergyUse'+fuel])) + ' ' + FUELUNIT[num], pc253)], ''])
+                    print(fuel)
+                    print(cons)
+                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253)], ''])
 
         if (data_dict['onSiteRenewableSystemGeneration'] is not None) and (data_dict['onSiteRenewableSystemGeneration'] != 0):
             pc251.textColor = FUELCOLOR[-1]
@@ -340,8 +347,16 @@ class Highlights():
         if data_dict['energyCost']:
             text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
             text_c232 = Paragraph('Annual Energy Cost', pc202)
+        elif ('percentElectricity' in data_dict) and data_dict['percentElectricity']:
+            text_c231 = Paragraph('{:,.0f}%'.format(data_dict['percentElectricity']), pc231)
+            text_c232 = Paragraph('Electrified', pc202)
         else:
-            percent_electric = 100.0 * data_dict['siteEnergyUseElectricityGridPurchase'] / data_dict['site_total']
+            site_total = 0.0
+            for fuel in ['siteEnergyUseElectricityGridPurchase', 'siteEnergyUseNaturalGas', 'siteEnergyUseFuelOil1', 'siteEnergyUseFuelOil2', 'siteEnergyUseFuelOil4', 'siteEnergyUseFuelOil5And6', 'siteEnergyUseDiesel', 'siteEnergyUseKerosene', 'siteEnergyUsePropane', 'siteEnergyUseDistrictSteam', 'siteEnergyUseDistrictHotWater', 'siteEnergyUseDistrictChilledWater', 'siteEnergyUseCoalAnthracite', 'siteEnergyUseCoalBituminous', 'siteEnergyUseCoke', 'siteEnergyUseWood', 'siteEnergyUseOther']:
+                if fuel in data_dict and data_dict[fuel] and data_dict[fuel] > 0.0:
+                    site_total += data_dict[fuel]
+            percent_electric = 100.0 * data_dict['siteEnergyUseElectricityGridPurchase'] / site_total
+            print(percent_electric)
             text_c231 = Paragraph('{:,.0f}%'.format(percent_electric), pc231)
             text_c232 = Paragraph('Electrified', pc202)
         return text_c231, text_c232

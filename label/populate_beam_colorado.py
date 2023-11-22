@@ -71,7 +71,8 @@ def write_colorado_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
-    Story.append(Paragraph(str(int(data_dict['propGrossFloorArea']))+' Sq.Ft.',pc14))
+    floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
+    Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("REPORT INFORMATION", pc12))
