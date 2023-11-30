@@ -90,8 +90,7 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     y_offset = 0.04
     # Expected Usage Total
     column_211 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding = 5)    
-    pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-    text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
+    text_c201 = Highlights.usage_box(data_dict)
     Story.append(text_c201)
     Story.append(FrameBreak)
     

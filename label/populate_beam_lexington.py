@@ -90,8 +90,7 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     y_offset = 0.04
     # Expected Usage Total
     column_211 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding = 5)    
-    pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-    text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
+    text_c201 = Highlights.usage_box(data_dict)
     Story.append(text_c201)
     Story.append(FrameBreak)
     
@@ -237,21 +236,24 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
 
 # Run with:  python3 -m label.populate_beam_lexington
 if __name__ == '__main__':
-    data_dict = {
-        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
-        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
-        'energyCost': 10000.0, 
-        'energyCostElectricityOnsiteSolarWind': 2110.0,
-        'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
-        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
-        'cons_solar': -11000.0,
-        'estar_wh': True,
-        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
-        'totalLocationBasedGHGEmissions': 150,
-        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-    }
+#    data_dict = {
+#        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
+#        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+#        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
+#        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
+#        'energyCost': 10000.0, 
+#        'energyCostElectricityOnsiteSolarWind': 2110.0,
+#        'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
+#        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
+#        'cons_solar': -11000.0,
+#        'estar_wh': True,
+#        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
+#        'totalLocationBasedGHGEmissions': 150,
+#        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+#    }
+    
+    data_dict = {'street': '32 BEDFORD ST', 'city': 'LEXINGTON', 'state': 'MA', 'zipcode': '02420', 'year_built': 1999, 'year_ending': 2022, 'systemDefinedPropertyType': 'Supermarket/Grocery Store', 'Who is your electricity supplier?': 'N/A', 'propGrossFloorArea': 48766.0, 'energy_star_score': 50.0, 'site_total': 12266.1076, 'siteIntensity': 251.5, 'medianSiteIntensity': 252.0, 'percentBetterThanSiteIntensityMedian': -0.2, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': None, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0, 'onSiteRenewableSystemGeneration': 0, 'siteEnergyUseElectricityGridPurchase': 6676233.0, 'siteEnergyUseElectricityGridPurchaseKwh': 1956691.7, 'siteEnergyUseNaturalGas': 5589874.6, 'siteEnergyUseKerosene': 0, 'siteEnergyUsePropane': 0, 'siteEnergyUseDiesel': 0, 'siteEnergyUseFuelOil1': 0, 'siteEnergyUseFuelOil2': 0, 'siteEnergyUseFuelOil4': 0, 'siteEnergyUseFuelOil5And6': 0, 'siteEnergyUseWood': 0, 'energyCost': 0, 'energyCostElectricityOnsiteSolarWind': 0, 'energyCostElectricityGridPurchase': 0, 'energyCostNaturalGas': 0, 'energyCostKerosene': 0, 'energyCostPropane': 0, 'energyCostDiesel': 0, 'energyCostFuelOil1': 0, 'energyCostFuelOil2': 0, 'energyCostFuelOil4': 0, 'energyCostFuelOil5And6': 0, 'energyCostWood': 0, 'totalLocationBasedGHGEmissions': 769.9, 'percentElectricity': 54.4, 'siteEnergyUseFuelOil': 0.0, 'energyCostFuelOil': 0.0}
+    
     out_file = 'Lexington_BEAM_Profile.pdf'
     write_lexington_profile_pdf(data_dict, out_file)
 

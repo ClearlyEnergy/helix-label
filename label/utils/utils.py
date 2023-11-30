@@ -227,7 +227,6 @@ class Tables():
         for num, fuel in enumerate(FUELS):
             if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
                 data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/(data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num])
-                print(data_dict['energyRate'+fuel])
                 num_fuel+=1
             elif data_dict['siteEnergyUse'+fuel]:
                 num_fuel+=1
@@ -246,8 +245,6 @@ class Tables():
                 if num_fuel > 3:
                     tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253),]])
                 else:
-                    print(fuel)
-                    print(cons)
                     tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253)], ''])
 
         if (data_dict['onSiteRenewableSystemGeneration'] is not None) and (data_dict['onSiteRenewableSystemGeneration'] != 0):
@@ -356,10 +353,22 @@ class Highlights():
                 if fuel in data_dict and data_dict[fuel] and data_dict[fuel] > 0.0:
                     site_total += data_dict[fuel]
             percent_electric = 100.0 * data_dict['siteEnergyUseElectricityGridPurchase'] / site_total
-            print(percent_electric)
             text_c231 = Paragraph('{:,.0f}%'.format(percent_electric), pc231)
             text_c232 = Paragraph('Electrified', pc202)
         return text_c231, text_c232
+
+    def usage_box(data_dict):
+        if data_dict['site_total'] >= 100000.0:
+            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=6> MMBtu </font>", pc201)
+        elif data_dict['site_total'] < 100000.0 and data_dict['site_total'] > 10000.0:
+            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=8> MMBtu </font>", pc201)
+        else:
+            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
+            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
+        
+        return text_c201
         
     def cert_commercial(data_dict, font_size, font_normal, font_color, icon, num_line):
         t_cert = []
