@@ -69,7 +69,7 @@ class Label:
         out_path = out_path if out_path else self.out_path
         out_file = f'{out_path}/{object_id}_profile.pdf'
 
-        is_data_valid, msg = validate_data_dict(data_dict)
+        is_data_valid, msg, data_dict = validate_data_dict(data_dict)
         if is_data_valid:
             fn(data_dict, out_file)
             return out_file, ''

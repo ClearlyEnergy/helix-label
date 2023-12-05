@@ -12,7 +12,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Flowable, Frame, FrameBreak, HRFlowable, Image, NextPageTemplate, PageBreak, PageTemplate,Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle  
 from label.utils.constants import *
-from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Charts, Tables, Scores, Highlights, flowable_text, flowable_triangle
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Charts, Tables, Scores, Highlights, flowable_text, flowable_triangle, validate_data_dict
 import datetime
 
 #Adding Arial Unicode for checkboxes
@@ -27,6 +27,7 @@ pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
 def write_lexington_profile_pdf(data_dict, output_pdf_path):
+    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
 
@@ -119,7 +120,7 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     
     # Cost
     y_offset += 0.02
-    text_c231, text_c232 = Highlights.cost_box(data_dict)
+    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL)
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
     column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     Story.append(text_c231)

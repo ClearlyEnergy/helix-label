@@ -134,13 +134,13 @@ class Charts():
         order = []
 
         for num, fuel in enumerate(fuels):
-            if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] > 0):
+            if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] > 0):
                 data.append(int(data_dict['energyCost'+fuel]))
                 labels.append(fuel_icons[num])
                 order.append(num)
         if not order: #check fuel unit conversions
             for num, fuel in enumerate(fuels):
-                if (data_dict['siteEnergyUse'+fuel] is not None) and (data_dict['siteEnergyUse'+fuel] > 0):
+                if ('siteEnergyUse'+fuel in data_dict) and (data_dict['siteEnergyUse'+fuel] is not None) and (data_dict['siteEnergyUse'+fuel] > 0):
                     data.append(int(data_dict['siteEnergyUse'+fuel]))
                     labels.append(fuel_icons[num])
                     order.append(num)
@@ -207,45 +207,32 @@ class Tables():
         pc253 = ParagraphStyle('body_left', alignment = TA_RIGHT, fontSize = FONT_T, textColor = CUSTOM_DGRAY, fontName = FONT_NORMAL,  spaceBefore = 0)
 
         tct = []
-    
-        oil_list = ['Diesel', 'FuelOil1', 'FuelOil2', 'FuelOil4', 'FuelOil5And6']
-        data_dict['siteEnergyUseFuelOil'] = 0.0
-        data_dict['energyCostFuelOil'] = 0.0
-        for oil in oil_list:
-            if data_dict['siteEnergyUse'+oil] is not None:
-                data_dict['siteEnergyUseFuelOil'] += data_dict['siteEnergyUse'+oil]
-            if data_dict['energyCost'+oil] is not None:
-                data_dict['energyCostFuelOil'] += data_dict['energyCost'+oil]
-        propane_list = ['Propane', 'Kerosene']
-        for propane in propane_list:
-            if data_dict['siteEnergyUse'+propane] is not None:
-                data_dict['siteEnergyUsePropane'] += data_dict['siteEnergyUse'+propane]
-            if data_dict['energyCost'+propane] is not None:
-                data_dict['energyCostPropane'] += data_dict['energyCost'+propane]
-
+        
         num_fuel = 0
         for num, fuel in enumerate(FUELS):
-            if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
+            if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
                 data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/(data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num])
                 num_fuel+=1
-            elif data_dict['siteEnergyUse'+fuel]:
+            elif ('energyCost'+fuel in data_dict) and data_dict['siteEnergyUse'+fuel]:
                 num_fuel+=1
         if data_dict['onSiteRenewableSystemGeneration'] != 0.0:
             num_fuel+=1
             
         for num, fuel in enumerate(FUELS):
-            cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
-            if (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
-                pc251.textColor = FUELCOLOR[num]
-                if num_fuel > 3:
-                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
-                else:
-                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
-            elif (cons is not None) and (cons != 0.0):
-                if num_fuel > 3:
-                    tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253),]])
-                else:
-                    tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253)], ''])
+            if ('energyCost'+fuel in data_dict):
+                cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
+                if  (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
+                    pc251.textColor = FUELCOLOR[num]
+                    if num_fuel > 3:
+                        tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
+                    else:
+                        tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
+                elif (cons is not None) and (cons != 0.0):
+                    cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
+                    if num_fuel > 3:
+                        tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253),]])
+                    else:
+                        tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253)], ''])
 
         if (data_dict['onSiteRenewableSystemGeneration'] is not None) and (data_dict['onSiteRenewableSystemGeneration'] != 0):
             pc251.textColor = FUELCOLOR[-1]
@@ -267,7 +254,7 @@ class Tables():
 
         row_ind = 0
         for num, fuel in enumerate(FUELS):
-            if data_dict['energyCost'+fuel]!= 0:
+            if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel]!= 0):
                 cost_subTableStyle.add('BACKGROUND',(2,row_ind),(-1,-num_fuel+row_ind),FUELCOLOR[num])
                 if num_fuel != 1:
                     cost_subTableStyle.add('LINEBELOW', (0, row_ind), (-2, -num_fuel+row_ind), 1, CUSTOM_MGRAY),
@@ -338,10 +325,12 @@ class Highlights():
         
         return text_c101, text_c102, text_c103
         
-    def cost_box(data_dict):
+    def cost_box(data_dict, text_color):
         pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-        pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL)
+        pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = text_color)
         if data_dict['energyCost']:
+            if data_dict['energyCost'] >= 1000000.0:
+                pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
             text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
             text_c232 = Paragraph('Annual Energy Cost', pc202)
         elif ('percentElectricity' in data_dict) and data_dict['percentElectricity']:
@@ -430,9 +419,45 @@ def validate_data_dict(data_dict: dict) -> bool:
     is_valid = True
     msg = ''
 
+    #Data tests
+    if ('siteEnergyUseElectricityGridPurchaseKwh' in data_dict and data_dict['siteEnergyUseElectricityGridPurchaseKwh'] > 0.0):
+        data_dict['siteEnergyUseElectricityGridPurchase'] = data_dict['siteEnergyUseElectricityGridPurchaseKwh'] * FUELFACTOR[0]
+    
+    #Concatenate fuels
+    oil_list = ['Diesel', 'FuelOil1', 'FuelOil2', 'FuelOil4', 'FuelOil5And6']
+    data_dict['siteEnergyUseFuelOil'] = 0.0
+    data_dict['energyCostFuelOil'] = 0.0
+    for oil in oil_list:
+        if 'siteEnergyUse'+oil in data_dict:
+            if data_dict['siteEnergyUse'+oil] is not None:
+                data_dict['siteEnergyUseFuelOil'] += data_dict['siteEnergyUse'+oil]
+            if data_dict['energyCost'+oil] is not None:
+                data_dict['energyCostFuelOil'] += data_dict['energyCost'+oil]
+    propane_list = ['Propane', 'Kerosene']
+    for propane in propane_list:
+        if 'siteEnergyUse'+propane in data_dict:
+            if data_dict['siteEnergyUse'+propane] is not None:
+                data_dict['siteEnergyUsePropane'] += data_dict['siteEnergyUse'+propane]
+            if data_dict['energyCost'+propane] is not None:
+                data_dict['energyCostPropane'] += data_dict['energyCost'+propane]
+    district_list = ['DistrictSteam', 'DistrictHotWater', 'DistrictChilledWater']
+    for district in district_list:
+        if 'siteEnergyUse'+district in data_dict:
+            if data_dict['siteEnergyUse'+district] is not None:
+                data_dict['siteEnergyUseDistrictSteam'] += data_dict['siteEnergyUse'+district]
+            if data_dict['energyCost'+district] is not None:
+                data_dict['energyCostDistrictSteam'] += data_dict['energyCost'+district]
+    
+    #Recalculate site total if there is at least electricity
+    if ('siteEnergyUseElectricityGridPurchaseKwh' in data_dict and data_dict['siteEnergyUseElectricityGridPurchaseKwh'] > 0.0 and data_dict['site_total'] in [0,None]):
+        data_dict['site_total'] = 0.0
+        for num, fuel in enumerate(FUELS):
+            if ('energyCost'+fuel in data_dict) and data_dict['siteEnergyUse'+fuel]:
+                data_dict['site_total'] += data_dict['siteEnergyUse'+fuel]/1000.0
+        
     # Check that site_total exists and has data -> meaning it has energy usage by (mmbtu)
     if not data_dict.get('site_total', None):
         is_valid = False
         msg += 'No site_total found or is Zero; '
 
-    return is_valid, msg
+    return is_valid, msg, data_dict
