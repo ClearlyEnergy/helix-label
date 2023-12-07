@@ -58,7 +58,7 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
-    def beam_profile(self, data_dict, object_id, out_path='', organization_name=''):
+    def beam_profile(self, data_dict, object_id, out_path='', out_file='', organization_name=''):
         org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
                            'City of Orlando': write_orlando_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
@@ -67,12 +67,14 @@ class Label:
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 
         out_path = out_path if out_path else self.out_path
-        out_file = f'{out_path}/{object_id}_profile.pdf'
+        out_file = out_file if out_file else f'{object_id}_profile.pdf'
+
+        full_path = out_path + '/' + out_file
 
         is_data_valid, msg = validate_data_dict(data_dict)
         if is_data_valid:
-            fn(data_dict, out_file)
-            return out_file, ''
+            fn(data_dict, full_path)
+            return full_path, ''
         else:
             return '', f'Errors for {object_id}: ' + msg
 
