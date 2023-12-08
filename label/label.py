@@ -63,6 +63,7 @@ class Label:
                            'City of Orlando': write_orlando_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
+                           'City of Indianapolis': write_indianapolis_profile_pdf
                            }
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 
