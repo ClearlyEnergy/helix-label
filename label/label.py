@@ -8,6 +8,7 @@ from label.populate_beam_orlando import write_orlando_profile_pdf
 from label.populate_beam_cambridge import write_cambridge_profile_pdf
 from label.populate_beam_madison import write_madison_profile_pdf
 from label.populate_beam_lexington import write_lexington_profile_pdf
+from label.populate_beam_portland import write_portland_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
 from label.populate_beam_indianapolis import write_indianapolis_profile_pdf
 from label.utils.utils import validate_data_dict
@@ -63,6 +64,7 @@ class Label:
         org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
                            'City of Orlando': write_orlando_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
+                           'City of Portland': write_portland_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
                            'City of Indianapolis': write_indianapolis_profile_pdf,
                            }

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_madison_orlando
+# run with python3 -m label.populate_beam_portland
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,15 +19,15 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(0.0/255),blue=(128.0/255)) ## This is the color to customize
+CUSTOM_DTEAL = colors.Color(red=(99.0/255),green=(207.0/255),blue=(227.0/255)) ## This is the color to customize
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
-
-def write_lexington_profile_pdf(data_dict, output_pdf_path):
-    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
+    
+def write_portland_profile_pdf(data_dict, output_pdf_path):
+#    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
 
@@ -42,15 +42,17 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     
     ### P1
     # Logo
-    column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/lexington.png"
-    im = Image(vthep_logo, 1.122*inch, 1.1*inch)
+#    column_10 = ColorFrame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL) 
+    column_10 = Frame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
+    vthep_logo = IMG_PATH+"/city_of_portland.jpg"
+    im = Image(vthep_logo, 2.0*inch, 0.775*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
     # Cost Box
-    column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
+    column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)
     text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE')
+    
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -62,7 +64,7 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
-    Story.append(Paragraph("Thank you for your compliance with Lexington’s Building Energy Use Disclosure (BEU-D) bylaw. This Building Energy Profile details your building’s energy use compared to the other buildings in Lexington that fall under the bylaw’s reporting requirement. It also highlights actions you can take to achieve more efficiency and energy cost savings.", tf_standard))
+    Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. It also highlights energy upgrades and improvements made to increase the building’s efficiency. The profile includes further recommendations that can help to achieve more efficiency and energy costs savings.", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -142,14 +144,14 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     column_252 = Frame(doc.leftMargin+doc.width/3+(1/5)*(2/3)*doc.width, doc.height*(1-y_offset), (1/2)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=0)    
     
     # Cost Table
-    cost_subTable = Tables.cost_table(data_dict)     
+    cost_subTable = Tables.cost_table(data_dict)
+     
     Story.append(cost_subTable)
     Story.append(FrameBreak)
     pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR)
     column_253 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset), (3/10)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=10)        
     Story.append(pie)
     Story.append(FrameBreak)    
-    
     
     # Energy Highlights Header
     y_offset += 0.03
@@ -159,7 +161,6 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c261)
     Story.append(FrameBreak)
 
-    
     # Energy Highlights Details
     y_offset += 0.17
     column_27 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
@@ -196,15 +197,14 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(achieve_table)      
     Story.append(FrameBreak)
-    
-        
+
     # Take Action Header
     y_offset += 0.0
     column_281 = ColorFrame(doc.leftMargin+doc.width/3, doc.bottomMargin+0.17*doc.height+10, (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, bottomPadding=10)    
     text_c281 = Paragraph('Take Action!', pc261)
     Story.append(text_c281)
     Story.append(FrameBreak)
-
+    
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
     column_282 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.bottomMargin+0.17*doc.height, (3/4)*(2/3)*doc.width, 0.06*doc.height, showBoundary=0, topPadding=10)    
@@ -217,13 +217,10 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Schedule a Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/en/business/programs-and-services/building-energy-assessments">Building Energy Assessment</link></font> to identify cost-saving upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Use Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/business/rebates-and-incentives">rebates and incentives</link></font> for insulation, HVAC, lighting, water heating.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Take advantage of <font name="InterstateLight" color=blue><link href="https://www.whitehouse.gov/cleanenergy/clean-energy-tax-provisions/">federal tax credits or direct pay rebates</link></font> for energy upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Consult <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">DSIRE</link></font> for all available incentives for renewables and energy efficiency.', pc291, bulletText=UNCHECKED.encode('UTF8')))    
-    Story.append(Paragraph('Take advantage of Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/en/business/programs-and-services/building-energy-assessments">programs and technical support</link></font> to help save energy.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Install solar panels on the roof or over parking lots.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Finance improvements with the <font name="InterstateLight" color=blue><link href="https://www.massdevelopment.com/what-we-offer/key-initiatives/pace">Property Assessed Clean Energy (PACE)</link></font> program.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Request the City to sponsor your <font name="InterstateLight" color=blue><link href="https://clearlyenergy.com/building-optimization?">decarbonization roadmap</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Look into efficiency incentives and rebates available through <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/">Efficiency Maine</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Identify state and federal incentives through the <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">Database of State Incentives for Renewables & Efficiency</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Attend the Spring 2024 Commercial Building Efficiency workshop to learn about <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/c-pace/">C-PACE financing</link></font>, <font name="InterstateLight" color=blue><link href="https://www.energy.gov/eere/buildings/tax-incentives-energy-efficiency-upgrades-commercial-buildings">federal tax incentives</link></font>, and a local building retrofit spotlight! It''s free! <font name="InterstateLight" color=blue><link href="mailto:eferrell@portlandmaine.gov">Email us</link></font> with any questions.', pc291, bulletText=UNCHECKED.encode('UTF8')))
                         
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -235,28 +232,12 @@ def write_lexington_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_lexington
+# Run with:  python3 -m label.populate_beam_portland
 if __name__ == '__main__':
-#    data_dict = {
-#        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-#        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-#        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
-#        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
-#        'energyCost': 10000.0, 
-#        'energyCostElectricityOnsiteSolarWind': 2110.0,
-#        'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
-#        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
-#        'cons_solar': -11000.0,
-#        'estar_wh': True,
-#        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
-#        'totalLocationBasedGHGEmissions': 150,
-#        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-#    }
+    data_dict = {'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 50, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0, 'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0, 'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'energyCost': 10000.0, 'energyCostElectricityOnsiteSolarWind': 2110.0, 'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0, 'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'cons_solar': -11000.0, 'estar_wh': True, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': -0.1, 'totalLocationBasedGHGEmissions': 150, 'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0}
     
-#    data_dict = {'street': '32 BEDFORD ST', 'city': 'LEXINGTON', 'state': 'MA', 'zipcode': '02420', 'year_built': 1999, 'year_ending': 2022, 'systemDefinedPropertyType': 'Supermarket/Grocery Store', 'Who is your electricity supplier?': 'N/A', 'propGrossFloorArea': 48766.0, 'energy_star_score': 50.0, 'site_total': 12266.1076, 'siteIntensity': 251.5, 'medianSiteIntensity': 252.0, 'percentBetterThanSiteIntensityMedian': -0.2, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': None, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0, 'onSiteRenewableSystemGeneration': 0, 'siteEnergyUseElectricityGridPurchase': 6676233.0, 'siteEnergyUseElectricityGridPurchaseKwh': 1956691.7, 'siteEnergyUseNaturalGas': 5589874.6, 'siteEnergyUseKerosene': 0, 'siteEnergyUsePropane': 0, 'siteEnergyUseDiesel': 0, 'siteEnergyUseFuelOil1': 0, 'siteEnergyUseFuelOil2': 0, 'siteEnergyUseFuelOil4': 0, 'siteEnergyUseFuelOil5And6': 0, 'siteEnergyUseWood': 0, 'energyCost': 0, 'energyCostElectricityOnsiteSolarWind': 0, 'energyCostElectricityGridPurchase': 0, 'energyCostNaturalGas': 0, 'energyCostKerosene': 0, 'energyCostPropane': 0, 'energyCostDiesel': 0, 'energyCostFuelOil1': 0, 'energyCostFuelOil2': 0, 'energyCostFuelOil4': 0, 'energyCostFuelOil5And6': 0, 'energyCostWood': 0, 'totalLocationBasedGHGEmissions': 769.9, 'percentElectricity': 54.4, 'siteEnergyUseFuelOil': 0.0, 'energyCostFuelOil': 0.0}
-    data_dict = {'street': '328 LOWELL ST', 'city': 'Lexington', 'state': 'MA', 'zipcode': '02420', 'year_built': 1900, 'year_ending': 2022, 'systemDefinedPropertyType': 'Office', 'Who is your electricity supplier?': 'EDF Energy Services', 'propGrossFloorArea': 46637.0, 'energy_star_score': 72.0, 'site_total': 3964.3278, 'siteIntensity': 85.0, 'medianSiteIntensity': 116.2, 'percentBetterThanSiteIntensityMedian': -26.9, 'yoy_percent_change_site_eui_2022': None, 'yoy_percent_change_elec_2022': None, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0, 'onSiteRenewableSystemGeneration': 0, 'siteEnergyUseElectricityGridPurchase': 846638.3, 'siteEnergyUseElectricityGridPurchaseKwh': 248135.5, 'siteEnergyUseNaturalGas': 3117689.5, 'siteEnergyUseKerosene': 0, 'siteEnergyUsePropane': 0, 'siteEnergyUseDiesel': 0, 'siteEnergyUseFuelOil1': 0, 'siteEnergyUseFuelOil2': 0, 'siteEnergyUseFuelOil4': 0, 'siteEnergyUseFuelOil5And6': 0, 'siteEnergyUseWood': 0, 'siteEnergyUseDistrictSteam': 0, 'siteEnergyUseDistrictHotWater': 0, 'siteEnergyUseDistrictChilledWater': 0, 'energyCost': 96508.29, 'energyCostElectricityOnsiteSolarWind': 0, 'energyCostElectricityGridPurchase': 58004.35, 'energyCostNaturalGas': 38503.94, 'energyCostKerosene': 0, 'energyCostPropane': 0, 'energyCostDiesel': 0, 'energyCostFuelOil1': 0, 'energyCostFuelOil2': 0, 'energyCostFuelOil4': 0, 'energyCostFuelOil5And6': 0, 'energyCostWood': 0, 'energyCostDistrictSteam': 0, 'energyCostDistrictHotWater': 0, 'energyCostDistrictChilledWater': 0, 'totalLocationBasedGHGEmissions': 226.8, 'percentElectricity': 21.4}
-    
-    out_file = 'Lexington_BEAM_Profile.pdf'
-    write_lexington_profile_pdf(data_dict, out_file)
+
+    out_file = 'Portland_BEAM_Profile.pdf'
+    write_portland_profile_pdf(data_dict, out_file)
 
 

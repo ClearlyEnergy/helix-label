@@ -375,14 +375,14 @@ class Highlights():
         t_achieve = []
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions was: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
         num_line += 1
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['site_total']))+" MMBTU/ft2", pc272)])
         num_line += 1
         
         if data_dict['percentBetterThanSiteIntensityMedian']:
             better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the national median", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the property type national median", pc272)])
             num_line += 1
         elif data_dict['medianSiteIntensity']:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" MMBTU/ft2", pc272)])
