@@ -62,7 +62,7 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
-    Story.append(Paragraph("Thank you for your compliance with Lexington’s Building Energy Use Disclosure (BEU-D) bylaw. This Building Energy Profile details your building’s energy use compared to the other buildings in Lexington that fall under the bylaw’s reporting requirement. It also highlights actions you can take to achieve more efficiency and energy cost savings.", tf_standard))
+    Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. It also highlights energy upgrades and improvements made to increase the building’s efficiency. The profile includes further recommendations that can help to achieve more efficiency and energy costs savings.", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -217,13 +217,13 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Schedule a Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/en/business/programs-and-services/building-energy-assessments">Building Energy Assessment</link></font> to identify cost-saving upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Use Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/business/rebates-and-incentives">rebates and incentives</link></font> for insulation, HVAC, lighting, water heating.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Take advantage of <font name="InterstateLight" color=blue><link href="https://www.whitehouse.gov/cleanenergy/clean-energy-tax-provisions/">federal tax credits or direct pay rebates</link></font> for energy upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Consult <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">DSIRE</link></font> for all available incentives for renewables and energy efficiency.', pc291, bulletText=UNCHECKED.encode('UTF8')))    
-    Story.append(Paragraph('Take advantage of Mass Save <font name="InterstateLight" color=blue><link href="https://www.masssave.com/en/business/programs-and-services/building-energy-assessments">programs and technical support</link></font> to help save energy.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Install solar panels on the roof or over parking lots.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Finance improvements with the <font name="InterstateLight" color=blue><link href="https://www.massdevelopment.com/what-we-offer/key-initiatives/pace">Property Assessed Clean Energy (PACE)</link></font> program.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=UNCHECKED.encode('UTF8')))
                         
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
