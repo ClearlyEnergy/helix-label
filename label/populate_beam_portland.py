@@ -218,10 +218,13 @@ def write_portland_profile_pdf(data_dict, output_pdf_path):
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
     Story.append(Paragraph('Request the City to sponsor your <font name="InterstateLight" color=blue><link href="https://clearlyenergy.com/building-optimization?">decarbonization roadmap</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('ASHRAE Level I Audit - Contact <font name="InterstateLight" color=blue><link href="mailto:eferrell@portlandmaine.gov">Erin Ferrell</link></font> to learn more about creating a report to identify cost saving measures', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Look into efficiency incentives and rebates available through <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/">Efficiency Maine</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Identify state and federal incentives through the <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">Database of State Incentives for Renewables & Efficiency</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Attend the Spring 2024 Commercial Building Efficiency workshop to learn about <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/c-pace/">C-PACE financing</link></font>, <font name="InterstateLight" color=blue><link href="https://www.energy.gov/eere/buildings/tax-incentives-energy-efficiency-upgrades-commercial-buildings">federal tax incentives</link></font>, and a local building retrofit spotlight! It''s free! <font name="InterstateLight" color=blue><link href="mailto:eferrell@portlandmaine.gov">Email us</link></font> with any questions.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-                        
+
+              
+              
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
