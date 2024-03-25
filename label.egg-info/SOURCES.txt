@@ -3,6 +3,15 @@ setup.py
 label/__init__.py
 label/generic_energy_profile.py
 label/label.py
+label/populate_beam_cambridge.py
+label/populate_beam_colorado.py
+label/populate_beam_indianapolis.py
+label/populate_beam_lexington.py
+label/populate_beam_madison.py
+label/populate_beam_orlando.py
+label/populate_beam_portland.py
+label/populate_beam_profile.py
+label/populate_beam_south_portland.py
 label/populate_energy_first_mortgage.py
 label/populate_massachusetts_home_scorecard.py
 label/populate_residential_green_addendum.py
@@ -14,4 +23,6 @@ label.egg-info/requires.txt
 label.egg-info/top_level.txt
 label/tmp/__init__.py
 label/utils/__init__.py
+label/utils/constants.py
 label/utils/utils.py
+tests/test_label.py

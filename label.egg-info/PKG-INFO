@@ -7,7 +7,6 @@ Author: ClearlyEnergy
 Author-email: info@clearlyenergy.com
 License: MIT
 Keywords: seed label generation
-Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
 Classifier: Topic :: Software Development :: Build Tools
@@ -18,8 +17,23 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.3
 Classifier: Programming Language :: Python :: 3.4
 Classifier: Programming Language :: Python :: 3.5
+Requires-Dist: boto3==1.26.142
+Requires-Dist: botocore==1.29.142
+Requires-Dist: docutils==0.17.1
+Requires-Dist: jmespath==0.10.0
+Requires-Dist: pdfrw==0.4
+Requires-Dist: peppercorn==0.6
+Requires-Dist: Pillow==10.0.0
+Requires-Dist: python-dateutil==2.7.3
+Requires-Dist: reportlab==4.0.5
+Requires-Dist: s3transfer==0.6.2
+Requires-Dist: six==1.16.0
+Requires-Dist: setuptools
+Requires-Dist: pytz
 Provides-Extra: dev
+Requires-Dist: check-manifest; extra == "dev"
 Provides-Extra: test
+Requires-Dist: coverage; extra == "test"
 
 HELIX-LABEL
 ===========
@@ -35,6 +49,4 @@ Installation
 Test Coverage
 -------------
 
-- python setup.py test
-
-
+- python3 setup.py test
