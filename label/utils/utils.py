@@ -283,7 +283,7 @@ class Scores():
             'Laboratory': 'Data Center', 'Other - Technology/Science': 'Data Center',
             'Personal Services (Health/Beauty, Dry Cleaning, etc.)': 'Retail Store', 'Repair Services (Vehicle, Shoe, Locksmith, etc.)': 'Retail Store', 'Other - Services': 'Retail Store',
             'Drinking Water Treatment & Distribution': 'Wastewater Treatment Plant', 'Energy/Power Station': 'Wastewater Treatment Plant', 'Other - Utility': 'Wastewater Treatment Plant',
-            'Self-Storage Facility': 'Warehouse', 'Distribution Center': 'Warehouse', 'Non-Refrigerated Warehouse': 'Warehouse', 'Refrigerated Warehouse': 'Warehouse',
+            'Self-Storage Facility': 'Warehouse', 'Distribution Center': 'Warehouse', 'Non-Refrigerated Warehouse': 'Warehouse', 'Refrigerated Warehouse': 'Warehouse', 'Garage': 'Warehouse',
             'Other': 'Office'
         }
 
@@ -306,14 +306,23 @@ class Scores():
 class Highlights():
     
     def score_box(data_dict, category):
+        pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor=colors.white, leading=14)
+        pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_XXL, fontName = FONT_BOLD, textColor = colors.white)
+        pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_S, fontName = FONT_BOLD, textColor = colors.white, spaceBefore=26)
         if category == 'ESTAR_SCORE':
-            pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor=colors.white, leading=14)
-            pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_XXL, fontName = FONT_BOLD, textColor = colors.white)
-            pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_S, fontName = FONT_BOLD, textColor = colors.white, spaceBefore=26)
             if data_dict['energy_star_score']:
                 text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
                 text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
                 text_c103 = Paragraph('50=median, 75=high performer', pc103)
+            else:
+                text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
+                text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
+                text_c103 = Paragraph('MMBtu', pc103)
+        elif category == 'GHG':
+            if data_dict['totalLocationBasedGHGEmissions']:
+                text_c101 = Paragraph("GREENHOUSE GAS EMISSIONS", pc101)
+                text_c102 = Paragraph(str(int(data_dict['totalLocationBasedGHGEmissions'])), pc102)
+                text_c103 = Paragraph("mt CO2e", pc103)
             else:
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               

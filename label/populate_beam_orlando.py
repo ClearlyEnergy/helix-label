@@ -62,7 +62,7 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
-    Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. It also highlights energy upgrades and improvements made to increase the building’s efficiency. The profile includes further recommendations that can help to achieve more efficiency and energy costs savings.", tf_standard))
+    Story.append(Paragraph("Thank you for submitting your energy data for the City of Orlando’s Building Energy and Water Efficiency Strategy ordinance. This building profile outlines your building’s energy usage in comparison to other buildings in Orlando. Additionally, this profile provides insights and trends specific to your property, along with suggested actions to enhance energy efficiency and reduce energy costs.", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -167,26 +167,16 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     
     ## HIGHLIGHTS: CERTIFICATIONS, SOLAR & EV, GENERAL
     num_line = 0
-    t_cert, num_line = Highlights.cert_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)             
-    if t_cert:
-        ratings_table = Table(t_cert, colWidths = [2.7*inch, 2.7*inch])
-        ratings_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'TOP'),
-            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(ratings_table)   
-        
-    t_solar, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_solar:
-        solar_table = Table(t_solar, colWidths = [5.1*inch])
-        solar_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(solar_table)
-    
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    t_achieve = []
+    pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
+    if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
+        t_achieve.append([Paragraph('''<img src="'''+CHECK_IMG+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site.', pc272)])
+        num_line +=1
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui_2022'])+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec_2022'])+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in ENERGY STAR Score since last year: " + str(data_dict['yoy_change_score_2022'])+".", pc272)])
+ 
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -204,7 +194,6 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c281)
     Story.append(FrameBreak)
     
-    
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
     column_282 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.bottomMargin+0.17*doc.height, (3/4)*(2/3)*doc.width, 0.06*doc.height, showBoundary=0, topPadding=10)    
@@ -217,14 +206,12 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-                        
+    date_time = datetime.datetime.now().strftime("%m/%d/%Y")
+    Story.append(Paragraph('Complete an energy audit or retro-commissioning by ' + date_time + ' deadline, and submit your energy audit summary or retro-commissioning report to the city electronically through <font name="InterstateLight" color=blue><link href="https://orlando-fl.beam-portal.org/helpdesk/tickets/submit/89/?org=City%20of%20Orlando">this webpage </link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('The free <font name="InterstateLight" color=blue><link href="https://www.ouc.com/business/business-rebates-programs/business-energy-audit">OUC utility audit</link></font> and free <font name="InterstateLight" color=blue><link href="https://www.duke-energy.com/business/products/business-energy-check">Duke Energy audit</link></font> are both eligible for compliance.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Identify any rebates or incentives offered by your city, state, or <font name="InterstateLight" color=blue><link href="https://www.ouc.com/residential/save-energy-water-money/rebates">utility</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Learn more about financing improvements with the <font name="InterstateLight" color=blue><link href="https://www.orlando.gov/Building-Development/Housing-and-Development-Grants-Incentives-and-Assistance/Housing-Assistance-Programs/Finance-Energy-Improvements-for-your-Property">Property Assessed Clean Energy (PACE)</link></font> program.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Perform regular building envelope maintenance.", pc291, bulletText=UNCHECKED.encode('UTF8')))                        
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
@@ -248,7 +235,7 @@ if __name__ == '__main__':
         'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
         'cons_solar': -11000.0,
         'estar_wh': True,
-        'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1,
+        'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1, 'yoy_change_score_2022': 5,
         'totalLocationBasedGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
