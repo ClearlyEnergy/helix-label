@@ -164,29 +164,44 @@ class Charts():
         return drawing
         
     # Wedge (start at 0.62; end at 4.82)
-    def wedge(data_dict, ):
+    def wedge(data_dict, eui=False):
         if data_dict['systemDefinedPropertyType'] and data_dict['systemDefinedPropertyType'] != 'N/A':
             espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
         else:
             espm_score_mapping = Scores.map_scores('Office')
         if data_dict['energy_star_score']:
-            site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
-            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
-            site_min = round(float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
-            site_median = round(float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))]))
+            site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
+            site_min = float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
+            site_median = float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
         else:
-            site_max = round(float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50']))
+            site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50'])
             site_min = 0.0
-            site_median = round(float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping['50']))
-            
-        wedge_img = IMG_PATH+"/wedge.png"
+            site_median = float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping['50'])
+
+        offset_x = 0.53+data_dict['site_total']/site_max*(4.75-0.53)
+        max_to_med = site_max / site_median
+        min_to_med = site_min / site_median
+
+        if eui: 
+            site_median = data_dict['medianSiteIntensity']
+            site_max = max_to_med * site_median
+            site_min = min_to_med * site_median
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's energy use intensity: " + str(data_dict['siteIntensity']),9)
+        else:
+            site_max = round(site_max)
+            site_min = round(site_min)
+            site_median = round(site_median)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
+    
+        if eui:
+            wedge_img = IMG_PATH+"/wedgei.png"
+        else:
+            wedge_img = IMG_PATH+"/wedge.png"
         triangle = IMG_PATH+"/triangle.png"
         triangle2 = IMG_PATH+"/triangle2.png"
         wedge = Image(wedge_img, 5.0*inch, 2.25*inch)
         # triangle for actual building consumption
-        offset_x = 0.53+data_dict['site_total']/site_max*(4.75-0.53)
         pic = flowable_triangle(triangle,offset_x, 1.78, 0.2, 0.288,'')
-        txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
         # triangle for net zero building, set at zero bar along with text
         pic2 = flowable_triangle(triangle2, 0.62, 0.44, 0.08, 0.138,"Net zero \n building","left")
         # if median is available, add it in as triangle on line
