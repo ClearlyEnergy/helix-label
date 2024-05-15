@@ -172,10 +172,10 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
         t_achieve.append([Paragraph('''<img src="'''+CHECK_IMG+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site.', pc272)])
         num_line +=1
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui_2022'])+" %.", pc272)])
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec_2022'])+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui'])+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec'])+" %.", pc272)])
     t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e.", pc272)])
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in ENERGY STAR Score since last year: " + str(data_dict['yoy_change_score_2022'])+".", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in ENERGY STAR Score since last year: " + str(data_dict['yoy_change_score'])+".", pc272)])
  
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
@@ -235,7 +235,7 @@ if __name__ == '__main__':
         'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
         'cons_solar': -11000.0,
         'estar_wh': True,
-        'yoy_percent_change_site_eui_2022': 0.15, 'yoy_percent_change_elec_2022': -0.1, 'yoy_change_score_2022': 5,
+        'yoy_percent_change_site_eui': 0.15, 'yoy_percent_change_elec': -0.1, 'yoy_change_score': 5,
         'totalLocationBasedGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }

@@ -248,7 +248,7 @@ if __name__ == '__main__':
         'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
         'cons_solar': -11000.0,
         'estar_wh': True,
-        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
+        'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
         'totalLocationBasedGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
@@ -264,7 +264,7 @@ if __name__ == '__main__':
 #        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
 #        'cons_solar': -11000.0,
 #        'estar_wh': True,
-#        'yoy_percent_change_site_eui_2022': 0.0, 'yoy_percent_change_elec_2022': -0.1,
+#        'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
 #        'totalLocationBasedGHGEmissions': 150,
 #        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
 #    }

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_madison_orlando
+# run with python3 -m label.populate_beam_minnesota
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,14 +19,14 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(0.0/255),green=(0.0/255),blue=(0.0/255))
+CUSTOM_DTEAL = colors.Color(red=(23.0/255),green=(58.0/255),blue=(101.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_madison_profile_pdf(data_dict, output_pdf_path):
+def write_minnesota_profile_pdf(data_dict, output_pdf_path):
 #    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
@@ -42,9 +42,9 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     
     ### P1
     # Logo
-    column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/city_of_madison_logo.webp"
-    im = Image(vthep_logo, 1.1*inch, 1.1*inch)
+    column_10 = Frame(doc.leftMargin, doc.height-0.08*doc.height, doc.width/3-12, 0.08*doc.height, showBoundary=0)    
+    vthep_logo = IMG_PATH+"/minnesota.png"
+    im = Image(vthep_logo, 2.0*inch, 0.43*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -140,7 +140,7 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     column_251 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/5)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=0)    
     Story.append(FrameBreak)
     column_252 = Frame(doc.leftMargin+doc.width/3+(1/5)*(2/3)*doc.width, doc.height*(1-y_offset), (1/2)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=0)    
-
+    
     # Cost Table
     cost_subTable = Tables.cost_table(data_dict)
     Story.append(cost_subTable)
@@ -235,11 +235,11 @@ def write_madison_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_madison
+# Run with:  python3 -m label.populate_beam_minnesota
 if __name__ == '__main__':
     data_dict = {
-        'street': '1 STATE STREET', 'city': 'MADISON', 'state': 'WI', 'zipcode': '53704', 
-        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+        'street': '75 Rev Dr Martin Luther King Jr Boulevard.', 'city': 'ST PAUL', 'state': 'MN', 'zipcode': '55155', 
+        'year_built': 1983, 'year_ending': yoy_percent_change_site_eui, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
         'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
         'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
         'energyCost': 10000.0, 
@@ -252,5 +252,5 @@ if __name__ == '__main__':
         'totalLocationBasedGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
-    out_file = 'Madison_BEAM_Profile.pdf'
-    write_madison_profile_pdf(data_dict, out_file)
+    out_file = 'MN_BEAM_Profile.pdf'
+    write_minnesota_profile_pdf(data_dict, out_file)
