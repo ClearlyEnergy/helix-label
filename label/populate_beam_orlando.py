@@ -172,8 +172,8 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
         t_achieve.append([Paragraph('''<img src="'''+CHECK_IMG+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site.', pc272)])
         num_line +=1
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui'])+" %.", pc272)])
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec'])+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(data_dict['yoy_percent_change_site_eui'])+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+" %.", pc272)])
     t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e.", pc272)])
     t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in ENERGY STAR Score since last year: " + str(data_dict['yoy_change_score'])+".", pc272)])
  

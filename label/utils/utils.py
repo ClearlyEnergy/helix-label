@@ -415,10 +415,10 @@ class Highlights():
         if 'yoy_percent_change_site_eui' in data_dict:
             if data_dict['yoy_percent_change_site_eui'] and abs(data_dict['yoy_percent_change_site_eui']) > 0:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(100.0*data_dict['yoy_percent_change_site_eui'])+" %", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(data_dict['yoy_percent_change_site_eui'])+" %", pc272)])
                     num_line += 1
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(100.0*data_dict['yoy_percent_change_elec'])+" %", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+" %", pc272)])
 #Can you vertically center the “Take Action!” label?
 #Can you add Building Type under Building Information and pull the Primary Property Use field?
 
