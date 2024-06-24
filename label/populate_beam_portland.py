@@ -221,7 +221,6 @@ def write_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph('ASHRAE Level I Audit - Contact <font name="InterstateLight" color=blue><link href="mailto:eferrell@portlandmaine.gov">Erin Ferrell</link></font> to learn more about creating a report to identify cost saving measures', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Look into efficiency incentives and rebates available through <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/">Efficiency Maine</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Identify state and federal incentives through the <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">Database of State Incentives for Renewables & Efficiency</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Attend the Spring 2024 Commercial Building Efficiency workshop to learn about <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/c-pace/">C-PACE financing</link></font>, <font name="InterstateLight" color=blue><link href="https://www.energy.gov/eere/buildings/tax-incentives-energy-efficiency-upgrades-commercial-buildings">federal tax incentives</link></font>, and a local building retrofit spotlight! It''s free! <font name="InterstateLight" color=blue><link href="mailto:eferrell@portlandmaine.gov">Email us</link></font> with any questions.', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
               
               

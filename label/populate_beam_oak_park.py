@@ -217,13 +217,13 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=UNCHECKED.encode('UTF8')))
+
+
+
+    
+    Story.append(Paragraph('<font name="InterstateBlack" color=black><link href="https://www.sustainoakpark.com/oak-parks-climate-action">Climate Ready Oak Park: </link></font> A tool for property owners to reference as the long-range plan developed for Oak Park to meet its energy goals.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('<font name="InterstateBlack" color=black><link href="https://www.sustainoakpark.com/programs-and-grants">Energy Programs and Grants: </link></font> This is a page that is updated often to reflect open opportunities to assist with energy consumption.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('<font name="InterstateBlack" color=black><link href="https://engageoakpark.com/">Engage Oak Park: </link></font> A platform for the community to ask questions on local issues and projects happening in Oak Park. Some examples are community compost, building electrification, Vision Zero, climate-ready, and building energy.', pc291, bulletText=UNCHECKED.encode('UTF8')))
                         
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
