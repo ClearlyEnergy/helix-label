@@ -169,6 +169,7 @@ class Charts():
             espm_score_mapping = Scores.map_scores(data_dict['systemDefinedPropertyType'])
         else:
             espm_score_mapping = Scores.map_scores('Office')
+
         if data_dict['energy_star_score']:
             site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
             site_min = float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
@@ -186,13 +187,13 @@ class Charts():
             site_median = data_dict['medianSiteIntensity']
             site_max = max_to_med * site_median
             site_min = min_to_med * site_median
-            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's energy use intensity: " + str(data_dict['siteIntensity']),9)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's energy use intensity: " + str(round(data_dict['siteIntensity'],1)),9)
         else:
             site_max = round(site_max)
             site_min = round(site_min)
             site_median = round(site_median)
             txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
-    
+
         if eui:
             wedge_img = IMG_PATH+"/wedgei.png"
         else:
@@ -354,6 +355,8 @@ class Highlights():
         pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = text_color)
         if data_dict['energyCost']:
             if data_dict['energyCost'] >= 1000000.0:
+                pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = colors.white)
+            else:
                 pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
             text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
             text_c232 = Paragraph('Annual Energy Cost', pc202)
@@ -377,6 +380,9 @@ class Highlights():
         elif data_dict['site_total'] < 100000.0 and data_dict['site_total'] > 10000.0:
             pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
             text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=8> MMBtu </font>", pc201)
+        elif data_dict['site_total'] < 10000.0 and data_dict['site_total'] > 1000.0:
+            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=9> MMBtu </font>", pc201)
         else:
             pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
             text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)

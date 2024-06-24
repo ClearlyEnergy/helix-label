@@ -236,8 +236,61 @@ def write_portland_profile_pdf(data_dict, output_pdf_path):
 
 # Run with:  python3 -m label.populate_beam_portland
 if __name__ == '__main__':
-    data_dict = {'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 10000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 50, 'site_total': 3434,  'siteIntensity': 45, 'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0, 'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0, 'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'energyCost': 10000.0, 'energyCostElectricityOnsiteSolarWind': 2110.0, 'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0, 'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'cons_solar': -11000.0, 'estar_wh': True, 'yoy_percent_change_site_eui': None, 'yoy_percent_change_elec': -0.1, 'totalLocationBasedGHGEmissions': 150, 'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0}
-    
+ #   data_dict = {'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 10000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 50, 'site_total': 3434,  'siteIntensity': 73.60, 'medianSiteIntensity': 176.40, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0, 'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0, 'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'energyCost': 10000.0, 'energyCostElectricityOnsiteSolarWind': 2110.0, 'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0, 'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'cons_solar': -11000.0, 'estar_wh': True, 'yoy_percent_change_site_eui': None, 'yoy_percent_change_elec': -0.1, 'totalLocationBasedGHGEmissions': 150, 'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0}
+    data_dict = {
+    "Who is your electricity supplier?": "N/A",
+    "city": "Portland",
+    "energyCost": 3060040.48,
+    "energyCostDiesel": 0,
+    "energyCostDistrictChilledWater": 0,
+    "energyCostDistrictHotWater": 0,
+    "energyCostDistrictSteam": 0,
+    "energyCostElectricityGridPurchase": 263454.42,
+    "energyCostElectricityOnsiteSolarWind": 0,
+    "energyCostFuelOil1": 0,
+    "energyCostFuelOil2": 0,
+    "energyCostFuelOil4": 0,
+    "energyCostFuelOil5And6": 0,
+    "energyCostKerosene": 0,
+    "energyCostNaturalGas": 42550.06,
+    "energyCostPropane": 0,
+    "energyCostWood": 0,
+    "energy_star_score": 100.0,
+    "medianSiteIntensity": 176.4,
+    "numberOfDcFastEvChargingStations": 0,
+    "numberOfLevelOneEvChargingStations": 0,
+    "numberOfLevelTwoEvChargingStations": 0,
+    "onSiteRenewableSystemGeneration": 0,
+    "percentBetterThanSiteIntensityMedian": -61.5,
+    "percentElectricity": 2.0,
+    "propGrossFloorArea": 104000.0,
+    "siteEnergyUseDiesel": 0,
+    "siteEnergyUseDistrictChilledWater": 0,
+    "siteEnergyUseDistrictHotWater": 0,
+    "siteEnergyUseDistrictSteam": 0,
+    "siteEnergyUseElectricityGridPurchase": 139786.2,
+    "siteEnergyUseElectricityGridPurchaseKwh": 40969.0,
+    "siteEnergyUseFuelOil1": 0,
+    "siteEnergyUseFuelOil2": 0,
+    "siteEnergyUseFuelOil4": 0,
+    "siteEnergyUseFuelOil5And6": 0,
+    "siteEnergyUseKerosene": 0,
+    "siteEnergyUseNaturalGas": 6914465.4,
+    "siteEnergyUsePropane": 0,
+    "siteEnergyUseWood": 0,
+    "siteIntensity": 67.8,
+    "site_total": 7054.2516,
+    "state": "ME",
+    "street": "9 Center Street",
+    "systemDefinedPropertyType": "Hotel",
+    "totalLocationBasedGHGEmissions": 377.4,
+    "year_built": 2021,
+    "year_ending": 2023,
+    "yoy_change_score": 0,
+    "yoy_percent_change_elec": 0,
+    "yoy_percent_change_site_eui": 0,
+    "zipcode": "04101"
+}    
 
     out_file = 'Portland_BEAM_Profile.pdf'
     write_portland_profile_pdf(data_dict, out_file)
