@@ -4,14 +4,17 @@ from label.populate_residential_green_addendum import write_green_addendum_pdf
 from label.populate_vermont_energy_profile import write_vermont_energy_profile_pdf
 from label.populate_massachusetts_home_scorecard import create_pdf
 from label.populate_energy_first_mortgage import write_energy_first_mortgage_pdf
-from label.populate_beam_orlando import write_orlando_profile_pdf
 from label.populate_beam_cambridge import write_cambridge_profile_pdf
-from label.populate_beam_madison import write_madison_profile_pdf
+from label.populate_beam_columbia import write_columbia_profile_pdf
+from label.populate_beam_core import write_core_profile_pdf
+from label.populate_beam_indianapolis import write_indianapolis_profile_pdf
 from label.populate_beam_lexington import write_lexington_profile_pdf
+from label.populate_beam_madison import write_madison_profile_pdf
 from label.populate_beam_portland import write_portland_profile_pdf
 from label.populate_beam_oak_park import write_oak_park_profile_pdf
+from label.populate_beam_orlando import write_orlando_profile_pdf
+from label.populate_beam_reno import write_reno_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
-from label.populate_beam_indianapolis import write_indianapolis_profile_pdf
 from label.utils.utils import validate_data_dict
 
 import os
@@ -63,12 +66,15 @@ class Label:
 
     def beam_profile(self, data_dict, object_id, out_path='', out_file='', organization_name=''):
         org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
-                           'City of Orlando': write_orlando_profile_pdf,
+                           'City of Columbia': write_columbia_profile_pdf,
+                           'CORE', write_core_profile_pdf,
+                           'City of Indianapolis': write_indianapolis_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
                            'Village of Oak Park': write_oak_park_profile_pdf,
+                           'City of Orlando': write_orlando_profile_pdf,
                            'City of Portland': write_portland_profile_pdf,
+                           'City of Reno': write_reno_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
-                           'City of Indianapolis': write_indianapolis_profile_pdf,
                            }
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 

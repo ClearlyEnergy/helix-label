@@ -187,7 +187,7 @@ class Charts():
             site_median = data_dict['medianSiteIntensity']
             site_max = max_to_med * site_median
             site_min = min_to_med * site_median
-            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's energy use intensity: " + str(round(data_dict['siteIntensity'],1)),9)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's energy use intensity: " + str(round(data_dict['siteIntensity'],1)) + " kBtu/sq.ft.",9)
         else:
             site_max = round(site_max)
             site_min = round(site_min)
@@ -373,19 +373,23 @@ class Highlights():
             text_c232 = Paragraph('Electrified', pc202)
         return text_c231, text_c232
 
-    def usage_box(data_dict):
-        if data_dict['site_total'] >= 100000.0:
+    def usage_box(data_dict, category='EU'):
+        if category == 'EU':
+            if data_dict['site_total'] >= 100000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=6> MMBtu </font>", pc201)
+            elif data_dict['site_total'] < 100000.0 and data_dict['site_total'] > 10000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=8> MMBtu </font>", pc201)
+            elif data_dict['site_total'] < 10000.0 and data_dict['site_total'] > 1000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=9> MMBtu </font>", pc201)
+            else:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
+        elif category == 'EUI':
             pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=6> MMBtu </font>", pc201)
-        elif data_dict['site_total'] < 100000.0 and data_dict['site_total'] > 10000.0:
-            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=8> MMBtu </font>", pc201)
-        elif data_dict['site_total'] < 10000.0 and data_dict['site_total'] > 1000.0:
-            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=9> MMBtu </font>", pc201)
-        else:
-            pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-            text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
+            text_c201 = Paragraph(str(int(data_dict['siteIntensity']))+"<font size=8> kBtu/sqft </font>", pc201)
         
         return text_c201
         
@@ -407,7 +411,7 @@ class Highlights():
         
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
         num_line += 1
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['site_total']))+" MMBTU/ft2", pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
         num_line += 1
         
         if data_dict['percentBetterThanSiteIntensityMedian']:
@@ -415,18 +419,17 @@ class Highlights():
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the property type national median", pc272)])
             num_line += 1
         elif data_dict['medianSiteIntensity']:
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" MMBTU/ft2", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" kBtu/sq.ft.", pc272)])
             num_line += 1
 
         if 'yoy_percent_change_site_eui' in data_dict:
             if data_dict['yoy_percent_change_site_eui'] and abs(data_dict['yoy_percent_change_site_eui']) > 0:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(data_dict['yoy_percent_change_site_eui'])+" %", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(data_dict['yoy_percent_change_site_eui'])+"%", pc272)])
                     num_line += 1
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+" %", pc272)])
-#Can you vertically center the “Take Action!” label?
-#Can you add Building Type under Building Information and pull the Primary Property Use field?
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+"%", pc272)])
+
 
         return t_achieve, num_line
 
