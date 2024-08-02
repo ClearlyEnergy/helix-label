@@ -99,7 +99,7 @@ def write_reno_profile_pdf(data_dict, output_pdf_path):
     
     column_212 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL)
-    text_c202 = Paragraph('Annual Energy Usage', pc202)
+    text_c202 = Paragraph('Energy Use Intensity', pc202)
     Story.append(text_c202)
     Story.append(FrameBreak)
 
