@@ -369,9 +369,9 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
         if data_dict[fuel+'_score'] != 0:
             pc251.textColor = FUELCOLOR[num]
             if num_fuel > 3:
-                tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), pc252), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['rate_'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
+                tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), pc252), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(float(data_dict['rate_'+fuel])) + ' $/'+FUELUNIT[num], pc253),], ''])
             else:
-                tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), pc252), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['rate_'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
+                tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph('$'+"{:,}".format(int(data_dict[fuel+'_score'])), pc252), Paragraph("{:,}".format(int(data_dict['cons_'+fuel])) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(float(data_dict['rate_'+fuel])) + ' $/'+FUELUNIT[num], pc253)], ''])
 
     if data_dict['has_solar'] and data_dict['solar_score'] != 0 and data_dict['solar_ownership'] == 'owned':
         pc251.textColor = FUELCOLOR[-1]
@@ -770,21 +770,28 @@ def write_vermont_energy_profile_pdf(data_dict, output_pdf_path):
 
 # Run with:  python3 -m label.populate_vermont_energy_profile
 if __name__ == '__main__':
-    data_dict = {
-        'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
-        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 60, 'cons_mmbtu': 3, 'cons_mmbtu_avg': 120, 'cons_mmbtu_max':160, 'cons_mmbtu_min': 0,
-        'heatingfuel': 'Electric', 'ng_score': 0.0, 'elec_score': 60.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 0.0, 'wood_pellet_score': 0, 'solar_score': 2110.0,
-        'cons_elec': 12129.0, 'cons_ng': 0.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 0.0, 'cons_solar': -11000.0,
-        'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
-        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': False, 'phius': False,
-        'high_cost_action': 2, 'low_cost_action': "1234",   
-        'heater_estar': False, 'water_estar': False, 'water_solar': True, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
-        'washer_estar': False, 'dishwasher_estar': False, 'evcharger': True, 
-        'heater_type': 'pump', 'water_type': 'heatpump', 
-        'has_audit': False, 'auditor': 'Joe', 'third_party': None, 'author_name': 'John Doe', 'author_company': 'Audit Corp 1',
-        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': '3000ccf, 15000kwh, 1500gal', 'certified_bill': False, 
-        'comments': ''
-    }
+#    data_dict = {
+#        'street': '18 BAILEY AVE', 'city': 'MONTPELIER', 'state': 'VT', 'zipcode': '05602', 
+#        'yearbuilt': 1895, 'finishedsqft': 3704.0, 'score': 60, 'cons_mmbtu': 3, 'cons_mmbtu_avg': 120, 'cons_mmbtu_max':160, 'cons_mmbtu_min': 0,
+#        'heatingfuel': 'Electric', 'ng_score': 0.0, 'elec_score': 60.0, 'ho_score': 0.0, 'propane_score': 00.0, 'wood_cord_score': 0.0, 'wood_pellet_score': 0, 'solar_score': 2110.0,
+#        'cons_elec': 12129.0, 'cons_ng': 0.0, 'cons_ho': 0.0, 'cons_propane': 0.0, 'cons_wood_cord': 0.0, 'cons_wood_pellet': 0.0, 'cons_solar': -11000.0,
+#        'rate_ho': 2.807, 'rate_propane': 3.39, 'rate_ng': 1.412, 'rate_elec': 0.175096666666667, 'rate_wood_cord': 199.0, 'rate_wood_pellet': 0.1,
+#        'evt': None, 'leed': None, 'ngbs': None, 'hers_score': None, 'hes_score': None, 'estar_wh': False, 'iap': False, 'zerh': False, 'phius': False,
+#        'high_cost_action': 2, 'low_cost_action': "1234",   
+#        'heater_estar': False, 'water_estar': False, 'water_solar': True, 'ac_estar': False, 'fridge_estar': False, 'lighting_estar': False, 
+#        'washer_estar': False, 'dishwasher_estar': False, 'evcharger': True, 
+#        'heater_type': 'pump', 'water_type': 'heatpump', 
+#        'has_audit': False, 'auditor': 'Joe', 'third_party': None, 'author_name': 'John Doe', 'author_company': 'Audit Corp 1',
+#        'has_solar': True, 'capacity': 4.0, 'solar_ownership': 'owned','has_storage': False, 'rating': 'Homeowner Verified', 'weatherization': 'diy', 'bill': '3000ccf, 15000kwh, 1500gal', 'certified_bill': False, 
+#        'comments': ''
+#    }
+
+#    data_dict = {"street":"19 HUBBARD PARK DR","postal_code":"05602","property_uid":"082-019000","author_name":"Veronique Bugnion","cons_elec":9592.2,"lighting_estar":4,"author_company":"ClearlyEnergy","organization_name":"Vermont Department of Public Service","dataset_name":"Vermont Profile","city":"MONTPELIER","state":"VT","zipcode":"05602",
+#                 "yearbuilt":1962,"finishedsqft":2348.0,"heatingfuel":"ho","score":3880.0,"elec_score":1600,"ng_score":0,"ho_score":2270,"propane_score":0,"wood_cord_score":0,"wood_pellet_score":0,"solar_score":0.0,"cons_mmbtu":98.94315515261115,"cons_mmbtu_max":325.8,"cons_mmbtu_min":68.8,"cons_mmbtu_avg":138.2,"cons_ho":501.98768197088464,
+#                 "cons_propane":0.0,"cons_ng":0.0,"cons_wood_cord":0.0,"cons_wood_pellet":0.0,"cons_solar":0.0,"rate_elec":0.184797142857143,"rate_ng":1.401,"rate_ho":4.53,"rate_propane":3.45,"rate_wood_cord":227.0,"rate_wood_pellet":285.0,"evt":None,"leed":None,"ngbs":None,"hers_score":None,"hes_score":None,"estar_wh":None,"zerh":None,"phius":None,"iap":None,"heater_estar":False,"water_estar":False,"water_solar":False,"ac_estar":False,"fridge_estar":False,"washer_estar":False,"dishwasher_estar":True,"heater_type":"standard","water_type":"tank","has_audit":False,"auditor":"","has_solar":False,"solar_ownership":"","capacity":5.0,"has_storage":False,"rating":"Professionally Verified","source":"Program Verifier","weatherization":"contractor","evcharger":False,"has_cert":None,"high_cost_action":2,"low_cost_action": "3561","certified_bill":False,"bill":"$3850","opt_out":False,"third_party":"","comments":""}
+
+#    data_dict = {"street":"56 LIBERTY ST","postal_code":"05602","property_uid":"090-056000","author_name":"Veronique Bugnion","cons_elec":5741.0,"lighting_estar":4,"author_company":"ClearlyEnergy","organization_name":"Vermont Department of Public Service","dataset_name":"Vermont Profile","city":"MONTPELIER","state":"VT","zipcode":"05602","yearbuilt":1890,"finishedsqft":1690.0,"heatingfuel":"ho","score":4780.0,"elec_score":1060,"ng_score":0,"ho_score":3720,"propane_score":0,"wood_cord_score":0,"wood_pellet_score":0,"solar_score":0.0,"cons_mmbtu":132.9,"cons_mmbtu_max":427.5,"cons_mmbtu_min":79.3,"cons_mmbtu_avg":159.2,"cons_ho":820.0,"cons_propane":0.0,"cons_ng":0.0,"cons_wood_cord":0.0,"cons_wood_pellet":0.0,"cons_solar":0.0,"rate_elec":"0.184797142857143","rate_ng":1.401,"rate_ho":4.53,"rate_propane":3.45,"rate_wood_cord":227.0,"rate_wood_pellet":285.0,"evt":None,"leed":None,"ngbs":None,"hers_score":None,"hes_score":None,"estar_wh":None,"zerh":None,"phius":None,"iap":None,"heater_estar":False,"water_estar":False,"water_solar":False,"ac_estar":False,"fridge_estar":False,"washer_estar":False,"dishwasher_estar":False,"heater_type":"furnace","water_type":"tank","has_audit":None,"auditor":None,"has_solar":False,"solar_ownership":None,"capacity":0.0,"has_storage":False,"rating":"Professionally Verified","source":"Program Verifier","weatherization":None,"evcharger":False,"has_cert":None,"high_cost_action":1,"low_cost_action":"3561","certified_bill":False,"bill":"","opt_out":False,"third_party":"","comments":""}
+    data_dict = {"street":"56 LIBERTY ST","postal_code":"05602","property_uid":"090-056000","author_name":"Veronique Bugnion","cons_elec":3145.7677053824364,"lighting_estar":4,"author_company":"ClearlyEnergy","organization_name":"Vermont Department of Public Service","dataset_name":"Vermont Profile","city":"MONTPELIER","state":"VT","zipcode":"05602","yearbuilt":1890,"finishedsqft":1690.0,"heatingfuel":"ho","score":2870.0,"elec_score":580,"ng_score":0,"ho_score":2200,"propane_score":80,"wood_cord_score":0,"wood_pellet_score":0,"solar_score":0.0,"cons_mmbtu":80.0962793404661,"cons_mmbtu_max":470.2,"cons_mmbtu_min":86.1,"cons_mmbtu_avg":173.2,"cons_ho":485.995079086116,"cons_propane":24.0,"cons_ng":0.0,"cons_wood_cord":0.0,"cons_wood_pellet":0.0,"cons_solar":0.0,"rate_elec":"0.184797142857143","rate_ng":1.401,"rate_ho":4.53,"rate_propane":3.45,"rate_wood_cord":227.0,"rate_wood_pellet":285.0,"evt":None,"leed":None,"ngbs":None,"hers_score":None,"hes_score":None,"estar_wh":None,"zerh":None,"phius":None,"iap":None,"heater_estar":False,"water_estar":True,"water_solar":False,"ac_estar":False,"fridge_estar":False,"washer_estar":True,"dishwasher_estar":True,"heater_type":"standard","water_type":"tank","has_audit":False,"auditor":"","has_solar":False,"solar_ownership":None,"capacity":5.0,"has_storage":False,"rating":"Professionally Verified","source":"Program Verifier","weatherization":"program","evcharger":False,"has_cert":None,"high_cost_action":2,"low_cost_action":"3561","certified_bill":False,"bill":"$2809","opt_out":False,"third_party":"","comments":""}
     out_file = 'VTLabel.pdf'
     write_vermont_energy_profile_pdf(data_dict, out_file)
 

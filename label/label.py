@@ -67,7 +67,7 @@ class Label:
     def beam_profile(self, data_dict, object_id, out_path='', out_file='', organization_name=''):
         org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
                            'City of Columbia': write_columbia_profile_pdf,
-                           'CORE', write_core_profile_pdf,
+                           'CORE': write_core_profile_pdf,
                            'City of Indianapolis': write_indianapolis_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
                            'Village of Oak Park': write_oak_park_profile_pdf,
