@@ -24,7 +24,7 @@ CUSTOM_YELLOW = colors.Color(red=(255.0/255),green=(221.0/255),blue=(0.0/255))
 CUSTOM_LTEAL = colors.Color(red=(53.0/255),green=(196.0/255),blue=(229.0/255))
 CUSTOM_DTEAL = colors.Color(red=(38.0/255),green=(86.0/255),blue=(145.0/255))
 FUELS = ['ElectricityGridPurchase', 'NaturalGas', 'FuelOil', 'Propane',  'Wood', 'DistrictSteam']
-FUELFACTOR = [3.412, 1.0, 138.500, 91.452, 17480.000, 1.0]
+FUELFACTOR = [3.412, 100.0, 138.500, 91.452, 17480.000, 1.0]
 FUELSNATIVE = ['ElectricityGridPurchaseKwh', 'NaturalGas', 'FuelOil', 'Propane',  'Wood', 'DistrictSteam']
 #FUELICONS = [u"",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf185"]
 FUELICONS = [u"\uf0e7",u"\uf06d",u"\uf043",u"\uf043",u"\uf1bb",u"\uf043",u"\uf185"]

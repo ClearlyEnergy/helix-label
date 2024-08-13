@@ -242,9 +242,10 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     Story.append(Spacer(1,12))
     Story.append(Paragraph('Recommendations',tf_standard_bold))
-    for cat in ['Lighting', 'Heating and Cooling', 'Building Envelope', 'Electrification', 'Water Heating']:
+    for cat in ['Leaks', 'Irrigation', 'Noise', 'Heating and Cooling', 'Electrification', 'Retrocommissioning', 'Variable Frequency Drives', 'Kitchen', 'Lighting', 'Heat Tape Controls', 'Building Envelope', 'Water Heating']:
         cat_name = 'recommendation_' + re.sub(r'(?<=[a-z])(?=[A-Z])|[^a-zA-Z]', ' ', cat).strip().replace(' ', '_').lower()
-        Story.append(Paragraph('<font name="InterstateBlack">'+cat+':</font> ' + data_dict[cat_name], tf_standard_spaced))
+        if data_dict[cat_name]is not None:
+            Story.append(Paragraph('<font name="InterstateBlack">'+cat+':</font> ' + data_dict[cat_name], tf_standard_spaced))
     Story.append(FrameBreak)
 
 ### BUILD PAGE
@@ -316,13 +317,88 @@ if __name__ == '__main__':
     "yoy_change_score": 10.0,
     "yoy_percent_change_elec": 10.0,
     "yoy_percent_change_site_eui": 10.0,
+    "yoy_percent_change_ng": 10.0,
     "zipcode": "81611",
-    "recommendation_lighting": "Lighting is one of the easiest and most cost-effective upgrades you can make for your business. LEDs have a wide color temperature range, long lifespan (saving on maintenance costs), better quality lighting, and are more affordable than ever. Add proper control systems (daylighting, timers, occupancy sensors, etc.) to maximize the efficiency of your lighting improvement project.",
+    "recommendation_leaks": None,
+    "recommendation_irrigation": None,
+    "recommendation_noise": None,
     "recommendation_heating_and_cooling": "Recommission the building regularly (for example, balance air distribution, verify sensor operation, tune up boilers, etc.) to ensure the building equipment is operating at its maximum efficiency. Replace manual thermostats with Wi-Fi enabled or wireless thermostats, and turn down heating and cooling systems when the building is unoccupied.", 
-    "recommendation_building_envelope": "Repair broken windows and weatherstrip or caulk windows and doors where drafts can be felt or there are visible signs of deterioration. Repair and tighten broken and misaligned exterior doors. Install insulating double-pleated blinds on all windows and shut them at night.",
     "recommendation_electrification": "Considering the lifespan of your current heating systems, we recommend you start planning to electrify your building. This includes electrifying heating and cooling systems, and appliances. Electrification offers a lot of benefits, including improved energy efficiency, reduced greenhouse gas emissions, and enhanced occupant comfort and health. And, since technology will only continue to evolve, moving towards electrification now can future-proof your investment and reduce your long-term operating costs.",
+    "recommendation_retrocommissioning": None,
+    "recommendation_variable_frequency_drives": None,
+    "recommendation_kitchen": None,
+    "recommendation_lighting": "Lighting is one of the easiest and most cost-effective upgrades you can make for your business. LEDs have a wide color temperature range, long lifespan (saving on maintenance costs), better quality lighting, and are more affordable than ever. Add proper control systems (daylighting, timers, occupancy sensors, etc.) to maximize the efficiency of your lighting improvement project.",
+    "recommendation_heat_tape_controls": None,
+    "recommendation_building_envelope": "Repair broken windows and weatherstrip or caulk windows and doors where drafts can be felt or there are visible signs of deterioration. Repair and tighten broken and misaligned exterior doors. Install insulating double-pleated blinds on all windows and shut them at night.",
     "recommendation_water_heating": "Repair any damaged or missing insulation on pipes and tanks. Look for rust or leaks around the base of the water heater. Repair leaky faucets and install high efficiency shower heads."
-}    
+}
+    data_dict = {
+    "Who is your electricity supplier?": "N/A",
+    "city": "Aspen",
+    "energyCost": 3060040.48,
+    "energyCostDiesel": 0,
+    "energyCostDistrictChilledWater": 0,
+    "energyCostDistrictHotWater": 0,
+    "energyCostDistrictSteam": 0,
+    "energyCostElectricityGridPurchase": 263454.42,
+    "energyCostElectricityOnsiteSolarWind": 0,
+    "energyCostFuelOil1": 0,
+    "energyCostFuelOil2": 0,
+    "energyCostFuelOil4": 0,
+    "energyCostFuelOil5And6": 0,
+    "energyCostKerosene": 0,
+    "energyCostNaturalGas": 42550.06,
+    "energyCostPropane": 0,
+    "energyCostWood": 0,
+    "energy_star_score": 100.0,
+    "medianSiteIntensity": 176.4,
+    "numberOfDcFastEvChargingStations": 0,
+    "numberOfLevelOneEvChargingStations": 0,
+    "numberOfLevelTwoEvChargingStations": 0,
+    "onSiteRenewableSystemGeneration": 0,
+    "percentBetterThanSiteIntensityMedian": -61.5,
+    "percentElectricity": 2.0,
+    "propGrossFloorArea": 104000.0,
+    "siteEnergyUseDiesel": 0,
+    "siteEnergyUseDistrictChilledWater": 0,
+    "siteEnergyUseDistrictHotWater": 0,
+    "siteEnergyUseDistrictSteam": 0,
+    "siteEnergyUseElectricityGridPurchase": 139786.2,
+    "siteEnergyUseElectricityGridPurchaseKwh": 40969.0,
+    "siteEnergyUseFuelOil1": 0,
+    "siteEnergyUseFuelOil2": 0,
+    "siteEnergyUseFuelOil4": 0,
+    "siteEnergyUseFuelOil5And6": 0,
+    "siteEnergyUseKerosene": 0,
+    "siteEnergyUseNaturalGas": 6914465.4,
+    "siteEnergyUsePropane": 0,
+    "siteEnergyUseWood": 0,
+    "siteIntensity": 67.8,
+    "site_total": 7054.2516,
+    "state": "CO",
+    "street": "232 Main St",
+    "systemDefinedPropertyType": "Hotel",
+    "totalLocationBasedGHGEmissions": 377.4,
+    "year_built": 2021,
+    "year_ending": 2023,
+    "yoy_change_score": 10.0,
+    "yoy_percent_change_elec": 10.0,
+    "yoy_percent_change_ng": 10.0,
+    "yoy_percent_change_site_eui": 10.0,
+    "zipcode": "81611",
+    "recommendation_leaks": "City of Aspen Utilities offers advanced metering infrastructure (AMI) that allows you to track your water consumption in near real time with your smart phone or computer. You can compare water consumption over time and set alerts to notify you of a leak. SIGN UP AND CATCH LEAKS NOW:  https://aspen.gov/1213/AIM---Aspen-Intelligent-Metering",
+    "recommendation_irrigation": "Many customers’ largest use of water is outdoor irrigation. Keep your plants and your lawn happy and your water use to a minimum by following proper irrigation practices. This includes inspecting for system leaks and maintaining an efficient watering schedule. Reach out to a qualified water efficient landscaper for an annual check-up on your irrigation system: https://www.aspen.gov/1195/Qualified-Water-Efficient-Landscaper-Pro You can also schedule a free irrigation assessment during summer months for an opportunity to receive a rebate on eligible system upgrades: https://aspen.gov/1536/Irrigation-Assessment-and-Rebates ",
+    "recommendation_noise": "Make sure to routinely inspect these fixtures for anything that looks or sounds unusual. Call a certified plumber if you suspect there might be an issue. (Leaky toilets can lead to over 600 gallons a water loss a month. Leaky faucets can lead to another 500 gallons a month).  Want to learn and do more? Visit https://aspen.gov/592/Water-Conservation or call 970-920-5030. ",
+    "recommendation_heating_and_cooling": None, 
+    "recommendation_electrification": "Rather than installing a new boiler, consider replacing the existing air conditioning PTAC's in guest rooms with heat pump PTAC's that work for heating and air conditioning. CORE has large incentives for heat pumps. If you need to replace the guest laundry dryers, consider heat pump dryers. ",
+    "recommendation_retrocommissioning": None,
+    "recommendation_variable_frequency_drives": None,
+    "recommendation_kitchen": None,
+    "recommendation_lighting": None,
+    "recommendation_heat_tape_controls": None,
+    "recommendation_building_envelope": None,
+    "recommendation_water_heating": None
+}
 
     out_file = 'CORE_BEAM_Profile.pdf'
     write_core_profile_pdf(data_dict, out_file)

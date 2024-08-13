@@ -192,7 +192,7 @@ class Charts():
             site_max = round(site_max)
             site_min = round(site_min)
             site_median = round(site_median)
-            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])),9)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])) + " MMBtu",9)
 
         if eui:
             wedge_img = IMG_PATH+"/wedgei.png"
@@ -229,26 +229,27 @@ class Tables():
             if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
                 data_dict['energyRate'+fuel] = data_dict['energyCost'+fuel]/(data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num])
                 num_fuel+=1
-            elif ('energyCost'+fuel in data_dict) and data_dict['siteEnergyUse'+fuel]:
+            elif ('energyCost'+fuel in data_dict) and (data_dict['siteEnergyUse'+fuel] != 0.0) and (data_dict['siteEnergyUse'+fuel] is not None):
                 num_fuel+=1
         if data_dict['onSiteRenewableSystemGeneration'] != 0.0:
             num_fuel+=1
             
         for num, fuel in enumerate(FUELS):
-            if ('energyCost'+fuel in data_dict):
+            if ('siteEnergyUse'+fuel in data_dict) and (data_dict['siteEnergyUse'+fuel] is not None):
                 cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
-                if  (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
-                    pc251.textColor = FUELCOLOR[num]
-                    if num_fuel > 3:
-                        tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
-                    else:
-                        tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
+                if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] != 0.0):
+                    if  (data_dict['energyCost'+fuel] is not None) :
+                        pc251.textColor = FUELCOLOR[num]
+                        if num_fuel > 3:
+                            tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num] + ' at {0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253),], ''])
+                        else:
+                            tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251),Paragraph('$'+"{:,}".format(int(data_dict['energyCost'+fuel])), pc252), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253), Paragraph('{0:.2f}'.format(data_dict['energyRate'+fuel]) + ' $/'+FUELUNIT[num], pc253)], ''])
                 elif (cons is not None) and (cons != 0.0):
-                    cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
-                    if num_fuel > 3:
-                        tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253),]])
-                    else:
-                        tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253)], ''])
+                        cons = data_dict['siteEnergyUse'+fuel]/FUELFACTOR[num]
+                        if num_fuel > 3:
+                            tct.append([FUELIMAGESSMALL[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253),]])
+                        else:
+                            tct.append([FUELIMAGES[num],  [Paragraph(FUELLABEL[num], pc251), Paragraph("{:,}".format(int(cons)) + ' ' + FUELUNIT[num], pc253)], ''])
 
         if (data_dict['onSiteRenewableSystemGeneration'] is not None) and (data_dict['onSiteRenewableSystemGeneration'] != 0):
             pc251.textColor = FUELCOLOR[-1]
@@ -270,7 +271,7 @@ class Tables():
 
         row_ind = 0
         for num, fuel in enumerate(FUELS):
-            if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel]!= 0):
+            if ('siteEnergyUse'+fuel in data_dict) and (data_dict['siteEnergyUse'+fuel] is not None) and (float(data_dict['siteEnergyUse'+fuel]) != 0.0):
                 cost_subTableStyle.add('BACKGROUND',(2,row_ind),(-1,-num_fuel+row_ind),FUELCOLOR[num])
                 if num_fuel != 1:
                     cost_subTableStyle.add('LINEBELOW', (0, row_ind), (-2, -num_fuel+row_ind), 1, CUSTOM_MGRAY),
@@ -413,14 +414,6 @@ class Highlights():
         num_line += 1
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
         num_line += 1
-        
-        if data_dict['percentBetterThanSiteIntensityMedian']:
-            better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the property type national median", pc272)])
-            num_line += 1
-        elif data_dict['medianSiteIntensity']:
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" kBtu/sq.ft.", pc272)])
-            num_line += 1
 
         if 'yoy_percent_change_site_eui' in data_dict:
             if data_dict['yoy_percent_change_site_eui'] and abs(data_dict['yoy_percent_change_site_eui']) > 0:
@@ -429,7 +422,19 @@ class Highlights():
                     num_line += 1
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+"%", pc272)])
+                    num_line += 1
+                if num_line < 5:
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in natural gas consumption since last year: " + str(data_dict['yoy_percent_change_ng'])+"%", pc272)])
+                    num_line += 1
 
+        if num_line < 5:
+            if data_dict['percentBetterThanSiteIntensityMedian']:
+                better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the property type national median", pc272)])
+                num_line += 1
+            elif data_dict['medianSiteIntensity']:
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" kBtu/sq.ft.", pc272)])
+                num_line += 1
 
         return t_achieve, num_line
 

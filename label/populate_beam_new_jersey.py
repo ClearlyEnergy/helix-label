@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_madison_orlando
+# run with python3 -m label.populate_beam_new_jersey
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,15 +19,15 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(120.0/255),green=(162.0/255),blue=(47.0/255))
+CUSTOM_DTEAL = colors.Color(red=(38.0/255),green=(86.0/255),blue=(145.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_cambridge_profile_pdf(data_dict, output_pdf_path):
-    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
+def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
+#    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
 
@@ -43,8 +43,8 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/city_of_cambridge.jpg"
-    im = Image(vthep_logo, 1.65*inch, 1.1*inch)
+    vthep_logo = IMG_PATH+"/NJCEP.png"
+    im = Image(vthep_logo, 2.5*inch, 0.79*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -72,7 +72,8 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
-    Story.append(Paragraph(str(int(data_dict['propGrossFloorArea']))+' Sq.Ft.',pc14))
+    floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
+    Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("REPORT INFORMATION", pc12))
@@ -141,13 +142,14 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     column_252 = Frame(doc.leftMargin+doc.width/3+(1/5)*(2/3)*doc.width, doc.height*(1-y_offset), (1/2)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=0)    
     
     # Cost Table
-    cost_subTable = Tables.cost_table(data_dict)
+    cost_subTable = Tables.cost_table(data_dict)     
     Story.append(cost_subTable)
     Story.append(FrameBreak)
     pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR)
     column_253 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset), (3/10)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=10)        
     Story.append(pie)
     Story.append(FrameBreak)    
+    
     
     # Energy Highlights Header
     y_offset += 0.03
@@ -175,25 +177,26 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(ratings_table)   
         
-    t_achieve, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_achieve:
-        achieve_table = Table(t_achieve, colWidths = [5.1*inch])
-        achieve_table.setStyle(TableStyle([
+    t_solar, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    if t_solar:
+        solar_table = Table(t_solar, colWidths = [5.1*inch])
+        solar_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
-        Story.append(achieve_table)
+        Story.append(solar_table)
     
-    t_solar, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
     if t_achieve:
-        solar_table = Table(t_solar, colWidths = [5.4*inch])
-        solar_table.setStyle(TableStyle([
+        achieve_table = Table(t_achieve, colWidths = [5.4*inch])
+        achieve_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('ALIGN', (0,0), (-1,-1), 'LEFT'),
             ('BACKGROUND',(0,0),(-1,-1),colors.white),
          ]))
-        Story.append(solar_table)      
+        Story.append(achieve_table)      
     Story.append(FrameBreak)
+    
         
     # Take Action Header
     y_offset += 0.0
@@ -201,8 +204,7 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     text_c281 = Paragraph('Take Action!', pc261)
     Story.append(text_c281)
     Story.append(FrameBreak)
-    
-    
+
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
     column_282 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.bottomMargin+0.17*doc.height, (3/4)*(2/3)*doc.width, 0.06*doc.height, showBoundary=0, topPadding=10)    
@@ -210,19 +212,24 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c282)
     Story.append(FrameBreak)
     
-    # Take Action Details    
+    # Take Action Details 
+    elec_util_acr_map = {'Atlantic City Electric': 'ACE', 'Jersey Central Power & Light': 'JCP&L', 'Rockland Electric Company': 'RECO', 'Public Service Electric & Gas Co.': 'PSE&G'}
+    gas_util_acr_map = {"Public Service Electric & Gas Co.":  'PSE&G', "New Jersey Natural Gas Co.": 'NJNG', "Elizabethtown Gas Co.": 'ETG', "South Jersey Gas Co.": 'SJG'}   
+    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business', "Jersey Central Power & Light": 'https://www.firstenergycorp.com/save_energy/save_energy_new_jersey/for-your-business.html', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj', "Public Service Electric & Gas Co.": 'https://nj.pseg.com/saveenergyandmoney/energysavingpage/energyefficiency?utm_campaign=pseg-portfoliowide-portfoliowide&utm_source=vanity&utm_medium=broad-use'}
+    gas_util_map = {"Public Service Electric & Gas Co.":  'https://nj.pseg.com/saveenergyandmoney/energysavingpage/energyefficiency?utm_campaign=pseg-portfoliowide-portfoliowide&utm_source=vanity&utm_medium=broad-use', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#direct-install', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}   
+
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-                        
+    Story.append(Paragraph(" ".join(['To find and participate in', elec_util_acr_map[data_dict['elec_util']].strip(), 'and', gas_util_acr_map[data_dict['gas_util']]]) + ' <font name="InterstateLight" color=blue><link href="https://cepfindaprogram.com/">energy efficiency programs</link></font> that may offer rebates, incentives, and financing for energy efficiency projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('For more information on electric energy efficiency programs from ' + elec_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('For more information on gas energy efficiency programs from ' + gas_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75%of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/about/how-energy-star-works/energy-star-certification">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+
+#'"Name of Person", <%s>' % ENV["EMAIL"]
+
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
@@ -233,22 +240,65 @@ def write_cambridge_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_cambridge
+# Run with:  python3 -m label.populate_beam_new_jersey
 if __name__ == '__main__':
     data_dict = {
-        'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
-        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
-        'energyCost': 10000.0, 
-        'energyCostElectricityOnsiteSolarWind': 2110.0,
-        'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
-        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
-        'cons_solar': -11000.0, 'siteIntensity': 100.0,
-        'estar_wh': True,
-        'yoy_percent_change_site_eui': 0.15, 'yoy_percent_change_elec': -0.1,
-        'totalLocationBasedGHGEmissions': 150,
-        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+        "Who is your electricity supplier?": "N/A",
+        "city": "JERSEY CITY",
+        "energyCost": 318753.47,
+        "energyCostDiesel": 0,
+        "energyCostDistrictChilledWater": 0,
+        "energyCostDistrictHotWater": 0,
+        "energyCostDistrictSteam": 0,
+        "energyCostElectricityGridPurchase": 265659.13,
+        "energyCostElectricityOnsiteSolarWind": 0,
+        "energyCostFuelOil1": 0,
+        "energyCostFuelOil2": 0,
+        "energyCostFuelOil4": 0,
+        "energyCostFuelOil5And6": 0,
+        "energyCostKerosene": 0,
+        "energyCostNaturalGas": 66310.05,
+        "energyCostPropane": 0,
+        "energyCostWood": 0,
+        "energy_star_score": 71.00,
+        "medianSiteIntensity": 176.4,
+        "numberOfDcFastEvChargingStations": 0,
+        "numberOfLevelOneEvChargingStations": 0,
+        "numberOfLevelTwoEvChargingStations": 0,
+        "onSiteRenewableSystemGeneration": 0,
+        "percentBetterThanSiteIntensityMedian": -61.5,
+        "percentElectricity": 2.0,
+        "propGrossFloorArea": 149326.00,
+        "siteEnergyUseDiesel": 0,
+        "siteEnergyUseDistrictChilledWater": 0,
+        "siteEnergyUseDistrictHotWater": 0,
+        "siteEnergyUseDistrictSteam": 0,
+        "siteEnergyUseElectricityGridPurchase": 139786.2,
+        "siteEnergyUseElectricityGridPurchaseKwh": 40969.0,
+        "siteEnergyUseFuelOil1": 0,
+        "siteEnergyUseFuelOil2": 0,
+        "siteEnergyUseFuelOil4": 0,
+        "siteEnergyUseFuelOil5And6": 0,
+        "siteEnergyUseKerosene": 0,
+        "siteEnergyUseNaturalGas": 6914465.4,
+        "siteEnergyUsePropane": 0,
+        "siteEnergyUseWood": 0,
+        "siteIntensity": 67.8,
+        "site_total": 7054.2516,
+        "state": "NJ",
+        "street": "1 BRUCE WAY",
+        "systemDefinedPropertyType": "Office",
+        "totalLocationBasedGHGEmissions": 555.3,
+        "year_built": 1987,
+        "year_ending": 2023,
+        "yoy_change_score": 10.0,
+        "yoy_percent_change_elec": 7.33,
+        "yoy_percent_change_ng": 12.1,
+        "yoy_percent_change_site_eui": 14.54,
+        "zipcode": "89501",
+        "elec_util": "Public Service Electric & Gas Co.",
+        "gas_util": "Public Service Electric & Gas Co."
     }
-    out_file = 'Cambridge_BEAM_Profile.pdf'
-    write_cambridge_profile_pdf(data_dict, out_file)
+
+    out_file = 'NJ_BEAM_Profile.pdf'
+    write_new_jersey_profile_pdf(data_dict, out_file)
