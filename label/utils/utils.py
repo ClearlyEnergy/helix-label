@@ -192,7 +192,7 @@ class Charts():
             site_max = round(site_max)
             site_min = round(site_min)
             site_median = round(site_median)
-            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str(int(data_dict['site_total'])) + " MMBtu",9)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str("{:,}".format(int(data_dict['site_total']))) + " MMBtu",9)
 
         if eui:
             wedge_img = IMG_PATH+"/wedgei.png"
@@ -212,7 +212,7 @@ class Charts():
             pic3 = flowable_triangle(triangle2,offset_x, 0.44,0.08, 0.138,"Median building","left")
         offset_x = 0.62 + 105.0/site_max*(4.82-0.62)
         # text for maximum reference
-        txt2 = flowable_text(4.82, 0.44, str(int(site_max)),7)
+        txt2 = flowable_text(4.82, 0.44, str("{:,}".format(int(site_max))),7)
     
         return wedge, txt, txt2, pic, pic2, pic3
     
@@ -344,6 +344,10 @@ class Highlights():
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
                 text_c103 = Paragraph('MMBtu', pc103)
+        elif category == 'EUI':
+                text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
+                text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
+                text_c103 = Paragraph('kBtu/sq.ft.', pc103)
         else:
             text_c101 = Paragraph("TBD", pc101)
             text_c102 = Paragraph('value', pc102)
@@ -378,16 +382,16 @@ class Highlights():
         if category == 'EU':
             if data_dict['site_total'] >= 100000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=6> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=6> MMBtu </font>", pc201)
             elif data_dict['site_total'] < 100000.0 and data_dict['site_total'] > 10000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=8> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=8> MMBtu </font>", pc201)
             elif data_dict['site_total'] < 10000.0 and data_dict['site_total'] > 1000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=9> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=9> MMBtu </font>", pc201)
             else:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str(int(data_dict['site_total']))+"<font size=10> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=10> MMBtu </font>", pc201)
         elif category == 'EUI':
             pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
             text_c201 = Paragraph(str(int(data_dict['siteIntensity']))+"<font size=8> kBtu/sqft </font>", pc201)
@@ -410,7 +414,7 @@ class Highlights():
         t_achieve = []
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e", pc272)])
+        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str("{:,}".format(data_dict['totalLocationBasedGHGEmissions']))+" metric tons CO2e", pc272)])
         num_line += 1
         t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
         num_line += 1
@@ -443,7 +447,7 @@ class Highlights():
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         pc273 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal)
         if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site', pc273)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building generated " + str("{:,}".format(data_dict['onSiteRenewableSystemGeneration'])) + ' KWh of solar or wind on site', pc273)])
             num_line +=1
 
         if (data_dict['numberOfLevelOneEvChargingStations'] > 0 or data_dict['numberOfLevelTwoEvChargingStations'] > 0 or data_dict['numberOfDcFastEvChargingStations'] > 0) and num_line <= 5:
