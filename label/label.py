@@ -10,6 +10,7 @@ from label.populate_beam_core import write_core_profile_pdf
 from label.populate_beam_indianapolis import write_indianapolis_profile_pdf
 from label.populate_beam_lexington import write_lexington_profile_pdf
 from label.populate_beam_madison import write_madison_profile_pdf
+from label.populate_beam_new_jersey import write_new_jersey_profile_pdf
 from label.populate_beam_portland import write_portland_profile_pdf
 from label.populate_beam_oak_park import write_oak_park_profile_pdf
 from label.populate_beam_orlando import write_orlando_profile_pdf
