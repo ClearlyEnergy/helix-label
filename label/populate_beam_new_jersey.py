@@ -62,7 +62,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
-    Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. It also highlights energy upgrades and improvements made to increase the building’s efficiency. The profile includes further recommendations that can help to achieve more efficiency and energy costs savings.", tf_standard))
+    Story.append(Paragraph("This energy profile details the estimated annual energy costs and expected annual energy usage of this building. This profile recommends actions to achieve more efficiency and energy cost savings.", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -132,7 +132,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     y_offset +=0.09
     column_24 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.09*doc.height, showBoundary=0, topPadding=10)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=0, spaceAfter=0, hAlign='CENTER', vAlign='TOP', dash=None))
-    text_c240 = Paragraph("Estimate includes electricity and fuels from ENERGY STAR Portfolio Manager", tf_standard)
+    text_c240 = Paragraph("Electricity and fuels estimates are from Energy Star Portfolio Manager", tf_standard)
 
     Story.append(text_c240)
     Story.append(FrameBreak)
@@ -222,11 +222,11 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph(" ".join(['To find and participate in', elec_util_acr_map[data_dict['elec_util']].strip(), 'and', gas_util_acr_map[data_dict['gas_util']]]) + ' <font name="InterstateLight" color=blue><link href="https://cepfindaprogram.com/">energy efficiency programs</link></font> that may offer rebates, incentives, and financing for energy efficiency projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Find and participate in utility <font name="InterstateLight" color=blue><link href="https://cepfindaprogram.com/">energy efficiency programs</link></font> that may offer rebates, incentives, and financing for energy efficiency projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('For more information on electric energy efficiency programs from ' + elec_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('For more information on gas energy efficiency programs from ' + gas_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75%of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/about/how-energy-star-works/energy-star-certification">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/about/how-energy-star-works/energy-star-certification">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
 #'"Name of Person", <%s>' % ENV["EMAIL"]
 

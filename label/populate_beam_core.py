@@ -21,7 +21,7 @@ from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, Charts, T
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(227.0/255),green=(241.0/255),blue=(252.0/255)) ## This is the color to customize
+CUSTOM_DTEAL = colors.Color(red=(35.0/255),green=(86.0/255),blue=(131.0/255)) ## This is the color to customize
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
@@ -45,8 +45,7 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     
     ### P1
     # Logo
-    column_10 = ColorFrame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL) 
-#    column_10 = Frame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
+    column_10 = ColorFrame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=20) 
     vthep_logo = IMG_PATH+"/core_logo.png"
     im = Image(vthep_logo, 2.0*inch, 0.56*inch)
     Story.append(im)
@@ -242,10 +241,10 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     Story.append(Spacer(1,12))
     Story.append(Paragraph('Recommendations',tf_standard_bold))
-    for cat in ['Leaks', 'Irrigation', 'Noise', 'Heating and Cooling', 'Electrification', 'Retrocommissioning', 'Variable Frequency Drives', 'Kitchen', 'Lighting', 'Heat Tape Controls', 'Building Envelope', 'Water Heating']:
-        cat_name = 'recommendation_' + re.sub(r'(?<=[a-z])(?=[A-Z])|[^a-zA-Z]', ' ', cat).strip().replace(' ', '_').lower()
-        if data_dict[cat_name]is not None:
-            Story.append(Paragraph('<font name="InterstateBlack">'+cat+':</font> ' + data_dict[cat_name], tf_standard_spaced))
+    
+    for cat in ['HVAC and DHW', 'Electrification', 'Retrocommissioning', 'Variable Frequency Drives (VFD)', 'Kitchen', 'LED Lighting', 'Heat Tape Controls', 'Building Envelope', 'Air Curtain', 'Leaks', 'Irrigation', 'Noise']:
+        if data_dict[cat]is not None:
+            Story.append(Paragraph('<font name="InterstateBlack">'+cat+':</font> ' + data_dict[cat], tf_standard_spaced))
     Story.append(FrameBreak)
 
 ### BUILD PAGE
@@ -265,140 +264,74 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
 # Run with:  python3 -m label.populate_beam_core
 if __name__ == '__main__':
  #   data_dict = {'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 10000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 50, 'site_total': 3434,  'siteIntensity': 73.60, 'medianSiteIntensity': 176.40, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0, 'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0, 'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'energyCost': 10000.0, 'energyCostElectricityOnsiteSolarWind': 2110.0, 'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0, 'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'cons_solar': -11000.0, 'estar_wh': True, 'yoy_percent_change_site_eui': None, 'yoy_percent_change_elec': -0.1, 'totalLocationBasedGHGEmissions': 150, 'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0}
+
     data_dict = {
-    "Who is your electricity supplier?": "N/A",
+    "Who is your electricity supplier?": "HCE Electric",
     "city": "Aspen",
-    "energyCost": 3060040.48,
+    "energyCost": 0,
     "energyCostDiesel": 0,
     "energyCostDistrictChilledWater": 0,
     "energyCostDistrictHotWater": 0,
     "energyCostDistrictSteam": 0,
-    "energyCostElectricityGridPurchase": 263454.42,
+    "energyCostElectricityGridPurchase": 0,
     "energyCostElectricityOnsiteSolarWind": 0,
     "energyCostFuelOil1": 0,
     "energyCostFuelOil2": 0,
     "energyCostFuelOil4": 0,
     "energyCostFuelOil5And6": 0,
     "energyCostKerosene": 0,
-    "energyCostNaturalGas": 42550.06,
+    "energyCostNaturalGas": 0,
     "energyCostPropane": 0,
     "energyCostWood": 0,
-    "energy_star_score": 100.0,
-    "medianSiteIntensity": 176.4,
+    "energy_star_score": 85,
+    "medianSiteIntensity": 147.8,
     "numberOfDcFastEvChargingStations": 0,
     "numberOfLevelOneEvChargingStations": 0,
     "numberOfLevelTwoEvChargingStations": 0,
     "onSiteRenewableSystemGeneration": 0,
-    "percentBetterThanSiteIntensityMedian": -61.5,
-    "percentElectricity": 2.0,
-    "propGrossFloorArea": 104000.0,
+    "percentBetterThanSiteIntensityMedian": -28.0,
+    "percentElectricity": 26.3,
+    "propGrossFloorArea": 99914.0,
     "siteEnergyUseDiesel": 0,
     "siteEnergyUseDistrictChilledWater": 0,
     "siteEnergyUseDistrictHotWater": 0,
     "siteEnergyUseDistrictSteam": 0,
-    "siteEnergyUseElectricityGridPurchase": 139786.2,
-    "siteEnergyUseElectricityGridPurchaseKwh": 40969.0,
+    "siteEnergyUseElectricityGridPurchase": 2794093.70,
+    "siteEnergyUseElectricityGridPurchaseKwh": 0,
     "siteEnergyUseFuelOil1": 0,
     "siteEnergyUseFuelOil2": 0,
     "siteEnergyUseFuelOil4": 0,
     "siteEnergyUseFuelOil5And6": 0,
     "siteEnergyUseKerosene": 0,
-    "siteEnergyUseNaturalGas": 6914465.4,
+    "siteEnergyUseNaturalGas": 7843999.9,
     "siteEnergyUsePropane": 0,
     "siteEnergyUseWood": 0,
-    "siteIntensity": 67.8,
-    "site_total": 7054.2516,
+    "siteIntensity": 106.5,
+    "site_total": 10638093.6,
     "state": "CO",
-    "street": "1 Center Street",
+    "street": "355 S. Monarch",
     "systemDefinedPropertyType": "Hotel",
-    "totalLocationBasedGHGEmissions": 377.4,
-    "year_built": 2021,
+    "totalLocationBasedGHGEmissions": 849.8,
+    "year_built": 2008,
     "year_ending": 2023,
-    "yoy_change_score": 10.0,
-    "yoy_percent_change_elec": 10.0,
-    "yoy_percent_change_site_eui": 10.0,
-    "yoy_percent_change_ng": 10.0,
+    "yoy_change_score": 1.0,
+    "yoy_percent_change_elec": 0,
+    "yoy_percent_change_ng": 0,
+    "yoy_percent_change_site_eui": 1.24,
     "zipcode": "81611",
-    "recommendation_leaks": None,
-    "recommendation_irrigation": None,
-    "recommendation_noise": None,
-    "recommendation_heating_and_cooling": "Recommission the building regularly (for example, balance air distribution, verify sensor operation, tune up boilers, etc.) to ensure the building equipment is operating at its maximum efficiency. Replace manual thermostats with Wi-Fi enabled or wireless thermostats, and turn down heating and cooling systems when the building is unoccupied.", 
-    "recommendation_electrification": "Considering the lifespan of your current heating systems, we recommend you start planning to electrify your building. This includes electrifying heating and cooling systems, and appliances. Electrification offers a lot of benefits, including improved energy efficiency, reduced greenhouse gas emissions, and enhanced occupant comfort and health. And, since technology will only continue to evolve, moving towards electrification now can future-proof your investment and reduce your long-term operating costs.",
-    "recommendation_retrocommissioning": None,
-    "recommendation_variable_frequency_drives": None,
-    "recommendation_kitchen": None,
-    "recommendation_lighting": "Lighting is one of the easiest and most cost-effective upgrades you can make for your business. LEDs have a wide color temperature range, long lifespan (saving on maintenance costs), better quality lighting, and are more affordable than ever. Add proper control systems (daylighting, timers, occupancy sensors, etc.) to maximize the efficiency of your lighting improvement project.",
-    "recommendation_heat_tape_controls": None,
-    "recommendation_building_envelope": "Repair broken windows and weatherstrip or caulk windows and doors where drafts can be felt or there are visible signs of deterioration. Repair and tighten broken and misaligned exterior doors. Install insulating double-pleated blinds on all windows and shut them at night.",
-    "recommendation_water_heating": "Repair any damaged or missing insulation on pipes and tanks. Look for rust or leaks around the base of the water heater. Repair leaky faucets and install high efficiency shower heads."
-}
-    data_dict = {
-    "Who is your electricity supplier?": "N/A",
-    "city": "Aspen",
-    "energyCost": 3060040.48,
-    "energyCostDiesel": 0,
-    "energyCostDistrictChilledWater": 0,
-    "energyCostDistrictHotWater": 0,
-    "energyCostDistrictSteam": 0,
-    "energyCostElectricityGridPurchase": 263454.42,
-    "energyCostElectricityOnsiteSolarWind": 0,
-    "energyCostFuelOil1": 0,
-    "energyCostFuelOil2": 0,
-    "energyCostFuelOil4": 0,
-    "energyCostFuelOil5And6": 0,
-    "energyCostKerosene": 0,
-    "energyCostNaturalGas": 42550.06,
-    "energyCostPropane": 0,
-    "energyCostWood": 0,
-    "energy_star_score": 100.0,
-    "medianSiteIntensity": 176.4,
-    "numberOfDcFastEvChargingStations": 0,
-    "numberOfLevelOneEvChargingStations": 0,
-    "numberOfLevelTwoEvChargingStations": 0,
-    "onSiteRenewableSystemGeneration": 0,
-    "percentBetterThanSiteIntensityMedian": -61.5,
-    "percentElectricity": 2.0,
-    "propGrossFloorArea": 104000.0,
-    "siteEnergyUseDiesel": 0,
-    "siteEnergyUseDistrictChilledWater": 0,
-    "siteEnergyUseDistrictHotWater": 0,
-    "siteEnergyUseDistrictSteam": 0,
-    "siteEnergyUseElectricityGridPurchase": 139786.2,
-    "siteEnergyUseElectricityGridPurchaseKwh": 40969.0,
-    "siteEnergyUseFuelOil1": 0,
-    "siteEnergyUseFuelOil2": 0,
-    "siteEnergyUseFuelOil4": 0,
-    "siteEnergyUseFuelOil5And6": 0,
-    "siteEnergyUseKerosene": 0,
-    "siteEnergyUseNaturalGas": 6914465.4,
-    "siteEnergyUsePropane": 0,
-    "siteEnergyUseWood": 0,
-    "siteIntensity": 67.8,
-    "site_total": 7054.2516,
-    "state": "CO",
-    "street": "232 Main St",
-    "systemDefinedPropertyType": "Hotel",
-    "totalLocationBasedGHGEmissions": 377.4,
-    "year_built": 2021,
-    "year_ending": 2023,
-    "yoy_change_score": 10.0,
-    "yoy_percent_change_elec": 10.0,
-    "yoy_percent_change_ng": 10.0,
-    "yoy_percent_change_site_eui": 10.0,
-    "zipcode": "81611",
-    "recommendation_leaks": "City of Aspen Utilities offers advanced metering infrastructure (AMI) that allows you to track your water consumption in near real time with your smart phone or computer. You can compare water consumption over time and set alerts to notify you of a leak. SIGN UP AND CATCH LEAKS NOW:  https://aspen.gov/1213/AIM---Aspen-Intelligent-Metering",
-    "recommendation_irrigation": "Many customers’ largest use of water is outdoor irrigation. Keep your plants and your lawn happy and your water use to a minimum by following proper irrigation practices. This includes inspecting for system leaks and maintaining an efficient watering schedule. Reach out to a qualified water efficient landscaper for an annual check-up on your irrigation system: https://www.aspen.gov/1195/Qualified-Water-Efficient-Landscaper-Pro You can also schedule a free irrigation assessment during summer months for an opportunity to receive a rebate on eligible system upgrades: https://aspen.gov/1536/Irrigation-Assessment-and-Rebates ",
-    "recommendation_noise": "Make sure to routinely inspect these fixtures for anything that looks or sounds unusual. Call a certified plumber if you suspect there might be an issue. (Leaky toilets can lead to over 600 gallons a water loss a month. Leaky faucets can lead to another 500 gallons a month).  Want to learn and do more? Visit https://aspen.gov/592/Water-Conservation or call 970-920-5030. ",
-    "recommendation_heating_and_cooling": None, 
-    "recommendation_electrification": "Rather than installing a new boiler, consider replacing the existing air conditioning PTAC's in guest rooms with heat pump PTAC's that work for heating and air conditioning. CORE has large incentives for heat pumps. If you need to replace the guest laundry dryers, consider heat pump dryers. ",
-    "recommendation_retrocommissioning": None,
-    "recommendation_variable_frequency_drives": None,
-    "recommendation_kitchen": None,
-    "recommendation_lighting": None,
-    "recommendation_heat_tape_controls": None,
-    "recommendation_building_envelope": None,
-    "recommendation_water_heating": None
-}
+    "Electrification": None,
+    "Retrocommissioning": "Retrocommissioning improves how building equipment and systems function together. It is a collaborative approach between facility managers and the firm performing the retrocommissioning. It can be an iterative process. CORE can recommend firms. Here is a summary of retrocommissioning: https://smartenergy.illinois.edu/retro-commissioning/ ",
+    "Variable Frequency Drives (VFD)": None,
+    "Kitchen": " When commercial kitchen equipment needs to be replaced, choose Enery Star equipment (ice machines, cooking, etc) and consider electric cooking equipment. Have commercial refrigeration systems serviced and cleaned at least twice per year. ",
+    "LED Lighting": None,
+    "Heat Tape Controls": None,
+    "Building Envelope": None,
+    "Air Curtain": None,
+    "HVAC and DHW": None,
+    "Leaks": "City of Aspen Utilities offers advanced metering infrastructure (AMI) that allows you to track your water consumption in near real time with your smart phone or computer. You can compare water consumption over time and set alerts to notify you of a leak. SIGN UP AND CATCH LEAKS NOW:  https://aspen.gov/1213/AIM---Aspen-Intelligent-Metering",
+    "Irrigation": "Many customers’ largest use of water is outdoor irrigation. Keep your plants and your lawn happy and your water use to a minimum by following proper irrigation practices. This includes inspecting for system leaks and maintaining an efficient watering schedule. Reach out to a qualified water efficient landscaper for an annual check-up on your irrigation system: https://www.aspen.gov/1195/Qualified-Water-Efficient-Landscaper-Pro You can also schedule a free irrigation assessment during summer months for an opportunity to receive a rebate on eligible system upgrades: https://aspen.gov/1536/Irrigation-Assessment-and-Rebates ",
+    "Noise": "Make sure to routinely inspect these fixtures for anything that looks or sounds unusual. Call a certified plumber if you suspect there might be an issue. (Leaky toilets can lead to over 600 gallons a water loss a month. Leaky faucets can lead to another 500 gallons a month).  Want to learn and do more? Visit https://aspen.gov/592/Water-Conservation or call 970-920-5030. ",
+    }
 
     out_file = 'CORE_BEAM_Profile.pdf'
     write_core_profile_pdf(data_dict, out_file)

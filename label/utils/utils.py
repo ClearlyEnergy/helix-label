@@ -380,18 +380,19 @@ class Highlights():
 
     def usage_box(data_dict, category='EU'):
         if category == 'EU':
-            if data_dict['site_total'] >= 100000.0:
+            site_total = data_dict['site_total'] / 1000.0 #kBtu to MMBtu
+            if site_total >= 100000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=6> MMBtu </font>", pc201)
-            elif data_dict['site_total'] < 100000.0 and data_dict['site_total'] > 10000.0:
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> MMBtu </font>", pc201)
+            elif site_total < 100000.0 and site_total > 10000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=8> MMBtu </font>", pc201)
-            elif data_dict['site_total'] < 10000.0 and data_dict['site_total'] > 1000.0:
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=8> MMBtu </font>", pc201)
+            elif site_total < 10000.0 and site_total > 1000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=9> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=9> MMBtu </font>", pc201)
             else:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(data_dict['site_total'])))+"<font size=10> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=10> MMBtu </font>", pc201)
         elif category == 'EUI':
             pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
             text_c201 = Paragraph(str(int(data_dict['siteIntensity']))+"<font size=8> kBtu/sqft </font>", pc201)
