@@ -348,6 +348,10 @@ class Highlights():
                 text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
                 text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
                 text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+        elif category == 'EU':
+                text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
+                text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
+                text_c103 = Paragraph('kBtu/sq.ft.', pc103)
         else:
             text_c101 = Paragraph("TBD", pc101)
             text_c102 = Paragraph('value', pc102)
@@ -411,26 +415,35 @@ class Highlights():
 
         return t_cert, num_line
 
-    def general_commercial(data_dict, font_size, font_normal, font_color, icon, num_line):
+    def general_commercial(data_dict, font_size, font_normal, font_color, icon, num_line, includes = ['ghg','eui']):
         t_achieve = []
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str("{:,}".format(data_dict['totalLocationBasedGHGEmissions']))+" metric tons CO2e", pc272)])
-        num_line += 1
-        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
-        num_line += 1
+        if 'ghg' in includes:
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str("{:,}".format(data_dict['totalLocationBasedGHGEmissions']))+" metric tons CO2e", pc272)])
+            num_line += 1
+        if 'eui' in includes:
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+            num_line += 1
 
         if 'yoy_percent_change_site_eui' in data_dict:
             if data_dict['yoy_percent_change_site_eui'] and abs(data_dict['yoy_percent_change_site_eui']) > 0:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(data_dict['yoy_percent_change_site_eui'])+"%", pc272)])
-                    num_line += 1
+                    if data_dict['yoy_percent_change_site_eui']:
+                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_site_eui']))+"%", pc272)])
+                        num_line += 1
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+"%", pc272)])
-                    num_line += 1
+                    if data_dict['yoy_percent_change_elec']:
+                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_elec']))+"%", pc272)])
+                        num_line += 1
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in natural gas consumption since last year: " + str(data_dict['yoy_percent_change_ng'])+"%", pc272)])
-                    num_line += 1
+                    if ('yoy_percent_change_water' in data_dict) and (data_dict['yoy_percent_change_water']):
+                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in water consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_water']))+"%", pc272)])
+                        num_line += 1
+                if num_line < 5:
+                    if data_dict['yoy_percent_change_ng']:
+                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in natural gas consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_ng']))+"%", pc272)])
+                        num_line += 1
 
         if num_line < 5:
             if data_dict['percentBetterThanSiteIntensityMedian']:

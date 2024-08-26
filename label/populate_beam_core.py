@@ -53,7 +53,7 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE')
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'EUI')
     
     Story.append(text_c101)
     Story.append(text_c102)
@@ -95,13 +95,13 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     y_offset = 0.04
     # Expected Usage Total
     column_211 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding = 5)    
-    text_c201 = Highlights.usage_box(data_dict)
+    text_c201 = Highlights.usage_box(data_dict,'EU')
     Story.append(text_c201)
     Story.append(FrameBreak)
     
     column_212 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL)
-    text_c202 = Paragraph('Annual Energy Use Intensity', pc202)
+    text_c202 = Paragraph('Annual Energy Consumption', pc202)
     Story.append(text_c202)
     Story.append(FrameBreak)
 
@@ -189,7 +189,7 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, includes = ['ghg'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -219,10 +219,12 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Discover energy savings and improvements at any stage of your building project through our free <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/energy-concierge">Energy Concierge</link></font> service.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Apply for <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/savings-finder">CORE rebates and grants</link></font>. Rebates of up to $15,000 are available per commercial or multifamily building project.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('You may qualify for larger rebates through CORE’s <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/cpp">Community Priority Participant program</link></font>, as well as utility, state, and federal programs. These grants can help cover a portion of the overall project cost for up to $200,0000.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Learn about Building Performance Standards by joining the City of Aspen’s <font name="InterstateLight" color=blue><link href="https://aspen.gov/1245/Building-IQ">BPS Stakeholder Committee</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Identify the right energy efficiency or heat pump project for you through our free <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/energy-concierge">Energy Concierge</link></font> service.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Apply for <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/savings-finder">CORE rebates and grants</link></font>. CORE rebates of up to $15,000 are available per commercial or multifamily building project.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('You may qualify for larger rebates through CORE’s <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/cpp">Community Priority Participant program</link></font>, as well as utility, state, and federal programs. CORE grants can help cover a portion of the overall project cost for up to $200,0000.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Talk to CORE’s Energy Concierge team about getting bids from qualified contractors.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Learn about Building Performance Standards by emailing <font name="InterstateLight" color=blue><link href="mailto:buildingIQ@aspen.gov">buildingIQ@aspen.gov</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+
 
 ### P2
     Story.append(NextPageTemplate('secondPage'))
@@ -243,7 +245,7 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph('Recommendations',tf_standard_bold))
     
     for cat in ['HVAC and DHW', 'Electrification', 'Retrocommissioning', 'Variable Frequency Drives (VFD)', 'Kitchen', 'LED Lighting', 'Heat Tape Controls', 'Building Envelope', 'Air Curtain', 'Leaks', 'Irrigation', 'Noise']:
-        if data_dict[cat]is not None:
+        if (data_dict[cat]is not None) and (data_dict[cat] != "N/A"):
             Story.append(Paragraph('<font name="InterstateBlack">'+cat+':</font> ' + data_dict[cat], tf_standard_spaced))
     Story.append(FrameBreak)
 
@@ -315,19 +317,20 @@ if __name__ == '__main__':
     "year_built": 2008,
     "year_ending": 2023,
     "yoy_change_score": 1.0,
-    "yoy_percent_change_elec": 0,
+    "yoy_percent_change_elec": 4.5,
     "yoy_percent_change_ng": 0,
-    "yoy_percent_change_site_eui": 1.24,
+    "yoy_percent_change_water": -3.5,
+    "yoy_percent_change_site_eui": 1.243,
     "zipcode": "81611",
-    "Electrification": None,
+    "Electrification": "N/A",
     "Retrocommissioning": "Retrocommissioning improves how building equipment and systems function together. It is a collaborative approach between facility managers and the firm performing the retrocommissioning. It can be an iterative process. CORE can recommend firms. Here is a summary of retrocommissioning: https://smartenergy.illinois.edu/retro-commissioning/ ",
-    "Variable Frequency Drives (VFD)": None,
+    "Variable Frequency Drives (VFD)": "N/A",
     "Kitchen": " When commercial kitchen equipment needs to be replaced, choose Enery Star equipment (ice machines, cooking, etc) and consider electric cooking equipment. Have commercial refrigeration systems serviced and cleaned at least twice per year. ",
-    "LED Lighting": None,
-    "Heat Tape Controls": None,
-    "Building Envelope": None,
-    "Air Curtain": None,
-    "HVAC and DHW": None,
+    "LED Lighting": "N/A",
+    "Heat Tape Controls": "N/A",
+    "Building Envelope": "N/A",
+    "Air Curtain": "N/A",
+    "HVAC and DHW": "N/A",
     "Leaks": "City of Aspen Utilities offers advanced metering infrastructure (AMI) that allows you to track your water consumption in near real time with your smart phone or computer. You can compare water consumption over time and set alerts to notify you of a leak. SIGN UP AND CATCH LEAKS NOW:  https://aspen.gov/1213/AIM---Aspen-Intelligent-Metering",
     "Irrigation": "Many customers’ largest use of water is outdoor irrigation. Keep your plants and your lawn happy and your water use to a minimum by following proper irrigation practices. This includes inspecting for system leaks and maintaining an efficient watering schedule. Reach out to a qualified water efficient landscaper for an annual check-up on your irrigation system: https://www.aspen.gov/1195/Qualified-Water-Efficient-Landscaper-Pro You can also schedule a free irrigation assessment during summer months for an opportunity to receive a rebate on eligible system upgrades: https://aspen.gov/1536/Irrigation-Assessment-and-Rebates ",
     "Noise": "Make sure to routinely inspect these fixtures for anything that looks or sounds unusual. Call a certified plumber if you suspect there might be an issue. (Leaky toilets can lead to over 600 gallons a water loss a month. Leaky faucets can lead to another 500 gallons a month).  Want to learn and do more? Visit https://aspen.gov/592/Water-Conservation or call 970-920-5030. ",
