@@ -45,9 +45,9 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     
     ### P1
     # Logo
-    column_10 = ColorFrame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=20) 
-    vthep_logo = IMG_PATH+"/core_logo.png"
-    im = Image(vthep_logo, 2.0*inch, 0.56*inch)
+    column_10 = ColorFrame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, topPadding=20)
+    vthep_logo = IMG_PATH+"/core_logo2.png"
+    im = Image(vthep_logo, 2.0*inch, 0.68*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
