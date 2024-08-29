@@ -390,13 +390,13 @@ class Highlights():
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> kBtu </font>", pc201)
             elif site_total < 100000.0 and site_total > 10000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=8> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=8> kBtu </font>", pc201)
             elif site_total < 10000.0 and site_total > 1000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=9> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=9> kBtu </font>", pc201)
             else:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=10> MMBtu </font>", pc201)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=10> kBtu </font>", pc201)
         elif category == 'EU':
             site_total = data_dict['site_total'] / 1000.0 #kBtu to MMBtu
             if site_total >= 1000000.0:
