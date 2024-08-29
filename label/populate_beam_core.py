@@ -95,7 +95,7 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     y_offset = 0.04
     # Expected Usage Total
     column_211 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding = 5)    
-    text_c201 = Highlights.usage_box(data_dict,'EU')
+    text_c201 = Highlights.usage_box(data_dict,'EU_kbtu')
     Story.append(text_c201)
     Story.append(FrameBreak)
     
@@ -221,7 +221,7 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
 
     Story.append(Paragraph('Identify the right energy efficiency or heat pump project for you through our free <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/energy-concierge">Energy Concierge</link></font> service.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Apply for <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/savings-finder">CORE rebates and grants</link></font>. CORE rebates of up to $15,000 are available per commercial or multifamily building project.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('You may qualify for larger rebates through CORE’s <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/cpp">Community Priority Participant program</link></font>, as well as utility, state, and federal programs. CORE grants can help cover a portion of the overall project cost for up to $200,0000.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('You may qualify for larger rebates through CORE’s <font name="InterstateLight" color=blue><link href="https://www.aspencore.org/community-priority-participants">Community Priority Participant program</link></font>, as well as utility, state, and federal programs. CORE grants can help cover a portion of the overall project cost for up to $200,0000.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Talk to CORE’s Energy Concierge team about getting bids from qualified contractors.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Learn about Building Performance Standards by emailing <font name="InterstateLight" color=blue><link href="mailto:buildingIQ@aspen.gov">buildingIQ@aspen.gov</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
 

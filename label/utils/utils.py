@@ -383,9 +383,26 @@ class Highlights():
         return text_c231, text_c232
 
     def usage_box(data_dict, category='EU'):
-        if category == 'EU':
-            site_total = data_dict['site_total'] / 1000.0 #kBtu to MMBtu
+        if category == 'EU_kbtu':
+            site_total = data_dict['site_total']
             if site_total >= 100000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> kBtu </font>", pc201)
+            elif site_total < 100000.0 and site_total > 10000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=8> MMBtu </font>", pc201)
+            elif site_total < 10000.0 and site_total > 1000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=9> MMBtu </font>", pc201)
+            else:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=10> MMBtu </font>", pc201)
+        elif category == 'EU':
+            site_total = data_dict['site_total'] / 1000.0 #kBtu to MMBtu
+            if site_total >= 1000000.0:
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> MMBtu </font>", pc201)
+            elif site_total >= 100000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> MMBtu </font>", pc201)
             elif site_total < 100000.0 and site_total > 10000.0:
@@ -429,21 +446,23 @@ class Highlights():
         if 'yoy_percent_change_site_eui' in data_dict:
             if data_dict['yoy_percent_change_site_eui'] and abs(data_dict['yoy_percent_change_site_eui']) > 0:
                 if num_line < 5:
-                    if data_dict['yoy_percent_change_site_eui']:
-                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_site_eui']))+"%", pc272)])
-                        num_line += 1
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_site_eui']))+"%", pc272)])
+                    num_line += 1
+        if 'yoy_percent_change_elec' in data_dict:
+            if data_dict['yoy_percent_change_elec'] and abs(data_dict['yoy_percent_change_elec']) > 0:
                 if num_line < 5:
-                    if data_dict['yoy_percent_change_elec']:
-                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_elec']))+"%", pc272)])
-                        num_line += 1
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_elec']))+"%", pc272)])
+                    num_line += 1
+        if 'yoy_percent_change_water' in data_dict:
+            if data_dict['yoy_percent_change_water'] and abs(data_dict['yoy_percent_change_water']) > 0:
                 if num_line < 5:
-                    if ('yoy_percent_change_water' in data_dict) and (data_dict['yoy_percent_change_water']):
-                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in water consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_water']))+"%", pc272)])
-                        num_line += 1
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in water consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_water']))+"%", pc272)])
+                    num_line += 1
+        if 'yoy_percent_change_ng' in data_dict:
+            if data_dict['yoy_percent_change_ng'] and abs(data_dict['yoy_percent_change_ng']) > 0:
                 if num_line < 5:
-                    if data_dict['yoy_percent_change_ng']:
-                        t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in natural gas consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_ng']))+"%", pc272)])
-                        num_line += 1
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in natural gas consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_ng']))+"%", pc272)])
+                    num_line += 1
 
         if num_line < 5:
             if data_dict['percentBetterThanSiteIntensityMedian']:
