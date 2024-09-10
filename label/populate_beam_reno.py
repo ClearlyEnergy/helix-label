@@ -222,7 +222,10 @@ def write_reno_profile_pdf(data_dict, output_pdf_path):
         Story.append(Paragraph('You are NOT required to obtain any of these certificates, however, buildings with them are exempt from the City of Reno Energy and Water Efficiency Benchmarking program.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     else:
         Story.append(Paragraph('According to your ENERGY STAR Score, your building is underperforming. <font name="InterstateLight" color=blue><link href="https://drive.google.com/file/d/1b3X1qbAK6FuDbKbpUx4wre7QhJkw8Cjm/view?usp=sharing">Please view this letter of eligibility</link></font> for a free technical assistance program to help improve your energy efficiency!', pc291, bulletText=UNCHECKED.encode('UTF8')))
-        Story.append(Paragraph('The City of Reno will also be hosting a webinar on August 8th at 11 am regarding this technical assistance program. Please register for the <font name="InterstateLight" color=blue><link href="https://events.gcc.teams.microsoft.com/event/87c7f9a6-730e-4963-9769-f50877cff555@c03159c6-d56c-490c-a793-69f98a7266e6">Decarbonization in a Box: Free Technical Assistance Webinar here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        Story.append(Paragraph('The City of Reno has partnered with Sustainable Real Estate Solutions, Inc. (SRS) to implement the Building Decarbonization in A Box Program. <font name="InterstateLight" color=blue><link href="https://drive.google.com/file/d/1sst_440NfxkFfw3hQorujJ4q6p6n_DIK/view?usp=sharing">Learn More</link></font> about how SRS can help you determine the costs and benefits of installing energy efficient upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+
+
+
 
     Story.append(FrameBreak)
 
@@ -256,7 +259,7 @@ if __name__ == '__main__':
         "energyCostNaturalGas": 66310.05,
         "energyCostPropane": 0,
         "energyCostWood": 0,
-        "energy_star_score": 71.00,
+        "energy_star_score": 80.00,
         "medianSiteIntensity": 176.4,
         "numberOfDcFastEvChargingStations": 0,
         "numberOfLevelOneEvChargingStations": 0,

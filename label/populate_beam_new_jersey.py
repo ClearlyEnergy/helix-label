@@ -186,7 +186,8 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg'])
+    
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -294,7 +295,7 @@ if __name__ == '__main__':
         "yoy_change_score": 10.0,
         "yoy_percent_change_elec": 7.33,
         "yoy_percent_change_ng": 12.1,
-        "yoy_percent_change_site_eui": 14.54,
+        "yoy_percent_change_site_eui": 15.3,
         "zipcode": "89501",
         "elec_util": "Public Service Electric & Gas Co.",
         "gas_util": "Public Service Electric & Gas Co."

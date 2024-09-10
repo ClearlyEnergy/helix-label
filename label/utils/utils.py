@@ -448,6 +448,16 @@ class Highlights():
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_site_eui']))+"%", pc272)])
                     num_line += 1
+            else:
+                if num_line < 5:
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+                    num_line += 1
+ 
+        else:
+            if num_line < 5:
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+                num_line += 1
+            
         if 'yoy_percent_change_elec' in data_dict:
             if data_dict['yoy_percent_change_elec'] and abs(data_dict['yoy_percent_change_elec']) > 0:
                 if num_line < 5:
