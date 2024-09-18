@@ -7,6 +7,7 @@ from label.populate_energy_first_mortgage import write_energy_first_mortgage_pdf
 from label.populate_beam_cambridge import write_cambridge_profile_pdf
 from label.populate_beam_columbia import write_columbia_profile_pdf
 from label.populate_beam_core import write_core_profile_pdf
+from label.populate_beam_grand_rapids import write_grand_rapids_profile_pdf
 from label.populate_beam_indianapolis import write_indianapolis_profile_pdf
 from label.populate_beam_lexington import write_lexington_profile_pdf
 from label.populate_beam_madison import write_madison_profile_pdf
@@ -70,6 +71,7 @@ class Label:
         org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
                            'City of Columbia': write_columbia_profile_pdf,
                            'CORE': write_core_profile_pdf,
+                           'Grand Rapids 2030': write_grand_rapids_profile_pdf,
                            'City of Indianapolis': write_indianapolis_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
                            'New Jersey BPU': write_new_jersey_profile_pdf,
@@ -79,6 +81,7 @@ class Label:
                            'City of Providence': write_providence_profile_pdf,
                            'City of Reno': write_reno_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
+                           'Village of Oak Park': write_oak_park_profile_pdf
                            }
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 

@@ -44,7 +44,7 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
     vthep_logo = IMG_PATH+"/beamlogo.png"
-    im = Image(vthep_logo, 2.5*inch, 0.91*inch)
+    im = Image(vthep_logo, 2.5*inch, 0.91*inch) #max is 1.1 inch height
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -71,6 +71,8 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph(data_dict['city'] + ", " + data_dict["state"] + " " + data_dict["zipcode"], pc14))
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
+    Story.append(Paragraph("PROPERTY TYPE:", pc13))
+    Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
     floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))

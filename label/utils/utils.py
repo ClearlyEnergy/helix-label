@@ -322,7 +322,7 @@ class Scores():
 
 class Highlights():
     
-    def score_box(data_dict, category):
+    def score_box(data_dict, category='ESTAR_SCORE'):
         pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor=colors.white, leading=14)
         pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_XXL, fontName = FONT_BOLD, textColor = colors.white)
         pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_S, fontName = FONT_BOLD, textColor = colors.white, spaceBefore=26)
@@ -331,10 +331,15 @@ class Highlights():
                 text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
                 text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
                 text_c103 = Paragraph('50=median, 75=high performer', pc103)
-            else:
+            elif data_dict['site_total']:
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
                 text_c103 = Paragraph('MMBtu', pc103)
+            elif data_dict['percentBetterThanSiteIntensityMedian']:
+                better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
+                text_c101 = Paragraph("EUI % DIFFERENCE", pc101)
+                text_c102 = Paragraph(str(int(data_dict['percentBetterThanSiteIntensityMedian']))+'%', pc102)               
+                text_c103 = Paragraph(better_worse + " efficient than the national median", pc103)
         elif category == 'GHG':
             if data_dict['totalLocationBasedGHGEmissions']:
                 text_c101 = Paragraph("GREENHOUSE GAS EMISSIONS", pc101)
@@ -359,27 +364,42 @@ class Highlights():
         
         return text_c101, text_c102, text_c103
         
-    def cost_box(data_dict, text_color):
-        pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
-        pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = text_color)
-        if data_dict['energyCost']:
-            if data_dict['energyCost'] >= 1000000.0:
-                pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = colors.white)
-            else:
-                pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
-            text_c231 = Paragraph('${:,.0f}'.format(data_dict['energyCost']), pc231)
-            text_c232 = Paragraph('Annual Energy Cost', pc202)
-        elif ('percentElectricity' in data_dict) and data_dict['percentElectricity']:
-            text_c231 = Paragraph('{:,.0f}%'.format(data_dict['percentElectricity']), pc231)
-            text_c232 = Paragraph('Electrified', pc202)
+    def cost_box(data_dict, text_color, category='COST'):
+        if data_dict['energyCost'] and category == 'COST':
+            metric_str = '${:,.0f}'.format(data_dict['energyCost'])
+            metric_num = data_dict['energyCost']
+            metric_text = 'Annual Energy Cost'
         else:
-            site_total = 0.0
-            for fuel in ['siteEnergyUseElectricityGridPurchase', 'siteEnergyUseNaturalGas', 'siteEnergyUseFuelOil1', 'siteEnergyUseFuelOil2', 'siteEnergyUseFuelOil4', 'siteEnergyUseFuelOil5And6', 'siteEnergyUseDiesel', 'siteEnergyUseKerosene', 'siteEnergyUsePropane', 'siteEnergyUseDistrictSteam', 'siteEnergyUseDistrictHotWater', 'siteEnergyUseDistrictChilledWater', 'siteEnergyUseCoalAnthracite', 'siteEnergyUseCoalBituminous', 'siteEnergyUseCoke', 'siteEnergyUseWood', 'siteEnergyUseOther']:
-                if fuel in data_dict and data_dict[fuel] and data_dict[fuel] > 0.0:
-                    site_total += data_dict[fuel]
-            percent_electric = 100.0 * data_dict['siteEnergyUseElectricityGridPurchase'] / site_total
-            text_c231 = Paragraph('{:,.0f}%'.format(percent_electric), pc231)
-            text_c232 = Paragraph('Electrified', pc202)
+            category = 'ELECTRIFY'
+        if category == 'ELECTRIFY':
+            if ('percentElectricity' in data_dict) and data_dict['percentElectricity']:
+                metric_str = '{:,.0f}%'.format(data_dict['percentElectricity'])
+                metric_num = data_dict['percentElectricity']
+            else:
+                site_total = 0.0
+                for fuel in ['siteEnergyUseElectricityGridPurchase', 'siteEnergyUseNaturalGas', 'siteEnergyUseFuelOil1', 'siteEnergyUseFuelOil2', 'siteEnergyUseFuelOil4', 'siteEnergyUseFuelOil5And6', 'siteEnergyUseDiesel', 'siteEnergyUseKerosene', 'siteEnergyUsePropane', 'siteEnergyUseDistrictSteam', 'siteEnergyUseDistrictHotWater', 'siteEnergyUseDistrictChilledWater', 'siteEnergyUseCoalAnthracite', 'siteEnergyUseCoalBituminous', 'siteEnergyUseCoke', 'siteEnergyUseWood', 'siteEnergyUseOther']:
+                    if fuel in data_dict and data_dict[fuel] and data_dict[fuel] > 0.0:
+                        site_total += data_dict[fuel]
+                metric_num = 100.0 * data_dict['siteEnergyUseElectricityGridPurchase'] / site_total
+                metric_str = '{:,.0f}%'.format(percent_electric)
+            metric_num = data_dict['energyCost']
+            metric_text = 'Electrified'
+        if data_dict['totalLocationBasedGHGEmissions'] and (category == 'GHG'):
+            metric_str = str("{:,}t".format(int(data_dict['totalLocationBasedGHGEmissions'])))
+            metric_num = data_dict['totalLocationBasedGHGEmissions']
+            metric_text = 'Greenhouse Gas Emissions'
+
+        font_size = FONT_LL
+        if metric_num >= 10000000.0:
+            font_size = FONT_H
+        elif metric_num >= 1000000.0 and metric_num < 10000000.0:
+            font_size = FONT_ML
+        elif metric_num >= 100000.0 and metric_num < 1000000.0:
+            font_size = FONT_L
+        pc231 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = font_size, fontName = FONT_BOLD, textColor = colors.white)
+        text_c231 = Paragraph(metric_str, pc231)
+        pc202 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = text_color)
+        text_c232 = Paragraph(metric_text, pc202)
         return text_c231, text_c232
 
     def usage_box(data_dict, category='EU'):
@@ -437,10 +457,13 @@ class Highlights():
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
         if 'ghg' in includes:
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str("{:,}".format(int(data_dict['totalLocationBasedGHGEmissions'])))+" metric tons CO2e", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s <font name="InterstateLight" color=blue><link href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator">greenhouse gas emissions</link></font> were: ' + str("{:,}".format(int(data_dict['totalLocationBasedGHGEmissions'])))+" metric tons CO2e", pc272)])
             num_line += 1
         if 'eui' in includes:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+            num_line += 1
+        if data_dict['energy_star_score'] and ('score' in includes):
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s ENERGY STAR score was: " + str(int(data_dict['energy_star_score']))+"/100", pc272)])
             num_line += 1
 
         if 'yoy_percent_change_site_eui' in data_dict:
@@ -448,12 +471,12 @@ class Highlights():
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_site_eui']))+"%", pc272)])
                     num_line += 1
-            else:
+            elif 'eui' not in includes:
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
                     num_line += 1
  
-        else:
+        elif 'eui' not in includes:
             if num_line < 5:
                 t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
                 num_line += 1
@@ -462,6 +485,14 @@ class Highlights():
             if data_dict['yoy_percent_change_elec'] and abs(data_dict['yoy_percent_change_elec']) > 0:
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_elec']))+"%", pc272)])
+                    num_line += 1
+            else:
+                if num_line < 5:
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
+                    num_line += 1
+        else:
+                if num_line < 5:
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
                     num_line += 1
         if 'yoy_percent_change_water' in data_dict:
             if data_dict['yoy_percent_change_water'] and abs(data_dict['yoy_percent_change_water']) > 0:
@@ -473,7 +504,14 @@ class Highlights():
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Change in natural gas consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_ng']))+"%", pc272)])
                     num_line += 1
-
+            else:
+                if num_line < 5:
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
+                    num_line += 1
+        else:
+                if num_line < 5:
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
+                    num_line += 1
         if num_line < 5:
             if data_dict['percentBetterThanSiteIntensityMedian']:
                 better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'

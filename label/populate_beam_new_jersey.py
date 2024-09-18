@@ -72,7 +72,8 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
-    floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
+
+    floor_area = '{:,.0f}'.format(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
@@ -216,20 +217,24 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     # Take Action Details 
     elec_util_acr_map = {'Atlantic City Electric': 'ACE', 'Jersey Central Power & Light': 'JCP&L', 'Rockland Electric Company': 'RECO', 'Public Service Electric & Gas Co.': 'PSE&G'}
     gas_util_acr_map = {"Public Service Electric & Gas Co.":  'PSE&G', "New Jersey Natural Gas Co.": 'NJNG', "Elizabethtown Gas Co.": 'ETG', "South Jersey Gas Co.": 'SJG'}   
-    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business', "Jersey Central Power & Light": 'https://www.firstenergycorp.com/save_energy/save_energy_new_jersey/for-your-business.html', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj', "Public Service Electric & Gas Co.": 'https://nj.pseg.com/saveenergyandmoney/energysavingpage/energyefficiency?utm_campaign=pseg-portfoliowide-portfoliowide&utm_source=vanity&utm_medium=broad-use'}
-    gas_util_map = {"Public Service Electric & Gas Co.":  'https://nj.pseg.com/saveenergyandmoney/energysavingpage/energyefficiency?utm_campaign=pseg-portfoliowide-portfoliowide&utm_source=vanity&utm_medium=broad-use', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#direct-install', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}   
+    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business/energy-management-program', "Jersey Central Power & Light": 'https://engmgmt.energysavenj.com/', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj/small-business', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/'}
+    gas_util_map = {"Public Service Electric & Gas Co.":  'https://bizsave.pseg.com/energy-management/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#smartstart', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives/energy-management', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings/ci-energy-management'}   
 
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
     Story.append(Paragraph('Find and participate in utility <font name="InterstateLight" color=blue><link href="https://cepfindaprogram.com/">energy efficiency programs</link></font> that may offer rebates, incentives, and financing for energy efficiency projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('For more information on electric energy efficiency programs from ' + elec_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('For more information on gas energy efficiency programs from ' + gas_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    if data_dict['elec_util']:
+        Story.append(Paragraph('For more information on electric energy efficiency programs from ' + elec_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    if data_dict['gas_util']:
+        Story.append(Paragraph('For more information on gas energy efficiency programs from ' + gas_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    if (not data_dict['elec_util']) or (not data_dict['gas_util']):
+        Story.append(Paragraph('For more information on clean energy programs in New Jersey, click <font name="InterstateLight" color=blue><link href="https://njcleanenergy.com/">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    if (not data_dict['elec_util']) and (not data_dict['gas_util']):
+        Story.append(Paragraph('For updates on NJ Clean Energy Programs, sign up for our listserv <font name="InterstateLight" color=blue><link href="https://visitor.r20.constantcontact.com/manage/optin?v=0014Ogu2wnBvl-XKzALEMAxRqHXXZqN78wNyahRWbOreRRMtzq_QzwtCSVAeJ4-mvFkT6N7t6li4b0SEm4afBVp0eglXB6n7Alv_0qga5-fWDg7u8q616oLKq7j72BhCjBqSBTMB0SxXFIZ0OgxRcIkwbL7iZ8-NnO5hV7zANu6Bgs%3D">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/about/how-energy-star-works/energy-star-certification">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-
-#'"Name of Person", <%s>' % ENV["EMAIL"]
+    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/about/how-energy-star-works/energy-star-certification">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -293,13 +298,14 @@ if __name__ == '__main__':
         "year_built": 1987,
         "year_ending": 2023,
         "yoy_change_score": 10.0,
-        "yoy_percent_change_elec": 7.33,
-        "yoy_percent_change_ng": 12.1,
+        "yoy_percent_change_elec": 15.2,
+        "yoy_percent_change_ng": None,
         "yoy_percent_change_site_eui": 15.3,
         "zipcode": "89501",
         "elec_util": "Public Service Electric & Gas Co.",
-        "gas_util": "Public Service Electric & Gas Co."
+        "gas_util": None
     }
+#        "gas_util": "Public Service Electric & Gas Co."
 
     out_file = 'NJ_BEAM_Profile.pdf'
     write_new_jersey_profile_pdf(data_dict, out_file)

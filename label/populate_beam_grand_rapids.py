@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_madison_orlando
+# run with python3 -m label.populate_beam_profile
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,15 +19,15 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(99.0/255),green=(161.0/255),blue=(58.0/255))
+CUSTOM_DTEAL = colors.Color(red=(123.0/255),green=(123.0/255),blue=(123.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_oak_park_profile_pdf(data_dict, output_pdf_path):
-#    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
+def write_grand_rapids_profile_pdf(data_dict, output_pdf_path):
+    is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
 
@@ -43,8 +43,8 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/oak-park-logo-color.png"
-    im = Image(vthep_logo, 1.833*inch, 1.1*inch)
+    vthep_logo = IMG_PATH+"/grand_rapids.png"
+    im = Image(vthep_logo, 1.78*inch, 1.1*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -71,8 +71,6 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph(data_dict['city'] + ", " + data_dict["state"] + " " + data_dict["zipcode"], pc14))
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
-    Story.append(Paragraph("PROPERTY TYPE:", pc13))
-    Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
     floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
@@ -168,7 +166,6 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     
     ## HIGHLIGHTS: CERTIFICATIONS, SOLAR & EV, GENERAL
-
     num_line = 0
     t_cert, num_line = Highlights.cert_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)             
     if t_cert:
@@ -189,7 +186,7 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg', 'eui', 'score'])
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg', 'eui'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -199,7 +196,6 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(achieve_table)      
     Story.append(FrameBreak)
-    
         
     # Take Action Header
     y_offset += 0.0
@@ -219,9 +215,14 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
-    Story.append(Paragraph('<font name="InterstateLight" color=blue><link href="https://www.comed.com/ways-to-save/for-your-business">Conduct an Energy Assessment </link></font>. Free assessments may be available from ComEd. You may also find deeper savings with an audit.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Visit the <font name="InterstateLight" color=blue><link href="https://www.sustainoakpark.com/get-started">Village of Oak Park</link></font>’s website for resources to 1) <font name="InterstateBlack">Improve energy efficiency.</font> Use the results of your assessment or audit to identify upgrades to improve efficiency. Incentives may be available! 2) <font name="InterstateBlack">Reduce your natural gas use by electrifying</font>. Incentives may be available! 3) <font name="InterstateBlack">Generate clean energy</font>. Once your building is efficient and electric, renewable energy is your next step.', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
+    Story.append(Paragraph('Consumers Energy and DTE offer free energy walk-throughs. You can also utilize the <font name="InterstateLight" color=blue><link href=" https://2030districts.org/grandrapids/members/">2030 District Professional Partners</link></font> list to schedule an Energy Assessment.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Use Consumers and DTE incentives for insulation, HVAC, lighting, and water heating.", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Take advantage of federal tax credits or direct pay rebates for energy upgrades.", pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Finance with <font name="InterstateLight" color=blue><link href="https://leanandgreenmi.com/about-pace/how-pace-works/">Property Assessed Clean Energy (PACE)</link></font> program or <font name="InterstateLight" color=blue><link href="https://michigansaves.org/">Michigan Saves</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Join the Michigan <font name="InterstateLight" color=blue><link href="https://michiganbattleofthebuildings.org/">Michigan Battle of the Buildings</link></font> if you are not already a competitor.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('2030 Resources: <font name="InterstateLight" color=blue><link href="https://2030districts.org/grandrapids/2030-energy-carbon-guidebook/">Energy & Carbon Guidebook</link></font>, <font name="InterstateLight" color=blue><link href="https://2030districts.org/grandrapids/energy-audit-resources/">Energy Audit Resources page</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+              
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
@@ -232,24 +233,43 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_oak_park
+# Run with:  python3 -m label.populate_grand_rapids_profile
 if __name__ == '__main__':
-        
-    data_dict = {
-        'street': '1150 Holley Court', 'city': 'Oak Park', 'state': 'IL', 'zipcode': '60302', 
-        'year_built': 	1984, 'year_ending': 2023, 'propGrossFloorArea': 323965.0, 'systemDefinedPropertyType': 'Garage', 
-        'energy_star_score': 75.0, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': -5, 'cons_mmbtu_min': 0,
-        'siteIntensity': 67.8, 'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
-        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
-        'energyCost': 10000.0, 
-        'energyCostElectricityOnsiteSolarWind': 2110.0,
-        'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
-        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
-        'cons_solar': -11000.0,
-        'estar_wh': True,
-        'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': 0.0,
-        'totalLocationBasedGHGEmissions': 150,
-        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-    }
-    out_file = 'Oak_Park_Profile.pdf'
-    write_oak_park_profile_pdf(data_dict, out_file)
+    has_cost = True
+    if has_cost:
+        data_dict = {
+            'street': '123 MAIN ST', 'city': 'MAIN CITY', 'state': 'MA', 'zipcode': '02139', 
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
+            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
+            'siteIntensity': 100.0,
+            'energyCost': 10000.0, 
+            'energyCostElectricityOnsiteSolarWind': 2110.0,
+            'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
+            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
+            'cons_solar': -11000.0,
+            'estar_wh': True,
+            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1, 'yoy_percent_change_ng': 5.7,
+            'totalLocationBasedGHGEmissions': 150,
+            'onSiteRenewableSystemGeneration': 0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+        }
+#no costs data example
+    else:
+        data_dict = {
+            'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'siteEnergyUseElectricityGridPurchase': 10000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 10000.0, 'siteEnergyUseNaturalGas': 5000.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
+            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
+            'siteIntensity': 100.0, 
+            'energyCost': None, 
+            'energyCostElectricityOnsiteSolarWind': None,
+            'energyCostElectricityGridPurchase': None, 'energyCostNaturalGas': None, 'energyCostKerosene': None, 'energyCostPropane': None,
+            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
+            'cons_solar': -11000.0,
+            'estar_wh': True,
+            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
+            'totalLocationBasedGHGEmissions': 150,
+            'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+        }
+    out_file = 'Grand_Rapids_Profile.pdf'
+    write_grand_rapids_profile_pdf(data_dict, out_file)
