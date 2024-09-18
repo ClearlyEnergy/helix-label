@@ -17,6 +17,7 @@ from label.populate_beam_oak_park import write_oak_park_profile_pdf
 from label.populate_beam_orlando import write_orlando_profile_pdf
 from label.populate_beam_providence import write_providence_profile_pdf
 from label.populate_beam_reno import write_reno_profile_pdf
+from label.populate_beam_san_diego import write_san_diego_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
 from label.utils.utils import validate_data_dict
 
@@ -79,6 +80,7 @@ class Label:
                            'City of Orlando': write_orlando_profile_pdf,
                            'City of Portland': write_portland_profile_pdf,
                            'City of Providence': write_providence_profile_pdf,
+                           'City of San Diego': write_san_diego_profile_pdf,
                            'City of Reno': write_reno_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
                            'Village of Oak Park': write_oak_park_profile_pdf
