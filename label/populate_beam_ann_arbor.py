@@ -63,7 +63,7 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
     Story.append(Paragraph("This building energy profile is a summary of data gathered from Energy Star Portfolio Manager. The profile displays metrics and offers insight into annual energy consumption and costs compared to other buildings of the same property type. Additional resources for increased efficiency and cost savings are linked at the bottom of the page.", tf_standard))
-    Story.append(Spacer(1,16))
+    Story.append(Spacer(1,12))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
     Story.append(Paragraph("LOCATION:", pc13))
@@ -74,14 +74,16 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
     floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
-    Story.append(Spacer(1,16))
+    Story.append(Paragraph("PROPERTY TYPE:", pc13))
+    Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
+    Story.append(Spacer(1,12))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("REPORT INFORMATION", pc12))
     Story.append(Paragraph("PROFILE CREATION DATE:", pc13))
     Story.append(Paragraph(datetime.datetime.now().strftime("%m/%d/%Y"),pc14))
     Story.append(Paragraph("REPORTING YEAR:", pc13))
     Story.append(Paragraph(str(data_dict['year_ending']),pc14))
-    Story.append(Spacer(1,16))
+    Story.append(Spacer(1,12))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("Brought to you by the Building Energy Analysis Manager", tf_small))
     Story.append(Image(IMG_PATH+"/beamlogo.png", 1.5*inch, 0.5475*inch))
@@ -186,7 +188,7 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg'])
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg','cost_sqft'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -216,7 +218,7 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('SCHEDULE a <font name="InterstateLight" color=blue><link href=" jculbertson@2030districts.org">review of your building(s)</link></font> with 2030 District Energy Advisors', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('SCHEDULE a review with 2030 District Energy Advisor: <font name="InterstateLight" color=blue><link href="mailto:jculbertson@2030districts.org">Jan Culbertson</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Apply for FREE or Discounted ENERGY AUDITS: <font name="InterstateLight" color=blue><link href="https://2030districts.org/annarbor/energy-audit-application/">A2 W/2030 District</link></font>, <font name="InterstateLight" color=blue><link href="https://www.restartmi.org/services">RESTART</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Apply for FREE Onsite <font name="InterstateLight" color=blue><link href="https://2030districts.org/annarbor/a2-area-commercial-solarize-landing/">Solar Feasibility Study and/or procurement assistance</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('DTE Programs and FREE efficiency assessments: <font name="InterstateLight" color=blue><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started/rebate-programs/The-DTE-Energy-Multifamily-Program.html">Multifamily</link></font>, <font name="InterstateLight" color=blue><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started.html">Commercial</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))

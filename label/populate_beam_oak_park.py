@@ -168,28 +168,17 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
     
     ## HIGHLIGHTS: CERTIFICATIONS, SOLAR & EV, GENERAL
-
     num_line = 0
-    t_cert, num_line = Highlights.cert_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)             
-    if t_cert:
-        ratings_table = Table(t_cert, colWidths = [2.7*inch, 2.7*inch])
-        ratings_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'TOP'),
-            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(ratings_table)   
-        
-    t_solar, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_solar:
-        solar_table = Table(t_solar, colWidths = [5.1*inch])
-        solar_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(solar_table)
+#    t_solar, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+#    if t_solar:
+#        solar_table = Table(t_solar, colWidths = [5.1*inch])
+#        solar_table.setStyle(TableStyle([
+#            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+#            ('BACKGROUND',(0,0),(-1,-1),colors.white),
+#         ]))
+#        Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg', 'eui', 'score'])
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg', 'eui', 'score', 'median'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -219,8 +208,8 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
-    Story.append(Paragraph('<font name="InterstateLight" color=blue><link href="https://www.comed.com/ways-to-save/for-your-business">Conduct an Energy Assessment </link></font>. Free assessments may be available from ComEd. You may also find deeper savings with an audit.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Visit the <font name="InterstateLight" color=blue><link href="https://www.sustainoakpark.com/get-started">Village of Oak Park</link></font>’s website for resources to 1) <font name="InterstateBlack">Improve energy efficiency.</font> Use the results of your assessment or audit to identify upgrades to improve efficiency. Incentives may be available! 2) <font name="InterstateBlack">Reduce your natural gas use by electrifying</font>. Incentives may be available! 3) <font name="InterstateBlack">Generate clean energy</font>. Once your building is efficient and electric, renewable energy is your next step.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('<font name="InterstateBlack">Conduct an Energy Assessment.</font> Free assessments may be available from ComEd for <font name="InterstateLight" color=blue><link href="https://www.comed.com/ways-to-save/for-your-business">commercial</link></font> and <font name="InterstateLight" color=blue><link href="https://www.comed.com/ways-to-save/for-your-business">multifamily</link></font> properties.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Visit the <font name="InterstateLight" color=blue><link href="https://www.sustainoakpark.com/get-started">Village of Oak Park</link></font>’s website for incentives and resources to 1) Improve energy efficiency 2) Reduce your natural gas use by electrifying 3) Generate clean energy.', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]

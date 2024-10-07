@@ -192,7 +192,7 @@ class Charts():
             site_max = round(site_max)
             site_min = round(site_min)
             site_median = round(site_median)
-            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str("{:,}".format(int(data_dict['site_total']))) + " MMBtu",9)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str("{:,}".format(int(data_dict['site_total']/1000.0))) + " MMBtu",9)
 
         if eui:
             wedge_img = IMG_PATH+"/wedgei.png"
@@ -331,15 +331,15 @@ class Highlights():
                 text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
                 text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
                 text_c103 = Paragraph('50=median, 75=high performer', pc103)
+            elif data_dict['percentBetterThanSiteIntensityMedian']:
+                better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
+                text_c101 = Paragraph("EUI % DIFFERENCE", pc101)
+                text_c102 = Paragraph(str(int(abs(data_dict['percentBetterThanSiteIntensityMedian'])))+'%', pc102)               
+                text_c103 = Paragraph(better_worse + " efficient than the national median", pc103)
             elif data_dict['site_total']:
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
                 text_c103 = Paragraph('MMBtu', pc103)
-            elif data_dict['percentBetterThanSiteIntensityMedian']:
-                better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
-                text_c101 = Paragraph("EUI % DIFFERENCE", pc101)
-                text_c102 = Paragraph(str(int(data_dict['percentBetterThanSiteIntensityMedian']))+'%', pc102)               
-                text_c103 = Paragraph(better_worse + " efficient than the national median", pc103)
         elif category == 'GHG':
             if data_dict['totalLocationBasedGHGEmissions']:
                 text_c101 = Paragraph("GREENHOUSE GAS EMISSIONS", pc101)
@@ -452,18 +452,32 @@ class Highlights():
 
         return t_cert, num_line
 
-    def general_commercial(data_dict, font_size, font_normal, font_color, icon, num_line, includes = ['ghg','eui']):
+    def general_commercial(data_dict, font_size, font_normal, font_color, icon, num_line, includes = ['ghg','eui', 'median']):
         t_achieve = []
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
         if 'ghg' in includes:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s <font name="InterstateLight" color=blue><link href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator">greenhouse gas emissions</link></font> were: ' + str("{:,}".format(int(data_dict['totalLocationBasedGHGEmissions'])))+" metric tons CO2e", pc272)])
             num_line += 1
-        if 'eui' in includes:
+        if 'eui' in includes and (num_line < 5):
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
             num_line += 1
-        if data_dict['energy_star_score'] and ('score' in includes):
+        if data_dict['energy_star_score'] and ('score' in includes) and (num_line < 5):
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s ENERGY STAR score was: " + str(int(data_dict['energy_star_score']))+"/100", pc272)])
+            num_line += 1
+
+        if ('median' in includes) and (num_line < 5):
+            if data_dict['percentBetterThanSiteIntensityMedian']:
+                better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(int(abs(data_dict['percentBetterThanSiteIntensityMedian'])))+ "% " + better_worse + " efficient than the property type national median", pc272)])
+                num_line += 1
+            elif data_dict['medianSiteIntensity']:
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" kBtu/sq.ft.", pc272)])
+                num_line += 1
+
+        if ('cost_sqft' in includes) and (num_line < 5):
+            cost_per_sqft = data_dict['energyCost'] / data_dict['propGrossFloorArea']
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s cost per square foot was: " + str("{:.2f}".format(cost_per_sqft)) +" $/sq.ft.", pc272)])
             num_line += 1
 
         if 'yoy_percent_change_site_eui' in data_dict:
@@ -475,7 +489,6 @@ class Highlights():
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
                     num_line += 1
- 
         elif 'eui' not in includes:
             if num_line < 5:
                 t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
@@ -512,14 +525,6 @@ class Highlights():
                 if num_line < 5:
                     t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
                     num_line += 1
-        if num_line < 5:
-            if data_dict['percentBetterThanSiteIntensityMedian']:
-                better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
-                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(abs(data_dict['percentBetterThanSiteIntensityMedian']))+ "% " + better_worse + " efficient than the property type national median", pc272)])
-                num_line += 1
-            elif data_dict['medianSiteIntensity']:
-                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" kBtu/sq.ft.", pc272)])
-                num_line += 1
 
         return t_achieve, num_line
 

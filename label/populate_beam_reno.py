@@ -76,6 +76,8 @@ def write_reno_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
     floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
+    Story.append(Paragraph("PROPERTY TYPE:", pc13))
+    Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("REPORT INFORMATION", pc12))
@@ -216,11 +218,13 @@ def write_reno_profile_pdf(data_dict, output_pdf_path):
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
-    if data_dict['energy_star_score'] and data_dict['energy_star_score'] > 75.0:
+    if (not data_dict['energy_star_score']) or (data_dict['energy_star_score'] >= 50 and data_dict['energy_star_score'] < 75):
+        Story.append(Paragraph('The City of Reno has partnered with Sustainable Real Estate Solutions, Inc. (SRS) to implement the Building Decarbonization in A Box Program. <font name="InterstateLight" color=blue><link href="https://drive.google.com/file/d/1sst_440NfxkFfw3hQorujJ4q6p6n_DIK/view?usp=sharing">Learn More</link></font> about how SRS can help you determine the costs and benefits of installing energy efficient upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    elif data_dict['energy_star_score'] and data_dict['energy_star_score'] >= 75:
         Story.append(Paragraph('You have a high ENERGY STAR Score! This means your building is eligible for an ENERGY STAR Certificate. Learn how to obtain one on the U.S. <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/buildings/building-recognition/building-certification">EPA ENERGY STAR website</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
         Story.append(Paragraph('Other certificates you may be interested in are the <font name="InterstateLight" color=blue><link href="https://www.usgbc.org/leed">LEED Building Certificate</link></font>, the <font name="InterstateLight" color=blue><link href="https://www.ngbs.com/the-ngbs-green-promise">National Green Building Standard Multifamily Building Certificate</link></font>, or a net-zero building certification from the <font name="InterstateLight" color=blue><link href="https://living-future.org/">International Living Future Institute</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
         Story.append(Paragraph('You are NOT required to obtain any of these certificates, however, buildings with them are exempt from the City of Reno Energy and Water Efficiency Benchmarking program.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    else:
+    elif data_dict['energy_star_score'] and data_dict['energy_star_score'] < 50:
         Story.append(Paragraph('According to your ENERGY STAR Score, your building is underperforming. <font name="InterstateLight" color=blue><link href="https://drive.google.com/file/d/1b3X1qbAK6FuDbKbpUx4wre7QhJkw8Cjm/view?usp=sharing">Please view this letter of eligibility</link></font> for a free technical assistance program to help improve your energy efficiency!', pc291, bulletText=UNCHECKED.encode('UTF8')))
         Story.append(Paragraph('The City of Reno has partnered with Sustainable Real Estate Solutions, Inc. (SRS) to implement the Building Decarbonization in A Box Program. <font name="InterstateLight" color=blue><link href="https://drive.google.com/file/d/1sst_440NfxkFfw3hQorujJ4q6p6n_DIK/view?usp=sharing">Learn More</link></font> about how SRS can help you determine the costs and benefits of installing energy efficient upgrades.', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
@@ -259,7 +263,7 @@ if __name__ == '__main__':
         "energyCostNaturalGas": 66310.05,
         "energyCostPropane": 0,
         "energyCostWood": 0,
-        "energy_star_score": 80.00,
+        "energy_star_score": 25.0,
         "medianSiteIntensity": 176.4,
         "numberOfDcFastEvChargingStations": 0,
         "numberOfLevelOneEvChargingStations": 0,

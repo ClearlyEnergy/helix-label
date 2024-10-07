@@ -92,7 +92,7 @@ def write_columbia_profile_pdf(data_dict, output_pdf_path):
     y_offset = 0.04
     # Expected Usage Total
     column_211 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding = 5)    
-    text_c201 = Highlights.usage_box(data_dict)
+    text_c201 = Highlights.usage_box(data_dict,'EU')
     Story.append(text_c201)
     Story.append(FrameBreak)
     
@@ -270,7 +270,7 @@ if __name__ == '__main__':
     "siteEnergyUsePropane": 0,
     "siteEnergyUseWood": 0,
     "siteIntensity": 67.8,
-    "site_total": 7054.2516,
+    "site_total": 7054251.6,
     "state": "CO",
     "street": "1 Center Street",
     "systemDefinedPropertyType": "Hotel",
