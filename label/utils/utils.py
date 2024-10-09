@@ -192,7 +192,7 @@ class Charts():
             site_max = round(site_max)
             site_min = round(site_min)
             site_median = round(site_median)
-            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str("{:,}".format(int(data_dict['site_total']/1000.0))) + " MMBtu",9)
+            txt = flowable_text(min(offset_x-0.5,2), 2.2, "This building's usage: " + str("{:,}".format(int(data_dict['site_total']))) + " MMBtu",9)
 
         if eui:
             wedge_img = IMG_PATH+"/wedgei.png"
