@@ -356,7 +356,7 @@ class Highlights():
         elif category == 'EU':
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
-                text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+                text_c103 = Paragraph('MMBtu', pc103)
         else:
             text_c101 = Paragraph("TBD", pc101)
             text_c102 = Paragraph('value', pc102)
@@ -404,7 +404,7 @@ class Highlights():
 
     def usage_box(data_dict, category='EU'):
         if category == 'EU_kbtu':
-            site_total = data_dict['site_total']
+            site_total = data_dict['site_total'] * 1000.0 #site_total is provided in MMBtu
             if site_total >= 100000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> kBtu </font>", pc201)
@@ -418,7 +418,7 @@ class Highlights():
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_LL, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=10> kBtu </font>", pc201)
         elif category == 'EU':
-            site_total = data_dict['site_total'] / 1000.0 #kBtu to MMBtu
+            site_total = data_dict['site_total']
             if site_total >= 1000000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> MMBtu </font>", pc201)

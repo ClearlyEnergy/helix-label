@@ -43,8 +43,8 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/ann_arbor.png"
-    im = Image(vthep_logo, 1.92*inch, 1.1*inch)
+    vthep_logo = IMG_PATH+"/ann_arbor.jpg"
+    im = Image(vthep_logo, 1.826*inch, 1.1*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
