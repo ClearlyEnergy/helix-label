@@ -365,13 +365,24 @@ class Highlights():
         return text_c101, text_c102, text_c103
         
     def cost_box(data_dict, text_color, category='COST'):
+        metric_num = None
+        if data_dict['totalLocationBasedGHGEmissions'] and (category == 'GHG'):
+            metric_str = str("{:,}t".format(int(data_dict['totalLocationBasedGHGEmissions'])))
+            metric_num = data_dict['totalLocationBasedGHGEmissions']
+            metric_text = 'Greenhouse Gas Emissions'
+
         if data_dict['energyCost'] and category == 'COST':
             metric_str = '${:,.0f}'.format(data_dict['energyCost'])
             metric_num = data_dict['energyCost']
             metric_text = 'Annual Energy Cost'
-        else:
-            category = 'ELECTRIFY'
-        if category == 'ELECTRIFY':
+
+        if data_dict['energyCost'] and category == 'COST_INCLSQFT':
+            metric_str = '${:,.0f}'.format(data_dict['energyCost'])
+            cost_per_sqft = data_dict['energyCost'] / data_dict['propGrossFloorArea']
+            metric_num = data_dict['energyCost']
+            metric_text = 'Annual Energy Cost; ' + '{:,.2f}$/sq.ft.'.format(cost_per_sqft)
+
+        if (category == 'ELECTRIFY') or (metric_num is None) :
             if ('percentElectricity' in data_dict) and data_dict['percentElectricity']:
                 metric_str = '{:,.0f}%'.format(data_dict['percentElectricity'])
                 metric_num = data_dict['percentElectricity']
@@ -384,10 +395,6 @@ class Highlights():
                 metric_str = '{:,.0f}%'.format(percent_electric)
             metric_num = data_dict['energyCost']
             metric_text = 'Electrified'
-        if data_dict['totalLocationBasedGHGEmissions'] and (category == 'GHG'):
-            metric_str = str("{:,}t".format(int(data_dict['totalLocationBasedGHGEmissions'])))
-            metric_num = data_dict['totalLocationBasedGHGEmissions']
-            metric_text = 'Greenhouse Gas Emissions'
 
         font_size = FONT_LL
         if metric_num >= 10000000.0:
@@ -458,6 +465,12 @@ class Highlights():
         
         if 'ghg' in includes:
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s <font name="InterstateLight" color=blue><link href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator">greenhouse gas emissions</link></font> were: ' + str("{:,}".format(int(data_dict['totalLocationBasedGHGEmissions'])))+" metric tons CO2e", pc272)])
+            num_line += 1
+        if 'ghg_elec' in includes and data_dict['local_elec_ghg_emissions'] and (num_line < 5):
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s greenhouse gas emissions from electricity were: ' + str("{:,}".format(int(data_dict['local_elec_ghg_emissions'])))+" mtCO2e", pc272)])
+            num_line += 1
+        if 'ghg_ng' in includes and data_dict['local_ng_ghg_emissions'] and (num_line < 5):
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s greenhouse gas emissions from natural gas were: ' + str("{:,}".format(int(data_dict['local_ng_ghg_emissions'])))+" mtCO2e", pc272)])
             num_line += 1
         if 'eui' in includes and (num_line < 5):
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])

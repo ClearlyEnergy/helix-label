@@ -74,7 +74,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
 
     floor_area = '{:,.0f}'.format(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
-    Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
+    Story.append(Paragraph(floor_area +' sq.ft.',pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("REPORT INFORMATION", pc12))
@@ -105,7 +105,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     y_offset += 0.28
     column_22 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, (y_offset-0.04)*doc.height, showBoundary=0, topPadding=10)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))
-    text_c220 = Paragraph("The building energy use with 0 being a net zero building", tf_standard)
+    text_c220 = Paragraph("Your building is benchmarked against buildings with similar uses.", tf_standard)
     Story.append(text_c220)
     
     # Wedge
@@ -215,26 +215,41 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Take Action Details 
-    elec_util_acr_map = {'Atlantic City Electric': 'ACE', 'Jersey Central Power & Light': 'JCP&L', 'Rockland Electric Company': 'RECO', 'Public Service Electric & Gas Co.': 'PSE&G'}
-    gas_util_acr_map = {"Public Service Electric & Gas Co.":  'PSE&G', "New Jersey Natural Gas Co.": 'NJNG', "Elizabethtown Gas Co.": 'ETG', "South Jersey Gas Co.": 'SJG'}   
-    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business/energy-management-program', "Jersey Central Power & Light": 'https://engmgmt.energysavenj.com/', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj/small-business', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/'}
-    gas_util_map = {"Public Service Electric & Gas Co.":  'https://bizsave.pseg.com/energy-management/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#smartstart', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives/energy-management', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings/ci-energy-management'}   
-
+    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business/energy-management-program', "Jersey Central Power & Light": 'https://engmgmt.energysavenj.com/', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj/small-business.', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/'}
+    gas_util_map = {"Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#smartstart', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}
+                
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
     Story.append(Paragraph('Find and participate in utility <font name="InterstateLight" color=blue><link href="https://cepfindaprogram.com/">energy efficiency programs</link></font> that may offer rebates, incentives, and financing for energy efficiency projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if data_dict['elec_util']:
-        Story.append(Paragraph('For more information on electric energy efficiency programs from ' + elec_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        if data_dict['elec_util'] == 'Atlantic City Electric':
+            Story.append(Paragraph('For more information on electric energy efficiency programs from ACE please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        elif data_dict['elec_util'] == 'Jersey Central Power & Light':
+            Story.append(Paragraph('For more information on electric energy efficiency programs from JCP&L please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        elif data_dict['elec_util'] == 'Rockland Electric Company':
+            Story.append(Paragraph('For more information on electric energy efficiency programs from RECO please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        elif data_dict['elec_util'] == 'Public Service Electric & Gas Co.':
+            Story.append(Paragraph('For more information on electric energy efficiency programs from PSEG please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if data_dict['gas_util']:
-        Story.append(Paragraph('For more information on gas energy efficiency programs from ' + gas_util_acr_map[data_dict['elec_util']] + ' click <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        if data_dict['gas_util'] == "Public Service Electric & Gas Co.":
+            Story.append(Paragraph('For more information on gas energy efficiency programs from PSE&G please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        elif data_dict['gas_util'] == "New Jersey Natural Gas Co.":
+            Story.append(Paragraph('For more information on gas energy efficiency programs from NJNG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        elif data_dict['gas_util'] == "Elizabethtown Gas Co.":
+            Story.append(Paragraph('For more information on gas energy efficiency programs from ETG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        elif data_dict['gas_util'] == "South Jersey Gas Co.":
+            Story.append(Paragraph('For more information on gas energy efficiency programs from SJG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if (not data_dict['elec_util']) or (not data_dict['gas_util']):
-        Story.append(Paragraph('For more information on clean energy programs in New Jersey, click <font name="InterstateLight" color=blue><link href="https://njcleanenergy.com/">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+        Story.append(Paragraph('For more information on clean energy programs in New Jersey, please visit <font name="InterstateLight" color=blue><link href="https://njcleanenergy.com/">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if (not data_dict['elec_util']) and (not data_dict['gas_util']):
         Story.append(Paragraph('For updates on NJ Clean Energy Programs, sign up for our listserv <font name="InterstateLight" color=blue><link href="https://visitor.r20.constantcontact.com/manage/optin?v=0014Ogu2wnBvl-XKzALEMAxRqHXXZqN78wNyahRWbOreRRMtzq_QzwtCSVAeJ4-mvFkT6N7t6li4b0SEm4afBVp0eglXB6n7Alv_0qga5-fWDg7u8q616oLKq7j72BhCjBqSBTMB0SxXFIZ0OgxRcIkwbL7iZ8-NnO5hV7zANu6Bgs%3D">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://www.energystar.gov/about/how-energy-star-works/energy-star-certification">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades <font name="InterstateLight" color=blue><link href="https://urldefense.com/v3/__https:/cepfindaprogram.com/transition.html?id=10__;!!J30X0ZrnC1oQtbA!LL2ig9UvQoa3DMO6p5zsREk0kMQg3ifH8YvjF_ucmeiMfkEJWQSZbK4bPIWRYyoLvj_RZzImuEcgpSvQp4xQLxNu6rpGEmFa$">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://urldefense.com/v3/__https:/www.energystar.gov/buildings/building-recognition/building-certification/how-apply__;!!J30X0ZrnC1oQtbA!LL2ig9UvQoa3DMO6p5zsREk0kMQg3ifH8YvjF_ucmeiMfkEJWQSZbK4bPIWRYyoLvj_RZzImuEcgpSvQp4xQLxNu6s5DMxye$">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+
+
+#Spell out units in the Annual Energy Usage section (people won't understand MMBTU)
 
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -303,7 +318,7 @@ if __name__ == '__main__':
         "yoy_percent_change_site_eui": 15.3,
         "zipcode": "89501",
         "elec_util": "Public Service Electric & Gas Co.",
-        "gas_util": None
+        "gas_util": "South Jersey Gas Co."
     }
 #        "gas_util": "Public Service Electric & Gas Co."
 

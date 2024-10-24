@@ -185,7 +185,7 @@ def write_san_diego_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg'])
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg','ghg_elec','ghg_ng'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -249,6 +249,8 @@ if __name__ == '__main__':
             'estar_wh': True,
             'yoy_percent_change_site_eui': -7.8, 'yoy_percent_change_elec': -0.1, 'yoy_percent_change_ng': 5.7,
             'totalLocationBasedGHGEmissions': 150,
+            'local_elec_ghg_emissions': 75,
+            'local_ng_ghg_emissions': 75,
             'onSiteRenewableSystemGeneration': 0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
         }
 #no costs data example

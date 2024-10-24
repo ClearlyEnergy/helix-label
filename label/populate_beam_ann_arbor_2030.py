@@ -19,13 +19,14 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(157.0/255),green=(196.0/255),blue=(79.0/255))
+CUSTOM_DTEAL = colors.Color(red=(123.0/255),green=(123.0/255),blue=(123.0/255))
+
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
+def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
     is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
@@ -42,8 +43,8 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/a2zero.png"
-    im = Image(vthep_logo, 1.36*inch, 1.1*inch)
+    vthep_logo = IMG_PATH+"/ann_arbor.jpg"
+    im = Image(vthep_logo, 1.826*inch, 1.1*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -236,56 +237,41 @@ def write_ann_arbor_profile_pdf(data_dict, output_pdf_path):
 
 # Run with:  python3 -m label.populate_ann_arbor_profile
 if __name__ == '__main__':
-    data_dict = {
-        "Who is your electricity supplier?": "N/A",
-        "city": "Ann Arbor",
-        "energyCost": 477927.08,
-        "energyCostDiesel": 0,
-        "energyCostDistrictChilledWater": 0,
-        "energyCostDistrictHotWater": 0,
-        "energyCostDistrictSteam": 0,
-        "energyCostElectricityGridPurchase": 448650.85,
-        "energyCostElectricityOnsiteSolarWind": 0,
-        "energyCostFuelOil1": 0,
-        "energyCostFuelOil2": 0,
-        "energyCostFuelOil4": 0,
-        "energyCostFuelOil5And6": 0,
-        "energyCostKerosene": 0,
-        "energyCostNaturalGas": 29276.23,
-        "energyCostPropane": 0,
-        "energyCostWood": 0,
-        "energy_star_score": 71.00,
-        "medianSiteIntensity": 55.2,
-        "numberOfDcFastEvChargingStations": 0,
-        "numberOfLevelOneEvChargingStations": 0,
-        "numberOfLevelTwoEvChargingStations": 0,
-        "onSiteRenewableSystemGeneration": 0,
-        "percentBetterThanSiteIntensityMedian":-14,
-        "percentElectricity": 78.1,
-        "propGrossFloorArea": 320086.00,
-        "siteEnergyUseDiesel": 0,
-        "siteEnergyUseDistrictChilledWater": 0,
-        "siteEnergyUseDistrictHotWater": 0,
-        "siteEnergyUseDistrictSteam": 0,
-        "siteEnergyUseElectricityGridPurchase": 11868761,
-        "siteEnergyUseElectricityGridPurchaseKwh": 3478534.4,
-        "siteEnergyUseFuelOil1": 0,
-        "siteEnergyUseFuelOil2": 0,
-        "siteEnergyUseFuelOil4": 0,
-        "siteEnergyUseFuelOil5And6": 0,
-        "siteEnergyUseKerosene": 0,
-        "siteEnergyUseNaturalGas": 3323649.1,
-        "siteEnergyUsePropane": 0,
-        "siteEnergyUseWood": 0,
-        "siteIntensity": 47.5,
-        "site_total": 7054.2516,
-        "state": "Michigan",
-        "street": "413 E. Huron St.",
-        "systemDefinedPropertyType": "Multifamily Housing",
-        "totalLocationBasedGHGEmissions": 2104.3,
-        "year_built": 2014,
-        "year_ending": 2023,
-        "zipcode": "48104"
-    }
-    out_file = 'Ann_Arbor_Profile.pdf'
-    write_ann_arbor_profile_pdf(data_dict, out_file)
+    has_cost = True
+    if has_cost:
+        data_dict = {
+            'street': '123 MAIN ST', 'city': 'MAIN CITY', 'state': 'MA', 'zipcode': '02139', 
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
+            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
+            'siteIntensity': 100.0,
+            'energyCost': 10000.0, 
+            'energyCostElectricityOnsiteSolarWind': 2110.0,
+            'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
+            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
+            'cons_solar': -11000.0,
+            'estar_wh': True,
+            'yoy_percent_change_site_eui': -7.8, 'yoy_percent_change_elec': -0.1, 'yoy_percent_change_ng': 5.7,
+            'totalLocationBasedGHGEmissions': 150,
+            'onSiteRenewableSystemGeneration': 0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+        }
+#no costs data example
+    else:
+        data_dict = {
+            'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'siteEnergyUseElectricityGridPurchase': 10000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 10000.0, 'siteEnergyUseNaturalGas': 5000.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
+            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
+            'siteIntensity': 100.0, 
+            'energyCost': None, 
+            'energyCostElectricityOnsiteSolarWind': None,
+            'energyCostElectricityGridPurchase': None, 'energyCostNaturalGas': None, 'energyCostKerosene': None, 'energyCostPropane': None,
+            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
+            'cons_solar': -11000.0,
+            'estar_wh': True,
+            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
+            'totalLocationBasedGHGEmissions': 150,
+            'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+        }
+    out_file = 'Ann_Arbor_2030_Profile.pdf'
+    write_ann_arbor_2030_profile_pdf(data_dict, out_file)
