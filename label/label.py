@@ -4,6 +4,8 @@ from label.populate_residential_green_addendum import write_green_addendum_pdf
 from label.populate_vermont_energy_profile import write_vermont_energy_profile_pdf
 from label.populate_massachusetts_home_scorecard import create_pdf
 from label.populate_energy_first_mortgage import write_energy_first_mortgage_pdf
+from label.populate_beam_ann_arbor import write_ann_arbor_profile_pdf
+from label.populate_beam_ann_arbor_2030 import write_ann_arbor_2030_profile_pdf
 from label.populate_beam_cambridge import write_cambridge_profile_pdf
 from label.populate_beam_columbia import write_columbia_profile_pdf
 from label.populate_beam_core import write_core_profile_pdf
@@ -69,7 +71,9 @@ class Label:
         return out_filename
 
     def beam_profile(self, data_dict, object_id, out_path='', out_file='', organization_name=''):
-        org_pdf_mapping = {'City of Cambridge': write_cambridge_profile_pdf,
+        org_pdf_mapping = {'City of Ann Arbor': write_ann_arbor_profile_pdf,
+                           'Ann Arbor and Washtenaw 2030 District': write_ann_arbor_2030_profile_pdf,
+                           'City of Cambridge': write_cambridge_profile_pdf,
                            'City of Columbia': write_columbia_profile_pdf,
                            'CORE': write_core_profile_pdf,
                            'Grand Rapids 2030': write_grand_rapids_profile_pdf,
