@@ -3,10 +3,10 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["helix-label"]
+packages = ["label"]
 
 [project]
-name = "label"
+name = "helix-label"
 version = "1.0.0"
 description = "Green Label PDF Generator"
 authors = [{name = "ClearlyEnergy", email = "info@clearlyenergy.com"}]
