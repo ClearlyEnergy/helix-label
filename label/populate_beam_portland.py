@@ -51,7 +51,7 @@ def write_portland_profile_pdf(data_dict, output_pdf_path):
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE')
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', 'MEDIAN')
     
     Story.append(text_c101)
     Story.append(text_c102)

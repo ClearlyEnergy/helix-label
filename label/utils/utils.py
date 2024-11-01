@@ -322,45 +322,46 @@ class Scores():
 
 class Highlights():
     
-    def score_box(data_dict, category='ESTAR_SCORE'):
+    def score_box(data_dict, category='ESTAR_SCORE', backup_category='EUI'):
         pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor=colors.white, leading=14)
         pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_XXL, fontName = FONT_BOLD, textColor = colors.white)
         pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_S, fontName = FONT_BOLD, textColor = colors.white, spaceBefore=26)
-        if category == 'ESTAR_SCORE':
-            if data_dict['energy_star_score']:
-                text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
-                text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
-                text_c103 = Paragraph('50=median, 75=high performer', pc103)
-            elif data_dict['percentBetterThanSiteIntensityMedian']:
+
+        first_choice = False
+        if (category == 'ESTAR_SCORE') and data_dict['energy_star_score']:
+            text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
+            text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
+            text_c103 = Paragraph('50=median, 75=high performer', pc103)
+            first_choice = True
+        elif (category == 'EUI') and data_dict['siteIntensity']:
+            text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
+            text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
+            text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+            first_choice = True
+        elif (category == 'GHG') and data_dict['totalLocationBasedGHGEmissions']:
+            text_c101 = Paragraph("GREENHOUSE GAS EMISSIONS", pc101)
+            text_c102 = Paragraph(str(int(data_dict['totalLocationBasedGHGEmissions'])), pc102)
+            text_c103 = Paragraph("mt CO2e", pc103)
+            first_choice = True
+
+        if first_choice == False:
+            if (backup_category == 'EUI') and data_dict['siteIntensity']:
+                text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
+                text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
+                text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+            elif (backup_category == 'MEDIAN') and data_dict['percentBetterThanSiteIntensityMedian']:
                 better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
                 text_c101 = Paragraph("EUI % DIFFERENCE", pc101)
                 text_c102 = Paragraph(str(int(abs(data_dict['percentBetterThanSiteIntensityMedian'])))+'%', pc102)               
                 text_c103 = Paragraph(better_worse + " efficient than the national median", pc103)
-            elif data_dict['site_total']:
+            elif (backup_category == 'EU') and data_dict['site_total']:
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
                 text_c103 = Paragraph('MMBtu', pc103)
-        elif category == 'GHG':
-            if data_dict['totalLocationBasedGHGEmissions']:
-                text_c101 = Paragraph("GREENHOUSE GAS EMISSIONS", pc101)
-                text_c102 = Paragraph(str(int(data_dict['totalLocationBasedGHGEmissions'])), pc102)
-                text_c103 = Paragraph("mt CO2e", pc103)
             else:
-                text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
-                text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
-                text_c103 = Paragraph('MMBtu', pc103)
-        elif category == 'EUI':
-                text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
-                text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
-                text_c103 = Paragraph('kBtu/sq.ft.', pc103)
-        elif category == 'EU':
-                text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
-                text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
-                text_c103 = Paragraph('MMBtu', pc103)
-        else:
-            text_c101 = Paragraph("TBD", pc101)
-            text_c102 = Paragraph('value', pc102)
-            text_c103 = Paragraph('range', pc103)
+                text_c101 = Paragraph("TBD", pc101)
+                text_c102 = Paragraph('value', pc102)
+                text_c103 = Paragraph('range', pc103)
         
         return text_c101, text_c102, text_c103
         

@@ -309,7 +309,7 @@ if __name__ == '__main__':
     "siteEnergyUsePropane": 0,
     "siteEnergyUseWood": 0,
     "siteIntensity": 106.5,
-    "site_total": 10638093.6,
+    "site_total": 10.6380936,
     "state": "CO",
     "street": "355 S. Monarch",
     "systemDefinedPropertyType": "Hotel",
