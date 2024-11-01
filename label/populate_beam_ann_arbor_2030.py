@@ -188,7 +188,7 @@ def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg','cost_sqft'])
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -218,12 +218,13 @@ def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('SCHEDULE a review with 2030 District Energy Advisor: <font name="InterstateLight" color=blue><link href="mailto:jculbertson@2030districts.org">Jan Culbertson</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Apply for FREE or Discounted ENERGY AUDITS: <font name="InterstateLight" color=blue><link href="https://2030districts.org/annarbor/energy-audit-application/">A2 W/2030 District</link></font>, <font name="InterstateLight" color=blue><link href="https://www.restartmi.org/services">RESTART</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Apply for FREE Onsite <font name="InterstateLight" color=blue><link href="https://2030districts.org/annarbor/a2-area-commercial-solarize-landing/">Solar Feasibility Study and/or procurement assistance</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('DTE Programs and FREE efficiency assessments: <font name="InterstateLight" color=blue><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started/rebate-programs/The-DTE-Energy-Multifamily-Program.html">Multifamily</link></font>, <font name="InterstateLight" color=blue><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started.html">Commercial</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('ENROLL in <font name="InterstateLight" color=blue><link href="https://solutions.dteenergy.com/dte/en/Products/DTE-CleanVision-MIGreenPower/p/MIGPGREEN">DTE’s Renewable Energy Program</link></font> MIGREENPOWER for +$0.02487/kWh. Access financial assistance: <font name="InterstateLight" color=blue><link href="https://michigansaves.org/">Michigan Saves</link></font> & <font name="InterstateLight" color=blue><link href="https://leanandgreenmi.com/">PACE</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Check out the Buildings and the Inflation Reduction Act Policy <font name="InterstateLight" color=blue><link href="https://www.usgbc.org/resources/buildings-and-inflation-reduction-act-policy-guidebook">Guidebook</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('SCHEDULE a review with 2030 District Energy Advisor: <font name="InterstateLight" color=blue><u><link href="mailto:jculbertson@2030districts.org">Jan Culbertson</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Apply for FREE or Discounted ENERGY AUDITS: <font name="InterstateLight" color=blue><u><link href="https://2030districts.org/annarbor/energy-audit-application/">A2 W/2030 District</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://www.restartmi.org/services">RESTART</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Apply for FREE Onsite <font name="InterstateLight" color=blue><u><link href="https://2030districts.org/annarbor/a2-area-commercial-solarize-landing/">Solar Feasibility Study and/or procurement assistance</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('DTE Programs and FREE efficiency assessments: <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started/rebate-programs/The-DTE-Energy-Multifamily-Program.html">Multifamily</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started.html">Commercial</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('ENROLL in <font name="InterstateLight" color=blue><u><link href="https://solutions.dteenergy.com/dte/en/Products/DTE-CleanVision-MIGreenPower/p/MIGPGREEN">DTE’s Renewable Energy Program</link></u></font> MIGREENPOWER for +$0.02487/kWh', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Access financial assistance: <font name="InterstateLight" color=blue><u><link href="https://michigansaves.org/">Michigan Saves</link></u></font> & <font name="InterstateLight" color=blue><u><link href="https://leanandgreenmi.com/">PACE</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8'))) 
+    Story.append(Paragraph('Check out the Buildings and the Inflation Reduction Act Policy <font name="InterstateLight" color=blue><u><link href="https://www.usgbc.org/resources/buildings-and-inflation-reduction-act-policy-guidebook">Guidebook</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
               
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -235,13 +236,13 @@ def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_ann_arbor_profile
+# Run with:  python3 -m label.populate_ann_arbor_2030_profile
 if __name__ == '__main__':
     has_cost = True
     if has_cost:
         data_dict = {
             'street': '123 MAIN ST', 'city': 'MAIN CITY', 'state': 'MA', 'zipcode': '02139', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'year_built': 1895, 'year_ending': 2023, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
             'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
             'siteIntensity': 100.0,
@@ -259,7 +260,7 @@ if __name__ == '__main__':
     else:
         data_dict = {
             'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'year_built': 1895, 'year_ending': 2023, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
             'siteEnergyUseElectricityGridPurchase': 10000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 10000.0, 'siteEnergyUseNaturalGas': 5000.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
             'siteIntensity': 100.0, 

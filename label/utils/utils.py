@@ -380,7 +380,7 @@ class Highlights():
             metric_str = '${:,.0f}'.format(data_dict['energyCost'])
             cost_per_sqft = data_dict['energyCost'] / data_dict['propGrossFloorArea']
             metric_num = data_dict['energyCost']
-            metric_text = 'Annual Energy Cost; ' + '{:,.2f}$/sq.ft.'.format(cost_per_sqft)
+            metric_text = 'Annual Energy Cost; ' + '${:,.2f}/SF'.format(cost_per_sqft)
 
         if (category == 'ELECTRIFY') or (metric_num is None) :
             if ('percentElectricity' in data_dict) and data_dict['percentElectricity']:
