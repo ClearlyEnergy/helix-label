@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_beam_profile
+# run with python3 -m label.populate_beam_detroit_2030
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,14 +19,14 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(123.0/255),green=(123.0/255),blue=(123.0/255))
+CUSTOM_DTEAL = colors.Color(red=(128.0/255),green=(128.0/255),blue=(128.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_detroit_profile_pdf(data_dict, output_pdf_path):
+def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
@@ -43,14 +43,14 @@ def write_detroit_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/grand_rapids.png"
-    im = Image(vthep_logo, 1.78*inch, 1.1*inch)
+    vthep_logo = IMG_PATH+"/detroit_2030_logo.png"
+    im = Image(vthep_logo, 1.826*inch, 1.1*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE')
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', 'EUI')
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -120,7 +120,7 @@ def write_detroit_profile_pdf(data_dict, output_pdf_path):
     
     # Cost
     y_offset += 0.02
-    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL)
+    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL, 'COST_INCLSQFT')
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
     column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     Story.append(text_c231)
@@ -216,13 +216,12 @@ def write_detroit_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Consumers Energy and DTE offer free energy walk-throughs. You can also utilize the <font name="InterstateLight" color=blue><link href=" https://2030districts.org/grandrapids/members/">2030 District Professional Partners</link></font> list to schedule an Energy Assessment.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Use Consumers and DTE incentives for insulation, HVAC, lighting, and water heating.", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Take advantage of federal tax credits or direct pay rebates for energy upgrades.", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Finance with <font name="InterstateLight" color=blue><link href="https://leanandgreenmi.com/about-pace/how-pace-works/">Property Assessed Clean Energy (PACE)</link></font> program or <font name="InterstateLight" color=blue><link href="https://michigansaves.org/">Michigan Saves</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Join the Michigan <font name="InterstateLight" color=blue><link href="https://michiganbattleofthebuildings.org/">Michigan Battle of the Buildings</link></font> if you are not already a competitor.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('2030 Resources: <font name="InterstateLight" color=blue><link href="https://2030districts.org/grandrapids/2030-energy-carbon-guidebook/">Energy & Carbon Guidebook</link></font>, <font name="InterstateLight" color=blue><link href="https://2030districts.org/grandrapids/energy-audit-resources/">Energy Audit Resources page</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-              
+    Story.append(Paragraph('SCHEDULE a review with 2030 District Energy Advisor: <font name="InterstateLight" color=blue><u><link href="mailto:kkuneman@2030districts.org">Kendal Kuneman</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Enroll in the <font name="InterstateLight" color=blue><u><link href="https://energyusage.dteenergy.com/static/dte/assets/userguides/DTE_userGuide_buildingManager.pdf">DTE Data Hub</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://solutions.dteenergy.com/dte/en/Products/DTE-CleanVision-MIGreenPower/p/MIGPGREEN">MIGreenPower</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Contact <font name="InterstateLight" color=blue><u><link href="https://detroitmi.gov/departments/water-and-sewerage-department/dwsd-customer-service/customer-portal">DWSD</link></u></font> for automated water data', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Apply for free or discounted energy audits: <font name="InterstateLight" color=blue><u><link href="https://www.restartmi.org/">RESTART @ LTU</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph("Explore the City of Detroit's" + '<font name="InterstateLight" color=blue><u><link href="https://detroitmi.gov/government/mayors-office/office-sustainability/energy-and-water-benchmarking-ordinance"> Energy and Water Benchmarking Ordinance</link></u></font> for automated water data', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Explore the <font name="InterstateLight" color=blue><u><link href="https://www.whitehouse.gov/cleanenergy/inflation-reduction-act-guidebook/">Inflation Reduction Act guidebook </link></u></font> for automated water data', pc291, bulletText=UNCHECKED.encode('UTF8')))              
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
@@ -238,8 +237,8 @@ if __name__ == '__main__':
     has_cost = True
     if has_cost:
         data_dict = {
-            'street': '123 MAIN ST', 'city': 'MAIN CITY', 'state': 'MA', 'zipcode': '02139', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'street': '123 MAIN ST', 'city': 'DETROIT', 'state': 'MI', 'zipcode': '48212', 
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 34, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
             'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
             'siteIntensity': 100.0,
@@ -256,7 +255,7 @@ if __name__ == '__main__':
 #no costs data example
     else:
         data_dict = {
-            'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
+            'street': '123 MAIN ST', 'city': 'DETROIT', 'state': 'MI', 'zipcode': '48212', 
             'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
             'siteEnergyUseElectricityGridPurchase': 10000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 10000.0, 'siteEnergyUseNaturalGas': 5000.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
@@ -271,5 +270,5 @@ if __name__ == '__main__':
             'totalLocationBasedGHGEmissions': 150,
             'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
         }
-    out_file = 'Grand_Rapids_Profile.pdf'
-    write_detroit_profile_pdf(data_dict, out_file)
+    out_file = 'Detroit_2030_Profile.pdf'
+    write_detroit_2030_profile_pdf(data_dict, out_file)
