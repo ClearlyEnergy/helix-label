@@ -175,9 +175,9 @@ class Charts():
             site_min = float(espm_score_mapping['100']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
             site_median = float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping[str(int(min(data_dict['energy_star_score'],99.0)))])
         else:
-            site_max = float(espm_score_mapping['1']) * data_dict['site_total'] / float(espm_score_mapping['50'])
+            site_median = data_dict['medianSiteIntensity'] * data_dict['site_total'] / data_dict['siteIntensity']
+            site_max = max(float(espm_score_mapping['1']) * site_median / float(espm_score_mapping['50']),data_dict['site_total'])
             site_min = 0.0
-            site_median = float(espm_score_mapping['50']) * data_dict['site_total'] / float(espm_score_mapping['50'])
 
         offset_x = 0.53+data_dict['site_total']/site_max*(4.75-0.53)
         max_to_med = site_max / site_median
