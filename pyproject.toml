@@ -31,7 +31,7 @@ dependencies = [
 "pdfrw==0.4",
 "peppercorn==0.6",
 "Pillow==11.0.0",
-"python-dateutil==2.9.0.post0",
+"python-dateutil>=2.7.3",
 "reportlab==4.2.5",
 "s3transfer==0.10.4",
 "six==1.16.0"
