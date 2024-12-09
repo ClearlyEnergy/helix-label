@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/**"
       - ".releaserc.json"
+      - ".pyproject.toml"
 jobs:
 
   semantic-release:
