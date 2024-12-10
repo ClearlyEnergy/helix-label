@@ -11,7 +11,7 @@ version = "1.0.0"
 description = "Green Label PDF Generator"
 authors = [{name = "ClearlyEnergy", email = "info@clearlyenergy.com"}]
 license = {text = "MIT"}
-requires-python = ">=3.5"
+requires-python = ">=3.9"
 readme = { file = "README.rst", content-type = "text/x-rst"}
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -31,7 +31,7 @@ dependencies = [
 "pdfrw==0.4",
 "peppercorn==0.6",
 "Pillow==10.0.0",
-"python-dateutil==2.7.3",
+"python-dateutil>=2.7.3",
 "reportlab==4.0.5",
 "s3transfer==0.6.2",
 "six==1.16.0"
