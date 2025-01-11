@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_beam_detroit_2030
+# run with python3 -m label.populate_beam_nyc
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,14 +19,14 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(128.0/255),green=(128.0/255),blue=(128.0/255))
+CUSTOM_DTEAL = colors.Color(red=(10.0/255),green=(87.0/255),blue=(150.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
+def write_nyc_profile_pdf(data_dict, output_pdf_path):
     is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
@@ -43,14 +43,14 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/detroit_2030_logo.png"
-    im = Image(vthep_logo, 1.826*inch, 1.1*inch)
+    vthep_logo = IMG_PATH+"/nyc.png"
+    im = Image(vthep_logo, 2.5*inch, 0.91*inch) #max is 1.1 inch height
     Story.append(im)
     Story.append(FrameBreak)
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', 'EUI')
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'GHG')
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -71,6 +71,8 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph(data_dict['city'] + ", " + data_dict["state"] + " " + data_dict["zipcode"], pc14))
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
+    Story.append(Paragraph("PROPERTY TYPE:", pc13))
+    Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
     floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
@@ -120,7 +122,7 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     
     # Cost
     y_offset += 0.02
-    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL, 'COST_INCLSQFT')
+    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL)
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
     column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     Story.append(text_c231)
@@ -186,7 +188,7 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['ghg', 'eui'])
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -196,6 +198,7 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(achieve_table)      
     Story.append(FrameBreak)
+    
         
     # Take Action Header
     y_offset += 0.0
@@ -216,14 +219,12 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Schedule a review with a Detroit 2030 District Energy Advisor <font name="InterstateLight" color=blue><u><link href="https://detroit-2030district.beam-portal.org/helpdesk/tickets/submit/135/">here</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Explore the City of Detroit's" + '<font name="InterstateLight" color=blue><u><link href="https://detroitmi.gov/government/mayors-office/office-sustainability/energy-and-water-benchmarking-ordinance"> Energy and Water Benchmarking Ordinance</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Apply for free energy audits: <font name="InterstateLight" color=blue><u><link href="https://www.restartmi.org/">RESTART @ LTU</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://iac.msu.edu/">MSU IAC</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://dteenergy.com/smallbusiness">DTE Business</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('DTE Programs: <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started.html">Commercial</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started/rebate-programs/The-DTE-Energy-Multifamily-Program.html">Multifamily</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://solutions.dteenergy.com/dte/en/Products/DTE-CleanVision-MIGreenPower/p/MIGPGREEN">MIGreenPower</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/service-request/pev/plug-in-electric-vehicles-pev.html">Business EV</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Access financial assistance: <font name="InterstateLight" color=blue><u><link href="https://michigansaves.org/">Michigan Saves</link></u></font> & <font name="InterstateLight" color=blue><u><link href="https://leanandgreenmi.com/">PACE</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Contact <font name="InterstateLight" color=blue><u><link href="https://app.smartsheet.com/b/form/593f0c5631d241e687533470e986a1fc">Detroit Water and Sewerage Department</link></u></font> for automated water data', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Explore the <font name="InterstateLight" color=blue><u><link href="https://www.whitehouse.gov/cleanenergy/inflation-reduction-act-guidebook/">Inflation Reduction Act guidebook </link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))              
-
+    Story.append(Paragraph('<font name="InterstateLight" color=blue><u><link href="https://accelerator.nyc/contact">Contact us</link></u></font> for personalized technical assistance from a dedicated account manager', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Access <font name="InterstateLight" color=blue><u><link href="https://accelerator.nyc/trainings">free trainings</link></u></font>on building decarbonization strategies, and compliance', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Find <font name="InterstateLight" color=blue><u><link href="https://accelerator.nyc/financing">financing options</link></u></font> for energy efficiency, electrification, and clean energy projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Get started with the <font name="InterstateLight" color=blue><u><link href="https://accelerator.nyc/contact">BEAM Optimizer</link></u></font> to visualize your path to LL97 compliance based on the timing of investments, budget', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Attend an <font name="InterstateLight" color=blue><u><link href="https://accelerator.nyc/events"> upcoming event</link></u></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+                        
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
@@ -234,43 +235,23 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_detroit_profile
+# Run with:  python3 -m label.populate_beam_profile
 if __name__ == '__main__':
-    has_cost = True
-    if has_cost:
-        data_dict = {
-            'street': '123 MAIN ST', 'city': 'DETROIT', 'state': 'MI', 'zipcode': '48212', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 34, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-            'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
-            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
-            'siteIntensity': 100.0,
-            'energyCost': 10000.0, 
-            'energyCostElectricityOnsiteSolarWind': 2110.0,
-            'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
-            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
-            'cons_solar': -11000.0,
-            'estar_wh': True,
-            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1, 'yoy_percent_change_ng': 5.7,
-            'totalLocationBasedGHGEmissions': 150,
-            'onSiteRenewableSystemGeneration': 0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-        }
-#no costs data example
-    else:
-        data_dict = {
-            'street': '123 MAIN ST', 'city': 'DETROIT', 'state': 'MI', 'zipcode': '48212', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-            'siteEnergyUseElectricityGridPurchase': 10000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 10000.0, 'siteEnergyUseNaturalGas': 5000.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
-            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
-            'siteIntensity': 100.0, 
-            'energyCost': None, 
-            'energyCostElectricityOnsiteSolarWind': None,
-            'energyCostElectricityGridPurchase': None, 'energyCostNaturalGas': None, 'energyCostKerosene': None, 'energyCostPropane': None,
-            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
-            'cons_solar': -11000.0,
-            'estar_wh': True,
-            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
-            'totalLocationBasedGHGEmissions': 150,
-            'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
-        }
-    out_file = 'Detroit_2030_Profile.pdf'
-    write_detroit_2030_profile_pdf(data_dict, out_file)
+    data_dict = {
+        'street': '1 TIMES SQUARE', 'city': 'NEW YORK CITY', 'state': 'NY', 'zipcode': '10001', 
+        'year_built': 1950, 'year_ending': 2024, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+        'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 0.0,
+        'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
+        'siteIntensity': 100.0,
+        'energyCost': 10000.0, 
+        'energyCostElectricityOnsiteSolarWind': 2110.0,
+        'energyCostElectricityGridPurchase': 6000.0, 'energyCostNaturalGas': 4000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 0000.0,
+        'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
+        'cons_solar': -11000.0,
+        'estar_wh': True,
+        'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
+        'totalLocationBasedGHGEmissions': 1500,
+        'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+    }
+    out_file = 'NYC_Profile.pdf'
+    write_nyc_profile_pdf(data_dict, out_file)

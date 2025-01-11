@@ -215,8 +215,8 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Take Action Details 
-    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business/energy-management-program', "Jersey Central Power & Light": 'https://engmgmt.energysavenj.com/', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj/small-business.', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/'}
-    gas_util_map = {"Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#smartstart', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}
+    elec_util_map = {"Atlantic City Electric": 'https://www.atlanticcityelectric.com/ways-to-save/for-your-business', "Jersey Central Power & Light": 'https://www.firstenergycorp.com/save_energy/save_energy_new_jersey/for-your-business.html', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/'}
+    gas_util_map = {"Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses/', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}
                 
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        

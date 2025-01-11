@@ -122,7 +122,7 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     
     # Cost
     y_offset += 0.02
-    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL)
+    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL, 'GHG')
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
     column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     Story.append(text_c231)
