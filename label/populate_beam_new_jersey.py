@@ -234,13 +234,14 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
             Story.append(Paragraph('For more information on electric energy efficiency programs from PSEG please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if data_dict['gas_util']:
         if data_dict['gas_util'] == "Public Service Electric & Gas Co.":
-            Story.append(Paragraph('For more information on gas energy efficiency programs from PSE&G please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+            Story.append(Paragraph('For more information on gas energy efficiency programs from PSE&G please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['gas_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['gas_util'] == "New Jersey Natural Gas Co.":
-            Story.append(Paragraph('For more information on gas energy efficiency programs from NJNG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+            Story.append(Paragraph('For more information on gas energy efficiency programs from NJNG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['gas_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['gas_util'] == "Elizabethtown Gas Co.":
-            Story.append(Paragraph('For more information on gas energy efficiency programs from ETG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+            Story.append(Paragraph('For more information on gas energy efficiency programs from ETG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['gas_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['gas_util'] == "South Jersey Gas Co.":
-            Story.append(Paragraph('For more information on gas energy efficiency programs from SJG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+            print(gas_util_map[data_dict['gas_util']])
+            Story.append(Paragraph('For more information on gas energy efficiency programs from SJG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['gas_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if (not data_dict['elec_util']) or (not data_dict['gas_util']):
         Story.append(Paragraph('For more information on clean energy programs in New Jersey, please visit <font name="InterstateLight" color=blue><link href="https://njcleanenergy.com/">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if (not data_dict['elec_util']) and (not data_dict['gas_util']):
