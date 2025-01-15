@@ -223,7 +223,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
     Story.append(Paragraph('Find and participate in utility <font name="InterstateLight" color=blue><link href="https://cepfindaprogram.com/">energy efficiency programs</link></font> that may offer rebates, incentives, and financing for energy efficiency projects', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    if data_dict['elec_util']:
+    if 'elec_util' in data_dict:
         if data_dict['elec_util'] == 'Atlantic City Electric':
             Story.append(Paragraph('For more information on electric energy efficiency programs from ACE please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['elec_util'] == 'Jersey Central Power & Light':
@@ -232,7 +232,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
             Story.append(Paragraph('For more information on electric energy efficiency programs from RECO please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['elec_util'] == 'Public Service Electric & Gas Co.':
             Story.append(Paragraph('For more information on electric energy efficiency programs from PSEG please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['elec_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    if data_dict['gas_util']:
+    if 'gas_util' in data_dict:
         if data_dict['gas_util'] == "Public Service Electric & Gas Co.":
             Story.append(Paragraph('For more information on gas energy efficiency programs from PSE&G please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['gas_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['gas_util'] == "New Jersey Natural Gas Co.":
@@ -242,9 +242,9 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
         elif data_dict['gas_util'] == "South Jersey Gas Co.":
             print(gas_util_map[data_dict['gas_util']])
             Story.append(Paragraph('For more information on gas energy efficiency programs from SJG please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['gas_util']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    if (not data_dict['elec_util']) or (not data_dict['gas_util']):
+    if ('elec_util' not in data_dict) or ('gas_util' not in data_dict):
         Story.append(Paragraph('For more information on clean energy programs in New Jersey, please visit <font name="InterstateLight" color=blue><link href="https://njcleanenergy.com/">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    if (not data_dict['elec_util']) and (not data_dict['gas_util']):
+    if ('elec_util' not in data_dict) and ('gas_util' not in data_dict):
         Story.append(Paragraph('For updates on NJ Clean Energy Programs, sign up for our listserv <font name="InterstateLight" color=blue><link href="https://visitor.r20.constantcontact.com/manage/optin?v=0014Ogu2wnBvl-XKzALEMAxRqHXXZqN78wNyahRWbOreRRMtzq_QzwtCSVAeJ4-mvFkT6N7t6li4b0SEm4afBVp0eglXB6n7Alv_0qga5-fWDg7u8q616oLKq7j72BhCjBqSBTMB0SxXFIZ0OgxRcIkwbL7iZ8-NnO5hV7zANu6Bgs%3D">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades <font name="InterstateLight" color=blue><link href="https://urldefense.com/v3/__https:/cepfindaprogram.com/transition.html?id=10__;!!J30X0ZrnC1oQtbA!LL2ig9UvQoa3DMO6p5zsREk0kMQg3ifH8YvjF_ucmeiMfkEJWQSZbK4bPIWRYyoLvj_RZzImuEcgpSvQp4xQLxNu6rpGEmFa$">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://urldefense.com/v3/__https:/www.energystar.gov/buildings/building-recognition/building-certification/how-apply__;!!J30X0ZrnC1oQtbA!LL2ig9UvQoa3DMO6p5zsREk0kMQg3ifH8YvjF_ucmeiMfkEJWQSZbK4bPIWRYyoLvj_RZzImuEcgpSvQp4xQLxNu6s5DMxye$">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
