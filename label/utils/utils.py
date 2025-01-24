@@ -343,6 +343,11 @@ class Highlights():
             text_c102 = Paragraph(str(int(data_dict['totalLocationBasedGHGEmissions'])), pc102)
             text_c103 = Paragraph("mt CO2e", pc103)
             first_choice = True
+        elif category == 'EU':
+            text_c101 = Paragraph("ENERGY USE", pc101)
+            text_c102 = Paragraph(str("{:,}".format(int(data_dict['site_total']))), pc102)
+            text_c103 = Paragraph("MMBtu", pc103)
+            first_choice = True
 
         if first_choice == False:
             if (backup_category == 'EUI') and data_dict['siteIntensity']:
@@ -428,13 +433,13 @@ class Highlights():
         elif category == 'EU':
             site_total = data_dict['site_total']
             if site_total >= 1000000.0:
-                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> MMBtu </font>", pc201)
             elif site_total >= 100000.0:
-                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=6> MMBtu </font>", pc201)
             elif site_total < 100000.0 and site_total > 10000.0:
-                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
+                pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = colors.white)
                 text_c201 = Paragraph(str("{:,}".format(int(site_total)))+"<font size=8> MMBtu </font>", pc201)
             elif site_total < 10000.0 and site_total > 1000.0:
                 pc201 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_L, fontName = FONT_BOLD, textColor = colors.white)
