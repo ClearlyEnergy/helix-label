@@ -113,18 +113,21 @@ class Label:
 
     def remotely_ipc_pdf(self, data_dict, aws_bucket):
         """
-        Produce a PDF report for IPC's SMARTE-Loan programs
+        Produce a PDF report for IPC's SMARTE-Loan programs.
         
-        :param dict data_dict: The data required to construct the IPC PDF
-        :param str aws_bucket: The destination S3 bucket
-        :return str out_filename: The destination on S3 where file was saved
+        :param dict data_dict: The data required to construct the IPC PDF.
+        :param str aws_bucket: The destination S3 bucket for the resultant PDF file.
+        :return str out_filename: The destination on S3 where resultant file was saved.
         """
 
+        if 'ce_api_id' not in data_dict:
+            raise ValueError('ce_api_id required in data_dict in order to write result file.')
+        
         # data_dict contains file paths pointing to images on S3
         # First, download these to the temporary directory.
-        qas = data_dict['question_answers']
-        for qa in qas:
-            s3_filepaths = qa['s3_image_filepaths']
+        question_answers = data_dict.get('question_answers', [])
+        for qa in question_answers:
+            s3_filepaths = qa.get('s3_image_filepaths', [])
             qa['local_image_filepaths'] = []
             for s3_fp in s3_filepaths:
                 obj = self.s3_resource.Object('ce-pictures', s3_fp)

@@ -139,13 +139,12 @@ def get_date_string(answer):
         return datetime.datetime.fromisoformat(answer).date().strftime("%m/%d/%Y")
     except (ValueError, TypeError):
         return None
-            
 
 # Run with:  python3 -m label.populate_remotely_ipc
 if __name__ == '__main__':
     question_answers = [
         {
-            # This results in a text input
+            # This results in a checkbox (multi-select) input
             "question_group": "Installations",
             "question": "Select all systems which have been installed for this home.",
             "options": ["Air Sealing", "Air source heat pump", "Central air conditioning", "Ductless mini split heat pump", "Ducts", "Ground water source heat pump", "Heat pump hot water heater", "Heating system", "High efficiency insulation", "Indirect hot water heater", " Other hot water heaters", "Smart meters", "Window retrofits"],
