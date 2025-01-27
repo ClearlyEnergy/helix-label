@@ -36,9 +36,9 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
 
     Story=[]
     #Standard text formats
-    tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14)  
+    tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14, spaceBefore = 4, spaceAfter = 4)  
     tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 14)  
-    tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 12, spaceAfter = 12)  
+    tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 4, spaceAfter = 4)  
     tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
     tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
     tf_small_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
@@ -104,15 +104,15 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
 
             date_answer = get_date_string(answer)
             if date_answer:
-                Story.append(Paragraph(date_answer, pc202))
+                Story.append(Paragraph(date_answer, tf_small))
             elif isinstance(answer, str):
-                Story.append(Paragraph(answer, pc202))
+                Story.append(Paragraph(answer, tf_small))
             elif isinstance(answer, list):
                 options = qa['options'] if qa['options'] else answer
                 for a in options:
                     bullet = CHECK.encode('UTF8') if a in answer else '   '
                     # Factor out code that formats scalar quantities
-                    Story.append(Paragraph(a, pc202, bulletText=bullet))
+                    Story.append(Paragraph(a, tf_small, bulletText=bullet))
                     
         Story.append(Spacer(1,16))
 
