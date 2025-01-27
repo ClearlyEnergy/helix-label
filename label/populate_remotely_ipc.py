@@ -3,10 +3,10 @@
 # run with python3 -m label.populate_remotely_ipc
 
 import os
-from reportlab.lib.enums import TA_RIGHT, TA_LEFT
+from reportlab.lib.enums import TA_LEFT
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -21,29 +21,23 @@ FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
 CUSTOM_DTEAL = colors.Color(red=(243.0/255),green=(243.0/255),blue=(243.0/255))
 
-pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
-pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
-#pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
+pdfmetrics.registerFont(TTFont('InterstateLight', FONT_PATH+'/InterstateLight.ttf'))
+pdfmetrics.registerFont(TTFont('InterstateBlack', FONT_PATH+'/InterstateBlack.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
 def write_remotely_ipc_pdf(data_dict, output_pdf_path):
-    """ 
+    """
     Create a PDF file of data submitted for IPC programs
     TODO: describe data_dict
     """
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
-    # styles = getSampleStyleSheet()
 
     Story=[]
     #Standard text formats
     title_font = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_XL, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 20, spaceBefore = 20, spaceAfter = 20)
     tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14, spaceBefore = 4, spaceAfter = 4)
-    # tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 14)
     tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 4, spaceAfter = 4, bulletIndent = 12, leftIndent = 12)  
-    # tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    # tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    # tf_small_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    
+
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
@@ -68,8 +62,6 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph(data_dict['city'] + ", " + data_dict["state"] + " " + data_dict["zipcode"], pc14))
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
-    # Story.append(Paragraph("PROPERTY TYPE:", pc13))
-    # Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("REPORT INFORMATION", pc12))
@@ -87,7 +79,6 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     column_20 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, doc.height, showBoundary=0, topPadding=10)    
     Story.append(Paragraph(f"{program_display_name}: Report", title_font))
     pc201 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceAfter=6)
-    # pc202 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
     question_answers = data_dict.get('question_answers', [])
     if not isinstance(question_answers, list):
         raise ValueError('question_answers must be a list')
@@ -106,17 +97,15 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
         for qa in qas:
             Story.append(Paragraph(qa['question'], tf_standard))
             answer = qa.get('answer', 'No answer provided')
-
             date_answer = get_date_string(answer)
             if date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
-            elif isinstance(answer, str) or isinstance(answer, int) or isinstance(answer, float):
+            elif isinstance(answer, (str, int, float)):
                 Story.append(Paragraph(str(answer), tf_small))
             elif isinstance(answer, list):
                 options = qa.get('options', answer)
                 for a in options:
                     bullet = CHECK.encode('UTF8') if a in answer else '   '
-                    # Factor out code that formats scalar quantities
                     Story.append(Paragraph(a, tf_small, bulletText=bullet))
                     
             images = qa.get('local_image_filepaths', [])
@@ -126,20 +115,18 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
                     Story.append(im)
                     
         Story.append(Spacer(1,16))
-        Image(vthep_logo, 2.5*inch, 0.675*inch)
 
-### BUILD PAGE
+    # BUILD PAGE
     page_1_frames = [column_10, column_12, column_20]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     doc.addPageTemplates(templates)
-    # style = styles["Normal"]
 
-    #populate story with paragraphs    
+    #populate story with paragraphs
     doc.build(Story)
-    
+
 def get_date_string(answer):
-    """ Get a string from an answer if the answer is an ISO date string """
+    """ Get a string from an answer if the answer is an ISO8601 date string """
     try:
         return datetime.datetime.fromisoformat(answer).date().strftime("%m/%d/%Y")
     except (ValueError, TypeError):
