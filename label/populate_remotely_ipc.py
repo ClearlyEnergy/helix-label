@@ -83,12 +83,7 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     if not isinstance(question_answers, list):
         raise ValueError('question_answers must be a list')
 
-    for qa in question_answers:
-        if not all(k in qa for k in ['question_group', 'question']):
-            raise ValueError('question_answer dictionary must contain question_group')
-        
     question_answers_by_group = { qa['question_group']: [] for qa in question_answers }
-
     for qa in question_answers:
         question_answers_by_group[qa['question_group']].append(qa)
         
