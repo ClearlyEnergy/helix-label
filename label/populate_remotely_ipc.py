@@ -262,6 +262,7 @@ if __name__ == '__main__':
     ]
     data_dict = {
         'program_display_name': 'IPC SMARTE',
+        'ce_api_id': '0123456789',
         'street': '77 MASSACHUSETTS AVE', 
         'city': 'CAMBRIGE', 
         'state': 'MA', 
