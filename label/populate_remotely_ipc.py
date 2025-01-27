@@ -53,7 +53,7 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Text Column
-    column_12 = ColorFrame(doc.leftMargin, doc.bottomMargin, doc.width/3-12, 0.87*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)
+    column_12 = ColorFrame(doc.leftMargin, doc.bottomMargin, doc.width/3-20, 0.87*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)
     pc12 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, leading = 14, spaceBefore = 4)
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
@@ -77,7 +77,10 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph(datetime.datetime.now().strftime("%m/%d/%Y"),pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
-    Story.append(Paragraph("Brought to you by Remotely", tf_small))
+    remotely_logo = os.path.join(IMG_PATH, "PoweredByRemotely.png")
+    Story.append(Spacer(1,16))
+    im = Image(remotely_logo, 2.0*inch, 0.675*inch, kind='proportional')
+    Story.append(im)
     Story.append(FrameBreak)
     
     # Column 2 (Question Groups)
@@ -149,8 +152,8 @@ if __name__ == '__main__':
             # This results in a checkbox (multi-select) input
             "question_group": "Installations",
             "question": "Select all systems which have been installed for this home.",
-            "options": ["Air Sealing", "Air source heat pump", "Central air conditioning", "Ductless mini split heat pump", "Ducts", "Ground water source heat pump", "Heat pump hot water heater", "Heating system", "High efficiency insulation", "Indirect hot water heater", " Other hot water heaters", "Smart meters", "Window retrofits"],
-            "answer": ["Ducts", "Heating system", "High efficiency insulation"]
+            "options": ["Air Sealing", "Air source heat pump", "Central air conditioning", "Ductless mini split heat pump", "Ducts", "Ground water source heat pump", "Heat pump hot water heater", "Heating system", "High efficiency insulation", "Indirect hot water heater", "Other hot water heaters", "Smart meters", "Window retrofits"],
+            "answer": ["Other hot water heaters", "Window retrofits"]
         },
         {
             # This results in a text input
@@ -166,27 +169,38 @@ if __name__ == '__main__':
             "answer": "2025-01-27T13:56:12Z"
         },
         {
-            "question_group": "Window Retrofits (1/1)",
-            "question": "How many windows of this size, type, and orientation are in this home?",
-            "answer": 4
+            "question_group": "Assessment Info",
+            "question": "What is the name of the customer?",
+            "answer": "Sam Harris"
         },
         {
-            "question_group": "Window Retrofits (1/1)",
+            "question_group": "Assessment Info",
+            "question": "Is the inverter consistent with the manufacturer specifications?",
+            "options": ["Yes", "No"],
+            "answer": ["Yes"]
+        },
+        {
+            "question_group": "Window Retrofits (1/2)",
             "question": "What is the make of the installed windows?",
             "answer": 'ClearlyEnergy Windows'
         },
         {
-            "question_group": "Window Retrofits (1/1)",
+            "question_group": "Window Retrofits (1/2)",
             "question": "What is the model name of the installed windows?",
             "answer": 'Clear & Efficienct'
         },
         {
-            "question_group": "Window Retrofits (1/1)",
+            "question_group": "Window Retrofits (1/2)",
             "question": "What is the area of the window in square feet?",
             "answer": 8.8
         },
         {
-            "question_group": "Window Retrofits (1/1)",
+            "question_group": "Window Retrofits (1/2)",
+            "question": "How many windows of this size, type, and orientation are in this home?",
+            "answer": 4
+        },
+        {
+            "question_group": "Window Retrofits (1/2)",
             "question": "Input comments about the installed window.",
             "answer": 
                 """
@@ -194,11 +208,30 @@ if __name__ == '__main__':
                 """
         },
         {
-            # This results in a radio (single-select) input
+            "question_group": "Window Retrofits (2/2)",
+            "question": "What is the make of the installed windows?",
+            "answer": 'ClearlyEnergy Windows'
+        },
+        {
+            "question_group": "Window Retrofits (2/2)",
+            "question": "What is the model name of the installed windows?",
+            "answer": 'MagicGlass'
+        },
+        {
+            "question_group": "Window Retrofits (2/2)",
+            "question": "What is the area of the window in square feet?",
+            "answer": 20
+        },
+        {
+            "question_group": "Window Retrofits (2/2)",
+            "question": "How many windows of this size, type, and orientation are in this home?",
+            "answer": 2
+        },
+        {
             "question_group": "Other Hot Water Heaters",
             "question": "Does the natural gas, on-demand, tankless water heater have an energy factor of 0.94 or greater?",
             "options": ["Yes", "No"],
-            "answer": "Yes"
+            "answer": ["Yes"]
         },
         {
             # This results in a checkbox (multi-select) input
@@ -208,11 +241,23 @@ if __name__ == '__main__':
             "answer": ["Natural Gas Tankless", "Propane Tankless"]
         },
         {
+            "question_group": "PV Arrays",
+            "question": "Are the conduit ends weather resistant or does the junction box have strain relief connectors?",
+            "options": ["Yes", "No"],
+            "answer": ["Yes"]
+        },
+        {
             # This results in a set of images.
             "question_group": "PV Arrays",
             "question": "Take a photo of the conduit ends or junction box connectors.",
-            "answer": None,
-            "local_image_filepaths": [os.path.join(IMG_PATH, 'beamlogo.png'), os.path.join(IMG_PATH, 'beamlogo.png')],
+            "answer": "These would be images taken during the inspection.",
+            "local_image_filepaths": [os.path.join(IMG_PATH, 'IPC-logo.png'), os.path.join(IMG_PATH, 'IPC-logo.png')],
+        },
+        {
+            "question_group": "PV Arrays",
+            "question": "Is there any visible damage to modules, junction boxes, or wires present?",
+            "options": ["Yes", "No"],
+            "answer": ["No"]
         }
     ]
     data_dict = {
