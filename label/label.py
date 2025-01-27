@@ -110,9 +110,31 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
     
-    # Produce a PDF report for IPC's SMARTE-Loan programs
+
     def remotely_ipc_pdf(self, data_dict, aws_bucket):
-        out_file = self.out_path + '/IPC_RemotelyInspection.pdf'
+        """
+        Produce a PDF report for IPC's SMARTE-Loan programs
+        
+        :param dict data_dict: The data required to construct the IPC PDF
+        :param str aws_bucket: The destination S3 bucket
+        :return str out_filename: The destination on S3 where file was saved
+        """
+
+        # data_dict contains file paths pointing to images on S3
+        # First, download these to the temporary directory.
+        qas = data_dict['question_answers']
+        for qa in qas:
+            s3_filepaths = qa['s3_image_filepaths']
+            qa['local_image_filepaths'] = []
+            for s3_fp in s3_filepaths:
+                obj = self.s3_resource.Object('ce-pictures', s3_fp)
+                local_fp = os.path.join(self.out_path, s3_fp.strip('/'))
+                os.makedirs(os.path.dirname(local_fp), exist_ok=True)
+                with open(local_fp, 'wb') as file:
+                    file.write(obj.get()['Body'].read())
+                qa['local_image_filepaths'].append(local_fp)
+
+        out_file = os.path.join(self.out_path, data_dict['ce_api_id'], 'ipc_remotely_inspection.pdf')
         write_remotely_ipc_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename

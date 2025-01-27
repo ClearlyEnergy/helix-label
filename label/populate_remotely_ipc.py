@@ -12,7 +12,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Frame, FrameBreak, HRFlowable, Image, PageTemplate,Paragraph, Spacer
 from label.utils.constants import *
-from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate, validate_data_dict
+from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
 import datetime
 
 #Adding Arial Unicode for checkboxes
@@ -32,16 +32,16 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     TODO: describe data_dict
     """
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
-    styles = getSampleStyleSheet()                 
+    # styles = getSampleStyleSheet()
 
     Story=[]
     #Standard text formats
     tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14, spaceBefore = 4, spaceAfter = 4)  
-    tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 14)  
+    # tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 14)  
     tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 4, spaceAfter = 4, bulletIndent = 12, leftIndent = 12)  
-    tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
-    tf_small_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
+    # tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
+    # tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
+    # tf_small_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
     
     ### P1
     # Logo
@@ -53,11 +53,12 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     
     # Text Column
     column_12 = ColorFrame(doc.leftMargin, doc.bottomMargin, doc.width/3-12, 0.87*doc.height, showBoundary=0, roundedBackground=CUSTOM_LGRAY, topPadding=10)
-    pc12 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, leading = 14, spaceBefore = 16)
+    pc12 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_ML, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, leading = 14, spaceBefore = 4)
     pc13 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 12, spaceBefore = 4)
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
-    Story.append(Paragraph("This report summarizes inspection findings for the IPC SMARTE program", tf_standard))
+    program_display_name = data_dict['program_display_name']
+    Story.append(Paragraph(f"This report summarizes inspection findings for the <font name='InterstateBlack'>{program_display_name}</font>", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -81,14 +82,13 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     # Column 2 (Question Groups)
     column_20 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, doc.height, showBoundary=0, topPadding=10)    
     pc201 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceAfter=6)
-    pc202 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
-    question_answers = data_dict['question_answers']
+    # pc202 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
+    question_answers = data_dict.get('question_answers', [])
     if not isinstance(question_answers, list):
         raise ValueError('question_answers must be a list')
-    
-    REQUIRED_KEYS = ['question_group', 'question', 'answer']
+
     for qa in question_answers:
-        if not all(k in qa for k in REQUIRED_KEYS):
+        if not all(k in qa for k in ['question_group', 'question']):
             raise ValueError('question_answer dictionary must contain question_group')
         
     question_answers_by_group = { qa['question_group']: [] for qa in question_answers }
@@ -100,28 +100,35 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
         Story.append(Paragraph(question_group, pc201))
         for qa in qas:
             Story.append(Paragraph(qa['question'], tf_standard))
-            answer = qa['answer']
+            answer = qa.get('answer', 'No answer provided')
 
             date_answer = get_date_string(answer)
             if date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
-            elif isinstance(answer, str):
-                Story.append(Paragraph(answer, tf_small))
+            elif isinstance(answer, str) or isinstance(answer, int) or isinstance(answer, float):
+                Story.append(Paragraph(str(answer), tf_small))
             elif isinstance(answer, list):
-                options = qa['options'] if qa['options'] else answer
+                options = qa.get('options', answer)
                 for a in options:
                     bullet = CHECK.encode('UTF8') if a in answer else '   '
                     # Factor out code that formats scalar quantities
                     Story.append(Paragraph(a, tf_small, bulletText=bullet))
                     
+            images = qa.get('local_image_filepaths', [])
+            if isinstance(images, list):
+                for fp in images:
+                    im = Image(fp, width=2*inch,height=1*inch,kind='proportional')
+                    Story.append(im)
+                    
         Story.append(Spacer(1,16))
+        Image(vthep_logo, 2.5*inch, 0.675*inch)
 
 ### BUILD PAGE
     page_1_frames = [column_10, column_12, column_20]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     doc.addPageTemplates(templates)
-    style = styles["Normal"]
+    # style = styles["Normal"]
 
     #populate story with paragraphs    
     doc.build(Story)
@@ -132,10 +139,18 @@ def get_date_string(answer):
         return datetime.datetime.fromisoformat(answer).date().strftime("%m/%d/%Y")
     except (ValueError, TypeError):
         return None
+            
 
 # Run with:  python3 -m label.populate_remotely_ipc
 if __name__ == '__main__':
     question_answers = [
+        {
+            # This results in a text input
+            "question_group": "Installations",
+            "question": "Select all systems which have been installed for this home.",
+            "options": ["Air Sealing", "Air source heat pump", "Central air conditioning", "Ductless mini split heat pump", "Ducts", "Ground water source heat pump", "Heat pump hot water heater", "Heating system", "High efficiency insulation", "Indirect hot water heater", " Other hot water heaters", "Smart meters", "Window retrofits"],
+            "answer": ["Ducts", "Heating system", "High efficiency insulation"]
+        },
         {
             # This results in a text input
             "question_group": "Assessment Info",
@@ -162,9 +177,42 @@ if __name__ == '__main__':
             "question": "What type of other hot water heater was installed?",
             "options": ["Natural Gas Condensing or Storage", "Natural Gas Tankless", "Propane Tankless"],
             "answer": ["Natural Gas Tankless", "Propane Tankless"]
+        },
+        {
+            "question_group": "Window Retrofits (1/1)",
+            "question": "How many windows of this size, type, and orientation are in this home?",
+            "answer": 4
+        },
+        {
+            "question_group": "Window Retrofits (1/1)",
+            "question": "What is the make of the installed windows?",
+            "answer": 'ClearlyEnergy Windows'
+        },
+        {
+            "question_group": "Window Retrofits (1/1)",
+            "question": "What is the model name of the installed windows?",
+            "answer": 'Clear & Efficienct'
+        },
+        {
+            "question_group": "Window Retrofits (1/1)",
+            "question": "What is the area of the window in square feet?",
+            "answer": 8.8
+        },
+        {
+            "question_group": "Window Retrofits (1/1)",
+            "question": "Input comments about the installed window.",
+            "answer": "Window on north facing wall has draft."
+        },
+        {
+            # This results in a set of images.
+            "question_group": "PV Arrays",
+            "question": "Take a photo of the conduit ends or junction box connectors.",
+            "answer": None,
+            "local_image_filepaths": [os.path.join(IMG_PATH, 'beamlogo.png'), os.path.join(IMG_PATH, 'beamlogo.png')],
         }
     ]
     data_dict = {
+        'program_display_name': 'IPC SMARTE Program',
         'street': '77 MASSACHUSETTS AVE', 
         'city': 'CAMBRIGE', 
         'state': 'MA', 
@@ -175,3 +223,4 @@ if __name__ == '__main__':
     }
     out_file = 'Remotely_IPC_Inspection_Report.pdf'
     write_remotely_ipc_pdf(data_dict, out_file)
+    
