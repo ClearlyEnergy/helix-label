@@ -36,8 +36,9 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
 
     Story=[]
     #Standard text formats
-    tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14, spaceBefore = 4, spaceAfter = 4)  
-    # tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 14)  
+    title_font = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_XL, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 20, spaceBefore = 20, spaceAfter = 20)
+    tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14, spaceBefore = 4, spaceAfter = 4)
+    # tf_standard_bold = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, leading = 14)
     tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 4, spaceAfter = 4, bulletIndent = 12, leftIndent = 12)  
     # tf_small_squished = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
     # tf_small_right = ParagraphStyle('standard', alignment = TA_RIGHT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 6, spaceAfter = 0)  
@@ -58,7 +59,7 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     pc14 = ParagraphStyle('column_1', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 12)
     
     program_display_name = data_dict['program_display_name']
-    Story.append(Paragraph(f"This report summarizes inspection findings for the <font name='InterstateBlack'>{program_display_name}</font>", tf_standard))
+    Story.append(Paragraph(f"This report summarizes inspection findings for an <font name='InterstateBlack'>{program_display_name}</font> inspection.", tf_standard))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
     Story.append(Paragraph("BUILDING INFORMATION", pc12))
@@ -81,6 +82,7 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     
     # Column 2 (Question Groups)
     column_20 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, doc.height, showBoundary=0, topPadding=10)    
+    Story.append(Paragraph(f"{program_display_name}: Report", title_font))
     pc201 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_L, fontName = FONT_BOLD, textColor = CUSTOM_DGRAY, spaceAfter=6)
     # pc202 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
     question_answers = data_dict.get('question_answers', [])
@@ -164,20 +166,6 @@ if __name__ == '__main__':
             "answer": "2025-01-27T13:56:12Z"
         },
         {
-            # This results in a radio (single-select) input
-            "question_group": "Other Hot Water Heaters",
-            "question": "Does the natural gas, on-demand, tankless water heater have an energy factor of 0.94 or greater?",
-            "options": ["Yes", "No"],
-            "answer": "Yes"
-        },
-        {
-            # This results in a checkbox (multi-select) input
-            "question_group": "Other Hot Water Heaters",
-            "question": "What type of other hot water heater was installed?",
-            "options": ["Natural Gas Condensing or Storage", "Natural Gas Tankless", "Propane Tankless"],
-            "answer": ["Natural Gas Tankless", "Propane Tankless"]
-        },
-        {
             "question_group": "Window Retrofits (1/1)",
             "question": "How many windows of this size, type, and orientation are in this home?",
             "answer": 4
@@ -200,7 +188,24 @@ if __name__ == '__main__':
         {
             "question_group": "Window Retrofits (1/1)",
             "question": "Input comments about the installed window.",
-            "answer": "Window on north facing wall has draft."
+            "answer": 
+                """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vestibulum velit quam, vitae scelerisque velit semper a. Pellentesque porta orci ac justo posuere, in elementum nisl condimentum. Nam finibus semper laoreet. Ut volutpat tellus ut lorem commodo, non fringilla urna consectetur. Aenean mollis sit amet lorem et pellentesque. Curabitur sed leo condimentum, finibus ex eu, sagittis ipsum. Aenean sodales, mi nec mattis feugiat, diam leo maximus ligula, quis condimentum diam felis non purus. Fusce facilisis dolor enim, vel fermentum ligula venenatis vitae. Aliquam viverra sit amet nibh vel dapibus. Proin ornare diam at est lobortis, vel pellentesque nisl porta. Morbi posuere sit amet arcu sit amet tristique. Vestibulum faucibus aliquam ante eget rhoncus. In a consequat diam. Ut sit amet ultricies lectus. Aenean porta ac magna nec posuere. Cras scelerisque felis sit amet porta euismod.
+                """
+        },
+        {
+            # This results in a radio (single-select) input
+            "question_group": "Other Hot Water Heaters",
+            "question": "Does the natural gas, on-demand, tankless water heater have an energy factor of 0.94 or greater?",
+            "options": ["Yes", "No"],
+            "answer": "Yes"
+        },
+        {
+            # This results in a checkbox (multi-select) input
+            "question_group": "Other Hot Water Heaters",
+            "question": "What type of other hot water heater was installed?",
+            "options": ["Natural Gas Condensing or Storage", "Natural Gas Tankless", "Propane Tankless"],
+            "answer": ["Natural Gas Tankless", "Propane Tankless"]
         },
         {
             # This results in a set of images.
@@ -211,7 +216,7 @@ if __name__ == '__main__':
         }
     ]
     data_dict = {
-        'program_display_name': 'IPC SMARTE Program',
+        'program_display_name': 'IPC SMARTE',
         'street': '77 MASSACHUSETTS AVE', 
         'city': 'CAMBRIGE', 
         'state': 'MA', 

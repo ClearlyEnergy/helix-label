@@ -115,6 +115,9 @@ class Label:
         """
         Produce a PDF report for IPC's SMARTE-Loan programs.
         
+        Question/answers will be placed into groups based on the question_group value.
+        Question/answers are added in the same order they are defined.
+        
         :param dict data_dict: The data required to construct the IPC PDF.
         :param str aws_bucket: The destination S3 bucket for the resultant PDF file.
         :return str out_filename: The destination on S3 where resultant file was saved.
