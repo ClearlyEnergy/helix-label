@@ -21,6 +21,7 @@ from label.populate_beam_providence import write_providence_profile_pdf
 from label.populate_beam_reno import write_reno_profile_pdf
 from label.populate_beam_san_diego import write_san_diego_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
+from label.populate_remotely_ipc import write_remotely_ipc_pdf
 from label.utils.utils import validate_data_dict
 
 import os
@@ -106,6 +107,13 @@ class Label:
     def massachusetts_energy_scorecard(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/MAScorecard.pdf'
         create_pdf(data_dict, out_file)
+        out_filename = self._write_S3(out_file, aws_bucket)
+        return out_filename
+    
+    # Produce a PDF report for IPC's SMARTE-Loan programs
+    def remotely_ipc_pdf(self, data_dict, aws_bucket):
+        out_file = self.out_path + '/IPC_RemotelyInspection.pdf'
+        write_remotely_ipc_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
