@@ -21,6 +21,7 @@ from label.populate_beam_providence import write_providence_profile_pdf
 from label.populate_beam_reno import write_reno_profile_pdf
 from label.populate_beam_san_diego import write_san_diego_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
+from label.populate_remotely_ipc import write_remotely_ipc_pdf
 from label.utils.utils import validate_data_dict
 
 import os
@@ -106,6 +107,41 @@ class Label:
     def massachusetts_energy_scorecard(self, data_dict, aws_bucket=''):
         out_file = self.out_path + '/MAScorecard.pdf'
         create_pdf(data_dict, out_file)
+        out_filename = self._write_S3(out_file, aws_bucket)
+        return out_filename
+    
+
+    def remotely_ipc_pdf(self, data_dict, aws_bucket):
+        """
+        Produce a PDF report for IPC's SMARTE-Loan programs.
+        
+        Question/answers will be placed into groups based on the question_group value.
+        Question/answers are added in the same order they are defined.
+        
+        :param dict data_dict: The data required to construct the IPC PDF.
+        :param str aws_bucket: The destination S3 bucket for the resultant PDF file.
+        :return str out_filename: The destination on S3 where resultant file was saved.
+        """
+
+        if 'ce_api_id' not in data_dict:
+            raise ValueError('ce_api_id required in data_dict in order to write result file.')
+        
+        # data_dict contains file paths pointing to images on S3
+        # First, download these to the temporary directory.
+        question_answers = data_dict.get('question_answers', [])
+        for qa in question_answers:
+            s3_filepaths = qa.get('s3_image_filepaths', [])
+            qa['local_image_filepaths'] = []
+            for s3_fp in s3_filepaths:
+                obj = self.s3_resource.Object('ce-pictures', s3_fp)
+                local_fp = os.path.join(self.out_path, s3_fp.strip('/'))
+                os.makedirs(os.path.dirname(local_fp), exist_ok=True)
+                with open(local_fp, 'wb') as file:
+                    file.write(obj.get()['Body'].read())
+                qa['local_image_filepaths'].append(local_fp)
+
+        out_file = os.path.join(self.out_path, data_dict['ce_api_id'], 'ipc_remotely_inspection.pdf')
+        write_remotely_ipc_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 

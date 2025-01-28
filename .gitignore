@@ -109,3 +109,6 @@ label-env/
 .mypy_cache/
 .vscode/
 *.pdf
+
+# MacOS
+.DS_Store
