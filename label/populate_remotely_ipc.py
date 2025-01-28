@@ -28,7 +28,10 @@ pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     """
     Create a PDF file of data submitted for IPC programs
-    TODO: describe data_dict
+    
+    :param dict data_dict: The data required to construct the IPC PDF. See the main function
+    in this file for example of input dictionary.
+    :param str output_pdf_path: A local file path where the resultant file will be written.    
     """
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
 
