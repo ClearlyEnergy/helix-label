@@ -216,7 +216,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     
     # Take Action Details 
     elec_util_map = {"Atlantic City Electric": 'https://www.atlanticcityelectric.com/ways-to-save/for-your-business', "Jersey Central Power & Light": 'https://www.firstenergycorp.com/save_energy/save_energy_new_jersey/for-your-business.html', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/'}
-    gas_util_map = {"Public Service Electric and Gas Co.": 'https://bizsave.pseg.com/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses/', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}
+    gas_util_map = {"Public Service Electric and Gas Co.": 'https://bizsave.pseg.com/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses/', "Elizabethtown Gas Co.": 'https://etgcisavings.customerapplication.com/', "South Jersey Gas Co.": 'https://sjgcisavings.customerapplication.com/'}
                 
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
@@ -231,7 +231,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
         elif data_dict['Electric Utility'] == 'Rockland Electric Company':
             Story.append(Paragraph('For more information on electric efficiency programs from RECO please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['Electric Utility']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
         elif data_dict['Electric Utility'] == 'Public Service Electric & Gas Co.':
-            Story.append(Paragraph('For more information on electric efficiency programs from PSEG please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['Electric Utility']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+            Story.append(Paragraph('For more information on electric efficiency programs from PSE&amp;G please visit <font name="InterstateLight" color=blue><link href="'+ elec_util_map[data_dict['Electric Utility']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     if data_dict['Gas Utility']:
         if data_dict['Gas Utility'] == "Public Service Electric and Gas Co.":
             Story.append(Paragraph('For more information on gas efficiency programs from PSE&amp;G please visit <font name="InterstateLight" color=blue><link href="'+ gas_util_map[data_dict['Gas Utility']] +'">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
@@ -247,6 +247,7 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
         Story.append(Paragraph('For updates on NJ Clean Energy Programs, sign up for our listserv <font name="InterstateLight" color=blue><link href="https://visitor.r20.constantcontact.com/manage/optin?v=0014Ogu2wnBvl-XKzALEMAxRqHXXZqN78wNyahRWbOreRRMtzq_QzwtCSVAeJ4-mvFkT6N7t6li4b0SEm4afBVp0eglXB6n7Alv_0qga5-fWDg7u8q616oLKq7j72BhCjBqSBTMB0SxXFIZ0OgxRcIkwbL7iZ8-NnO5hV7zANu6Bgs%3D">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Schedule a professional energy audit to identify cost-saving upgrades <font name="InterstateLight" color=blue><link href="https://urldefense.com/v3/__https:/cepfindaprogram.com/transition.html?id=10__;!!J30X0ZrnC1oQtbA!LL2ig9UvQoa3DMO6p5zsREk0kMQg3ifH8YvjF_ucmeiMfkEJWQSZbK4bPIWRYyoLvj_RZzImuEcgpSvQp4xQLxNu6rpGEmFa$">here</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('If your ENERGY STAR score is 75 or higher, you may be eligible for an ENERGY STAR certification. This certification shows that your building is more efficient than 75% of similar buildings nationwide. For more information, click <font name="InterstateLight" color=blue><link href="https://urldefense.com/v3/__https:/www.energystar.gov/buildings/building-recognition/building-certification/how-apply__;!!J30X0ZrnC1oQtbA!LL2ig9UvQoa3DMO6p5zsREk0kMQg3ifH8YvjF_ucmeiMfkEJWQSZbK4bPIWRYyoLvj_RZzImuEcgpSvQp4xQLxNu6s5DMxye$">here</link></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
+
 
 
 #Spell out units in the Annual Energy Usage section (people won't understand MMBTU)
