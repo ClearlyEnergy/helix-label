@@ -16,6 +16,7 @@ from label.populate_beam_lexington import write_lexington_profile_pdf
 from label.populate_beam_madison import write_madison_profile_pdf
 from label.populate_beam_new_jersey import write_new_jersey_profile_pdf
 from label.populate_beam_portland import write_portland_profile_pdf
+from label.populate_beam_philadelphia import write_philadelphia_profile_pdf
 from label.populate_beam_oak_park import write_oak_park_profile_pdf
 from label.populate_beam_orlando import write_orlando_profile_pdf
 from label.populate_beam_providence import write_providence_profile_pdf
@@ -86,6 +87,7 @@ class Label:
                            'Village of Oak Park': write_oak_park_profile_pdf,
                            'City of Orlando': write_orlando_profile_pdf,
                            'City of Portland': write_portland_profile_pdf,
+                           'City of Philadelphia': write_philadelphia_profile_pdf,
                            'City of Providence': write_providence_profile_pdf,
                            'City of San Diego': write_san_diego_profile_pdf,
                            'City of Reno': write_reno_profile_pdf,
