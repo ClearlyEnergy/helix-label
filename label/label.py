@@ -79,7 +79,7 @@ class Label:
                            'City of Cambridge': write_cambridge_profile_pdf,
                            'City of Columbia': write_columbia_profile_pdf,
                            'CORE': write_core_profile_pdf,
-                           'Detroit 2030 District', write_detroit_2030_profile_pdf,
+                           'Detroit 2030 District': write_detroit_2030_profile_pdf,
                            'Grand Rapids 2030': write_grand_rapids_profile_pdf,
                            'City of Indianapolis': write_indianapolis_profile_pdf,
                            'Town of Lexington MA': write_lexington_profile_pdf,
