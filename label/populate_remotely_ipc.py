@@ -44,7 +44,7 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     ### P1
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH + "/IPC-logo.png"
+    vthep_logo = IMG_PATH + "/IPC-Logo.png"
     im = Image(vthep_logo, 2.5*inch, 0.675*inch) #max is 1.1 inch height
     Story.append(im)
     Story.append(FrameBreak)
@@ -236,7 +236,7 @@ if __name__ == '__main__':
             "question_group": "PV Arrays",
             "question": "Take a photo of the conduit ends or junction box connectors.",
             "answer": "These would be images taken during the inspection.",
-            "local_image_filepaths": [os.path.join(IMG_PATH, 'IPC-logo.png'), os.path.join(IMG_PATH, 'IPC-logo.png')],
+            "local_image_filepaths": [os.path.join(IMG_PATH, 'IPC-Logo.png'), os.path.join(IMG_PATH, 'IPC-Logo.png')],
         },
         {
             "question_group": "PV Arrays",
