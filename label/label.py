@@ -144,7 +144,8 @@ class Label:
                     file.write(obj.get()['Body'].read())
                 qa['local_image_filepaths'].append(local_fp)
 
-        out_file = os.path.join(self.out_path, data_dict['ce_api_id'], 'ipc_remotely_inspection.pdf')
+        tmp_filename = str(uuid.uuid4()) +'.pdf'
+        out_file = os.path.join(self.out_path, tmp_filename)
         write_remotely_ipc_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
