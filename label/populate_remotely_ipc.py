@@ -3,6 +3,7 @@
 # run with python3 -m label.populate_remotely_ipc
 
 import os
+import io
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -257,6 +258,10 @@ if __name__ == '__main__':
         'program_name': 'SMARTEPV',
         'question_answers': question_answers
     }
-    out_file = 'Remotely_IPC_Inspection_Report.pdf'
+    out_file = io.BytesIO()
     write_remotely_ipc_pdf(data_dict, out_file)
+    with open('RemotelyLabel.pdf', 'wb') as f:
+        # Write the content from the BytesIO object to the file
+        out_file.seek(0)
+        f.write(out_file.read())
     

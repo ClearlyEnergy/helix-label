@@ -26,6 +26,7 @@ from label.populate_beam_south_portland import write_south_portland_profile_pdf
 from label.populate_remotely_ipc import write_remotely_ipc_pdf
 from label.utils.utils import validate_data_dict
 
+import io
 import os
 import os.path
 import boto3
@@ -145,8 +146,7 @@ class Label:
                     file.write(obj.get()['Body'].read())
                 qa['answer'].append(local_fp)
 
-        tmp_filename = str(uuid.uuid4()) + '.pdf'
-        out_file = self.out_path  + '/' +  tmp_filename
+        out_file = io.BytesIO()
         write_remotely_ipc_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
@@ -154,8 +154,14 @@ class Label:
     def _write_S3(self, file_name, aws_bucket = ''):
         bucket = os.environ.get('S3_BUCKET', aws_bucket)
         filename = 'labels/' + str(uuid.uuid4())+'.pdf'
-        self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs={'ContentType': 'application/pdf', 'ACL': 'public-read'})
-        os.remove(file_name)
+        args = {'ContentType': 'application/pdf', 'ACL': 'public-read'}
+        if isinstance(file_name, str):
+            self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs=args)
+            os.remove(file_name)
+        elif hasattr(file_name, 'read') and hasattr(file_name, 'seek'):
+            file_name.seek(0)
+            self.s3_resource.Object(bucket, filename).upload_fileobj(file_name, ExtraArgs=args)
+        
         return filename
 
     def remove_label(self, filename, aws_bucket=''):
