@@ -134,18 +134,19 @@ class Label:
         # First, download these to the temporary directory.
         question_answers = data_dict.get('question_answers', [])
         for qa in question_answers:
-            s3_filepaths = qa.get('s3_image_filepaths', [])
-            qa['local_image_filepaths'] = []
+            if not qa.get('data_type', None) == 'photo':
+                continue
+            s3_filepaths = qa.get('answer', [])
+            qa['answer'] = []
             for s3_fp in s3_filepaths:
                 obj = self.s3_resource.Object('ce-pictures', s3_fp)
-                local_fp = os.path.join(self.out_path, s3_fp.strip('/'))
-                os.makedirs(os.path.dirname(local_fp), exist_ok=True)
+                local_fp = self.out_path + '/' + str(uuid.uuid4())
                 with open(local_fp, 'wb') as file:
                     file.write(obj.get()['Body'].read())
-                qa['local_image_filepaths'].append(local_fp)
+                qa['answer'].append(local_fp)
 
-        tmp_filename = str(uuid.uuid4()) +'.pdf'
-        out_file = os.path.join(self.out_path, tmp_filename)
+        tmp_filename = str(uuid.uuid4()) + '.pdf'
+        out_file = self.out_path  + '/' +  tmp_filename
         write_remotely_ipc_pdf(data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename

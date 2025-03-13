@@ -89,14 +89,21 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     question_answers_by_group = { qa['question_group']: [] for qa in question_answers }
     for qa in question_answers:
         question_answers_by_group[qa['question_group']].append(qa)
-        
+
     for (question_group, qas) in question_answers_by_group.items():
         Story.append(Paragraph(question_group, pc201))
         for qa in qas:
             Story.append(Paragraph(qa['question'], tf_standard))
             answer = qa.get('answer', 'No answer provided')
             date_answer = get_date_string(answer)
-            if date_answer:
+
+            if qa.get('data_type', None) == 'photo':
+                images = qa.get('answer', [])
+                if isinstance(images, list):
+                    for fp in images:
+                        im = Image(fp, width=2*inch,height=1*inch,kind='proportional')
+                        Story.append(im)
+            elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
             elif isinstance(answer, (str, int, float)):
                 Story.append(Paragraph(str(answer), tf_small))
@@ -105,13 +112,7 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
                 for a in options:
                     bullet = CHECK.encode('UTF8') if a in answer else '   '
                     Story.append(Paragraph(a, tf_small, bulletText=bullet))
-                    
-            images = qa.get('local_image_filepaths', [])
-            if isinstance(images, list):
-                for fp in images:
-                    im = Image(fp, width=2*inch,height=1*inch,kind='proportional')
-                    Story.append(im)
-                    
+
         Story.append(Spacer(1,16))
 
     # BUILD PAGE
@@ -235,8 +236,8 @@ if __name__ == '__main__':
             # This results in a set of images.
             "question_group": "PV Arrays",
             "question": "Take a photo of the conduit ends or junction box connectors.",
-            "answer": "These would be images taken during the inspection.",
-            "local_image_filepaths": [os.path.join(IMG_PATH, 'IPC-Logo.png'), os.path.join(IMG_PATH, 'IPC-Logo.png')],
+            "answer":[os.path.join(IMG_PATH, 'IPC-Logo.png'), os.path.join(IMG_PATH, 'IPC-Logo.png')],
+            "data_type": "photo"
         },
         {
             "question_group": "PV Arrays",
