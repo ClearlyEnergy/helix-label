@@ -148,6 +148,7 @@ class Label:
 
         out_file = io.BytesIO()
         write_remotely_ipc_pdf(data_dict, out_file)
+        aws_bucket = 'ce-seed'
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
