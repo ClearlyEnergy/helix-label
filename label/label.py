@@ -132,25 +132,28 @@ class Label:
             raise ValueError('ce_api_id required in data_dict in order to write result file.')
         
         # data_dict contains file paths pointing to images on S3
-        # First, download these to the temporary directory.
+        # Replace the list of S3 filepaths with list of file pointers
         question_answers = data_dict.get('question_answers', [])
         for qa in question_answers:
-            if not qa.get('data_type', None) == 'photo':
+            if not qa.get('data_type') == 'photo':
                 continue
-            s3_filepaths = qa.get('answer', [])
-            qa['answer'] = []
-            for s3_fp in s3_filepaths:
-                obj = self.s3_resource.Object('ce-pictures', s3_fp)
-                local_fp = self.out_path + '/' + str(uuid.uuid4())
-                with open(local_fp, 'wb') as file:
-                    file.write(obj.get()['Body'].read())
-                qa['answer'].append(local_fp)
+            fps = []
+            for answer in qa.get('answer', []):
+                obj = self.s3_resource.Object('ce-pictures', answer)
+                data = obj.get()['Body']
+                fp = io.BytesIO()
+                fp.write(data.read())
+                fps.append(fp)
+
+            # replace answer with list of file pointers
+            qa['answer'] = fps
 
         out_file = io.BytesIO()
         write_remotely_ipc_pdf(data_dict, out_file)
-        aws_bucket = 'ce-seed'
         out_filename = self._write_S3(out_file, aws_bucket)
-        return out_filename
+        bucket = os.environ.get('S3_BUCKET', aws_bucket)
+        url = f"https://{bucket}.s3.amazonaws.com/{out_filename}"
+        return url
 
     def _write_S3(self, file_name, aws_bucket = ''):
         bucket = os.environ.get('S3_BUCKET', aws_bucket)

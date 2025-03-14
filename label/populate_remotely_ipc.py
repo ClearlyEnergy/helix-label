@@ -95,24 +95,24 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
         Story.append(Paragraph(question_group, pc201))
         for qa in qas:
             Story.append(Paragraph(qa['question'], tf_standard))
-            answer = qa.get('answer', 'No answer provided')
+            answer = qa.get('answer', [])
+            if not isinstance(answer, list):
+                continue
+            options = qa.get('options', [])
             date_answer = get_date_string(answer)
-
             if qa.get('data_type', None) == 'photo':
-                images = qa.get('answer', [])
-                if isinstance(images, list):
-                    for fp in images:
-                        im = Image(fp, width=2*inch,height=1*inch,kind='proportional')
-                        Story.append(im)
+                for fp in answer:
+                    im = Image(fp, width=2*inch,height=1*inch,kind='proportional')
+                    Story.append(im)
             elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
-            elif isinstance(answer, (str, int, float)):
-                Story.append(Paragraph(str(answer), tf_small))
-            elif isinstance(answer, list):
-                options = qa.get('options', answer)
-                for a in options:
-                    bullet = CHECK.encode('UTF8') if a in answer else '   '
-                    Story.append(Paragraph(a, tf_small, bulletText=bullet))
+            elif not options:
+                a = answer[0] if answer else 'No response provided'
+                Story.append(Paragraph(str(a), tf_small))
+            elif options:
+                for option in options:
+                    bullet = CHECK.encode('UTF8') if option in answer else '   '
+                    Story.append(Paragraph(option, tf_small, bulletText=bullet))
 
         Story.append(Spacer(1,16))
 
@@ -127,8 +127,11 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
 
 def get_date_string(answer):
     """ Get a string from an answer if the answer is an ISO8601 date string """
+    if not isinstance(answer, list) or not answer:
+        return None
+    
     try:
-        return datetime.datetime.fromisoformat(answer).date().strftime("%m/%d/%Y")
+        return datetime.datetime.fromisoformat(answer[0]).date().strftime("%m/%d/%Y")
     except (ValueError, TypeError):
         return None
 
@@ -146,19 +149,19 @@ if __name__ == '__main__':
             # This results in a text input
             "question_group": "Assessment Info",
             "question": "What is the name of the inspector?",
-            "answer": "Marc Maron"
+            "answer": ["Marc Maron"]
         },
         {
             # This results in a date input
             "question_group": "Assessment Info",
             "question": "What is the date of the inspection?",
             # Date MUST be ISO8601 or function assumes plain text.
-            "answer": "2025-01-27T13:56:12Z"
+            "answer": ["2025-01-27T13:56:12Z"]
         },
         {
             "question_group": "Assessment Info",
             "question": "What is the name of the customer?",
-            "answer": "Sam Harris"
+            "answer": ["Sam Harris"]
         },
         {
             "question_group": "Assessment Info",
@@ -169,50 +172,47 @@ if __name__ == '__main__':
         {
             "question_group": "Window Retrofits (1/2)",
             "question": "What is the make of the installed windows?",
-            "answer": 'ClearlyEnergy Windows'
+            "answer": ['ClearlyEnergy Windows']
         },
         {
             "question_group": "Window Retrofits (1/2)",
             "question": "What is the model name of the installed windows?",
-            "answer": 'Clear & Efficienct'
+            "answer": ['Clear & Efficienct']
         },
         {
             "question_group": "Window Retrofits (1/2)",
             "question": "What is the area of the window in square feet?",
-            "answer": 8.8
+            "answer": [8.8]
         },
         {
             "question_group": "Window Retrofits (1/2)",
             "question": "How many windows of this size, type, and orientation are in this home?",
-            "answer": 4
+            "answer": [4]
         },
         {
             "question_group": "Window Retrofits (1/2)",
             "question": "Input comments about the installed window.",
-            "answer": 
-                """
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vestibulum velit quam, vitae scelerisque velit semper a. Pellentesque porta orci ac justo posuere, in elementum nisl condimentum. Nam finibus semper laoreet. Ut volutpat tellus ut lorem commodo, non fringilla urna consectetur. Aenean mollis sit amet lorem et pellentesque. Curabitur sed leo condimentum, finibus ex eu, sagittis ipsum. Aenean sodales, mi nec mattis feugiat, diam leo maximus ligula, quis condimentum diam felis non purus. Fusce facilisis dolor enim, vel fermentum ligula venenatis vitae. Aliquam viverra sit amet nibh vel dapibus. Proin ornare diam at est lobortis, vel pellentesque nisl porta. Morbi posuere sit amet arcu sit amet tristique. Vestibulum faucibus aliquam ante eget rhoncus. In a consequat diam. Ut sit amet ultricies lectus. Aenean porta ac magna nec posuere. Cras scelerisque felis sit amet porta euismod.
-                """
+            "answer": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vestibulum velit quam, vitae scelerisque velit semper a. Pellentesque porta orci ac justo posuere, in elementum nisl condimentum. Nam finibus semper laoreet. Ut volutpat tellus ut lorem commodo, non fringilla urna consectetur. Aenean mollis sit amet lorem et pellentesque. Curabitur sed leo condimentum, finibus ex eu, sagittis ipsum. Aenean sodales, mi nec mattis feugiat, diam leo maximus ligula, quis condimentum diam felis non purus. Fusce facilisis dolor enim, vel fermentum ligula venenatis vitae. Aliquam viverra sit amet nibh vel dapibus. Proin ornare diam at est lobortis, vel pellentesque nisl porta. Morbi posuere sit amet arcu sit amet tristique. Vestibulum faucibus aliquam ante eget rhoncus. In a consequat diam. Ut sit amet ultricies lectus. Aenean porta ac magna nec posuere. Cras scelerisque felis sit amet porta euismod."]
         },
         {
             "question_group": "Window Retrofits (2/2)",
             "question": "What is the make of the installed windows?",
-            "answer": 'ClearlyEnergy Windows'
+            "answer": ['ClearlyEnergy Windows']
         },
         {
             "question_group": "Window Retrofits (2/2)",
             "question": "What is the model name of the installed windows?",
-            "answer": 'MagicGlass'
+            "answer": ['MagicGlass']
         },
         {
             "question_group": "Window Retrofits (2/2)",
             "question": "What is the area of the window in square feet?",
-            "answer": 20
+            "answer": [20]
         },
         {
             "question_group": "Window Retrofits (2/2)",
             "question": "How many windows of this size, type, and orientation are in this home?",
-            "answer": 2
+            "answer": [2]
         },
         {
             "question_group": "Other Hot Water Heaters",
@@ -247,6 +247,20 @@ if __name__ == '__main__':
             "answer": ["No"]
         }
     ]
+    
+    # Testing a set of file pointers instead of paths to local files
+    for qa in question_answers:
+        if not qa.get('data_type') == 'photo':
+            continue
+        fps = []
+        for a in qa['answer']:
+            fp = io.BytesIO()
+            with open(a, 'rb') as f:
+                fp.write(f.read())
+            fp.seek(0)
+            fps.append(fp)
+        qa['answer'] = fps
+
     data_dict = {
         'program_display_name': 'IPC SMARTE',
         'ce_api_id': '0123456789',
@@ -258,6 +272,7 @@ if __name__ == '__main__':
         'program_name': 'SMARTEPV',
         'question_answers': question_answers
     }
+    
     out_file = io.BytesIO()
     write_remotely_ipc_pdf(data_dict, out_file)
     with open('RemotelyLabel.pdf', 'wb') as f:
