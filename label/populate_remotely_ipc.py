@@ -11,7 +11,9 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Frame, FrameBreak, HRFlowable, Image, PageTemplate,Paragraph, Spacer
+from reportlab.platypus import (
+    Frame, FrameBreak, HRFlowable, Image, PageTemplate,Paragraph, Spacer, Table, TableStyle
+)
 from label.utils.constants import *
 from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
 from label.utils.image_utils import fix_image_orientation
@@ -102,9 +104,8 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
             options = qa.get('options', [])
             date_answer = get_date_string(answer)
             if qa.get('data_type', None) == 'photo':
-                for fp in answer:
-                    im = Image(fp, width=2*inch,height=1*inch,kind='proportional')
-                    Story.append(im)
+                table = image_table(answer)
+                Story.append(table)
             elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
             elif not options:
@@ -125,6 +126,42 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
 
     #populate story with paragraphs
     doc.build(Story)
+
+def image_table(image_files):
+    """ Build a Table of fixed size images """
+    max_columns = 2  # Number of images per row
+    image_width = 3 * inch
+    image_height = 3 * inch
+    padding = 5  # Padding between images
+    
+    image_cells = []
+    row = []
+    for i, fp in enumerate(image_files):
+        im = Image(fp, width=image_width, height=image_height, kind='proportional')
+        row.append(im)
+
+        if (i + 1) % max_columns == 0:
+            image_cells.append(row)
+            row = []
+
+    # Append any remaining images
+    if row:
+        image_cells.append(row)
+
+    table = Table(
+        image_cells,
+        colWidths=image_width + padding,
+        rowHeights=image_height + (2 * padding)
+    )
+    table.setStyle(TableStyle([
+        ('BOX', (0,0), (-1,-1), 1, CUSTOM_DGRAY),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (-1, -1), padding),
+        ('RIGHTPADDING', (0, 0), (-1, -1), padding),
+        ('TOPPADDING', (0, 0), (-1, -1), padding),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), padding),
+    ]))
+    return table
 
 def get_date_string(answer):
     """ Get a string from an answer if the answer is an ISO8601 date string """
