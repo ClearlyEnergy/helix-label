@@ -4,7 +4,6 @@
 
 import os
 import io
-import PIL
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -15,6 +14,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Frame, FrameBreak, HRFlowable, Image, PageTemplate,Paragraph, Spacer
 from label.utils.constants import *
 from label.utils.utils import ColorFrame, ColorFrameSimpleDocTemplate
+from label.utils.image_utils import fix_image_orientation
 import datetime
 
 #Adding Arial Unicode for checkboxes
@@ -135,34 +135,6 @@ def get_date_string(answer):
         return datetime.datetime.fromisoformat(answer[0]).date().strftime("%m/%d/%Y")
     except (ValueError, TypeError):
         return None
-    
-def fix_image_orientation(fp):
-    img = PIL.Image.open(fp)
-    format = img.format
-    exif = img.getexif()
-    orientation = None
-    for o in PIL.ExifTags.TAGS.keys():
-        if PIL.ExifTags.TAGS[o]=='Orientation':
-            orientation = o
-            break
-        
-    if orientation and orientation in img.getexif():
-        orientation_value = exif[orientation]
-
-        # Rotate image based on Exif orientation value
-        if orientation_value == 3:
-            img = img.rotate(180, expand=True)
-        elif orientation_value == 6:
-            img = img.rotate(270, expand=True)
-        elif orientation_value == 8:
-            img = img.rotate(90, expand=True)
-        exif[orientation] = 1
-
-    output = io.BytesIO()
-    img.format = format
-    img.save(output, format=img.format, exif=exif.tobytes())
-    output.seek(0)
-    return output
 
 # Run with:  python3 -m label.populate_remotely_ipc
 if __name__ == '__main__':
