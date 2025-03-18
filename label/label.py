@@ -142,7 +142,9 @@ class Label:
                 obj = self.s3_resource.Object('ce-pictures', answer)
                 data = obj.get()['Body']
                 fp = io.BytesIO()
-                fp.write(data.read())
+                image = data.read()
+                
+                fp.write(image)
                 fps.append(fp)
 
             # replace answer with list of file pointers
