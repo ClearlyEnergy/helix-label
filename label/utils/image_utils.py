@@ -1,15 +1,15 @@
-"""Image utility module"""
+"""ImageUtils"""
 
 import io
 from PIL import Image, ExifTags
 
-def fix_image_orientation(fp):
+def fix_image_orientation(image_file):
     """
-    Take a file for an image and returns the file
-    with the image rotated to correct for orientation.
+    Takes a file name or file-like object.
+    Returns the image with the image rotated to correct for orientation.
     """
 
-    img = Image.open(fp)
+    img = Image.open(image_file)
     original_format = img.format
     exif = img.getexif()
 

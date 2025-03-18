@@ -104,7 +104,8 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
             options = qa.get('options', [])
             date_answer = get_date_string(answer)
             if qa.get('data_type', None) == 'photo':
-                table = image_table(answer)
+                images = [fix_image_orientation(f) for f in answer]
+                table = image_table(images)
                 Story.append(table)
             elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
@@ -285,19 +286,6 @@ if __name__ == '__main__':
             "answer": ["No"]
         }
     ]
-    
-    # Testing a set of file pointers instead of paths to local files
-    for qa in question_answers:
-        if not qa.get('data_type') == 'photo':
-            continue
-        fps = []
-        for a in qa['answer']:
-            fp = io.BytesIO()
-            with open(a, 'rb') as f:
-                image_bytes = fix_image_orientation(f)
-                fps.append(image_bytes)
-            
-        qa['answer'] = fps
 
     data_dict = {
         'program_display_name': 'IPC SMARTE',
