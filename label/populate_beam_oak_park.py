@@ -19,7 +19,7 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(99.0/255),green=(161.0/255),blue=(58.0/255))
+CUSTOM_DTEAL = colors.Color(red=(75.0/255),green=(178.0/255),blue=(176.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
@@ -44,7 +44,7 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     # Logo
     column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
     vthep_logo = IMG_PATH+"/oak-park-logo-color.png"
-    im = Image(vthep_logo, 1.833*inch, 1.1*inch)
+    im = Image(vthep_logo, 2.25*inch, 1.1*inch)
     Story.append(im)
     Story.append(FrameBreak)
     
@@ -74,7 +74,7 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("PROPERTY TYPE:", pc13))
     Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
-    floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
+    floor_area = str("{:,}".format(int(data_dict['propGrossFloorArea']))) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
@@ -200,7 +200,7 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     pc262 = ParagraphStyle('column_2', alignment = TA_LEFT, fontSize = FONT_T, fontName = FONT_BOLD, textColor = CUSTOM_DTEAL, spaceBefore = -12, spaceAfter = -12)
     
     column_282 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.bottomMargin+0.17*doc.height, (3/4)*(2/3)*doc.width, 0.06*doc.height, showBoundary=0, topPadding=10)    
-    text_c282 = Paragraph('The following actions can help you save money on your energy costs for years to come', pc262)
+    text_c282 = Paragraph('The following actions can help you save money on your energy costs for years to come.', pc262)
     Story.append(text_c282)
     Story.append(FrameBreak)
     
