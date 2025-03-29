@@ -72,7 +72,7 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("YEAR BUILT:", pc13))
     Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
-    floor_area = str(int(data_dict['propGrossFloorArea'])) if data_dict['propGrossFloorArea'] is not None else 'N/A'
+    floor_area = str("{:,}".format(int(data_dict['propGrossFloorArea']))) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
     Story.append(Spacer(1,16))
     Story.append(HRFlowable(width="90%", thickness=1, lineCap='round', color=colors.white, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None))
@@ -222,7 +222,7 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph('DTE Programs: <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started.html">Commercial</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/energy-efficiency/getting-started/rebate-programs/The-DTE-Energy-Multifamily-Program.html">Multifamily</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://solutions.dteenergy.com/dte/en/Products/DTE-CleanVision-MIGreenPower/p/MIGPGREEN">MIGreenPower</link></u></font>, <font name="InterstateLight" color=blue><u><link href="https://www.dteenergy.com/us/en/business/service-request/pev/plug-in-electric-vehicles-pev.html">Business EV</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Access financial assistance: <font name="InterstateLight" color=blue><u><link href="https://michigansaves.org/">Michigan Saves</link></u></font> & <font name="InterstateLight" color=blue><u><link href="https://leanandgreenmi.com/">PACE</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Contact <font name="InterstateLight" color=blue><u><link href="https://app.smartsheet.com/b/form/593f0c5631d241e687533470e986a1fc">Detroit Water and Sewerage Department</link></u></font> for automated water data', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Explore the <font name="InterstateLight" color=blue><u><link href="https://www.whitehouse.gov/cleanenergy/inflation-reduction-act-guidebook/">Inflation Reduction Act guidebook </link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))              
+    Story.append(Paragraph('Explore the <font name="InterstateLight" color=blue><u><link href="https://www.dsireusa.org/">Database of State Incentives for Renewables & Efficiency </link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))              
 
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -234,7 +234,7 @@ def write_detroit_2030_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_detroit_profile
+# Run with:  python3 -m label.populate_detroit_2030
 if __name__ == '__main__':
     has_cost = True
     if has_cost:
