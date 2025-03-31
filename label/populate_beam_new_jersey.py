@@ -215,9 +215,11 @@ def write_new_jersey_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Take Action Details 
-    elec_util_map = {"Atlantic City Electric": 'https://www.atlanticcityelectric.com/ways-to-save/for-your-business', "Jersey Central Power & Light": 'https://www.firstenergycorp.com/save_energy/save_energy_new_jersey/for-your-business.html', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/'}
-    gas_util_map = {"Public Service Electric and Gas Co.": 'https://bizsave.pseg.com/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses/', "Elizabethtown Gas Co.": 'https://etgcisavings.customerapplication.com/', "South Jersey Gas Co.": 'https://sjgcisavings.customerapplication.com/'}
-                
+#    elec_util_map = {"Atlantic City Electric": 'https://www.atlanticcityelectric.com/ways-to-save/for-your-business', "Jersey Central Power & Light": 'https://www.firstenergycorp.com/save_energy/save_energy_new_jersey/for-your-business.html', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/'}
+    elec_util_map = {"Atlantic City Electric": 'https://homeenergysavings.atlanticcityelectric.com/business/energy-management-program', "Jersey Central Power & Light": 'https://engmgmt.energysavenj.com/', "Rockland Electric Company": 'https://www.oru.com/en/save-money/rebates-incentives-credits/new-jersey-customers/incentives-for-business-customers-nj/small-business', "Public Service Electric & Gas Co.": 'https://bizsave.pseg.com/energy-management/'}
+#    gas_util_map = {"Public Service Electric and Gas Co.": 'https://bizsave.pseg.com/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses/', "Elizabethtown Gas Co.": 'https://etgcisavings.customerapplication.com/', "South Jersey Gas Co.": 'https://sjgcisavings.customerapplication.com/'}
+    gas_util_map = {"Public Service Electric and Gas Co.": 'https://bizsave.pseg.com/energy-management/', "New Jersey Natural Gas Co.": 'https://www.savegreen.com/businesses#smartstart', "Elizabethtown Gas Co.": 'https://www.elizabethtowngas.com/business/business-service/energy-efficiency-incentives', "South Jersey Gas Co.": 'https://southjerseygas.com/save-energy-money/commercial-savings'}
+
     column_29 = Frame(doc.leftMargin+doc.width/3, doc.bottomMargin, (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
@@ -318,10 +320,9 @@ if __name__ == '__main__':
         "yoy_percent_change_ng": None,
         "yoy_percent_change_site_eui": 15.3,
         "zipcode": "89501",
-        "Electric Utility": "Public Service Electric & Gas Co.",
-        "Gas Utility": "Public Service Electric and Gas Co."
+        "Electric Utility": "Rockland Electric Company",
+        "Gas Utility": "South Jersey Gas Co."
     }
-#        "Gas Utility": "Public Service Electric & Gas Co."
 
     out_file = 'NJ_BEAM_Profile.pdf'
     write_new_jersey_profile_pdf(data_dict, out_file)
