@@ -131,33 +131,8 @@ class Label:
         if 'ce_api_id' not in data_dict:
             raise ValueError('ce_api_id required in data_dict in order to write result file.')
 
-        # data_dict contains file paths pointing to images on S3
-        # Replace the list of S3 filepaths with list of file pointers
-        question_answers = data_dict.get('question_answers', [])
-        for qa in question_answers:
-            if not qa.get('data_type') == 'photo':
-                continue
-            
-            # A list of file paths (or file pointers if testing on staging)
-            fps = []
-            for answer in qa.get('answer', []):
-                obj = self.s3_resource.Object('ce-pictures', answer)
-                data = obj.get()['Body']
-                image = data.read()
-                temp_path = self.out_path + f'/{str(uuid.uuid4())}.jpg'
-                with open(temp_path, 'wb') as f:
-                    f.write(image)
-                    fps.append(temp_path)
-
-                # fp = io.BytesIO()
-                # fp.write(image)
-                # fps.append(fp)
-
-            # replace answer with list of file paths
-            qa['answer'] = fps
-
         out_file = io.BytesIO()
-        write_remotely_ipc_pdf(data_dict, out_file)
+        write_remotely_ipc_pdf(self.s3_resource, data_dict, out_file)
         out_filename = self._write_S3(out_file, aws_bucket)
         bucket = os.environ.get('S3_BUCKET', aws_bucket)
         url = f"https://{bucket}.s3.amazonaws.com/{out_filename}"

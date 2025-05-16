@@ -29,7 +29,7 @@ pdfmetrics.registerFont(TTFont('InterstateLight', FONT_PATH+'/InterstateLight.tt
 pdfmetrics.registerFont(TTFont('InterstateBlack', FONT_PATH+'/InterstateBlack.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_remotely_ipc_pdf(data_dict, output_pdf_path):
+def write_remotely_ipc_pdf(s3_resource, data_dict, output_pdf_path):
     """
     Create a PDF file of data submitted for IPC programs
     
@@ -103,9 +103,8 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
                 continue
             options = qa.get('options', [])
             date_answer = get_date_string(answer)
-            if qa.get('data_type', None) == 'photo':
-                images = [fix_image_orientation(f) for f in answer]
-                table = image_table(images)
+            if qa.get('data_type', None) == 'photo' and answer and s3_resource:
+                table = image_table(s3_resource, answer)
                 Story.append(table)
             elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
@@ -128,18 +127,27 @@ def write_remotely_ipc_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs
     doc.build(Story)
 
-def image_table(image_files):
+
+def load_image(s3_resource, key):
+    """Load and image from S3 and adjust its orientation"""
+    image_file = s3_resource.Object('ce-pictures', key).get()['Body'].read()
+    image_file = io.BytesIO(image_file)
+    image_file = fix_image_orientation(image_file)
+    return image_file
+
+def image_table(s3_resource, image_file_keys):
     """ Build a Table of fixed size images """
     max_columns = 2  # Number of images per row
     image_width = 3 * inch
     image_height = 3 * inch
     padding = 5  # Padding between images
-    
     image_cells = []
     row = []
-    for i, fp in enumerate(image_files):
-        im = Image(fp, width=image_width, height=image_height, kind='proportional')
-        row.append(im)
+
+    for i, key in enumerate(image_file_keys):
+        image_file = load_image(s3_resource, key)
+        image = Image(image_file, width=image_width, height=image_height, kind='proportional')
+        row.append(image)
 
         if (i + 1) % max_columns == 0:
             image_cells.append(row)
@@ -300,7 +308,7 @@ if __name__ == '__main__':
     }
     
     out_file = io.BytesIO()
-    write_remotely_ipc_pdf(data_dict, out_file)
+    write_remotely_ipc_pdf(None, data_dict, out_file)
     with open('RemotelyLabel.pdf', 'wb') as f:
         # Write the content from the BytesIO object to the file
         out_file.seek(0)
