@@ -109,8 +109,10 @@ def write_remotely_ipc_pdf(s3_resource, data_dict, output_pdf_path):
             elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
             elif not options:
-                a = answer[0] if answer else 'No response provided'
-                Story.append(Paragraph(str(a), tf_small))
+                for a in answer:
+                    Story.append(Paragraph(str(a), tf_small))
+                if not answer:
+                    Story.append(Paragraph(str('No response provided'), tf_small))
             elif options:
                 for option in options:
                     bullet = CHECK.encode('UTF8') if option in answer else '   '
