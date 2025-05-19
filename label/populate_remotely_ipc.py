@@ -8,6 +8,7 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.colors import red
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -44,6 +45,7 @@ def write_remotely_ipc_pdf(s3_resource, data_dict, output_pdf_path):
     title_font = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_XL, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 20, spaceBefore = 20, spaceAfter = 20)
     tf_standard = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_H, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, leading = 14, spaceBefore = 4, spaceAfter = 4)
     tf_small = ParagraphStyle('standard', alignment = TA_LEFT, fontSize = FONT_S, fontName = FONT_NORMAL, textColor = CUSTOM_DGRAY, spaceBefore = 4, spaceAfter = 4, bulletIndent = 12, leftIndent = 12)  
+    tf_small_red = ParagraphStyle('note_style', parent=tf_small, textColor=red)
 
     ### P1
     # Logo
@@ -103,20 +105,26 @@ def write_remotely_ipc_pdf(s3_resource, data_dict, output_pdf_path):
                 continue
             options = qa.get('options', [])
             date_answer = get_date_string(answer)
-            if qa.get('data_type', None) == 'photo' and answer and s3_resource:
-                table = image_table(s3_resource, answer)
-                Story.append(table)
+            if qa.get('data_type', None) == 'photo':
+                if answer and s3_resource:
+                    table = image_table(s3_resource, answer)
+                    Story.append(table)
+                else:
+                    Story.append(Paragraph('No photos taken', tf_small_red))
             elif date_answer:
                 Story.append(Paragraph(date_answer, tf_small))
             elif not options:
                 for a in answer:
                     Story.append(Paragraph(str(a), tf_small))
                 if not answer:
-                    Story.append(Paragraph(str('No response provided'), tf_small))
+                    Story.append(Paragraph('No response provided', tf_small_red))
             elif options:
-                for option in options:
-                    bullet = CHECK.encode('UTF8') if option in answer else '   '
-                    Story.append(Paragraph(option, tf_small, bulletText=bullet))
+                if not answer:
+                    Story.append(Paragraph("No selection was made.", tf_small_red))
+                else:
+                    for option in options:
+                        bullet = CHECK.encode('UTF8') if option in answer else '   '
+                        Story.append(Paragraph(option, tf_small, bulletText=bullet))
 
         Story.append(Spacer(1,16))
 
@@ -251,7 +259,7 @@ if __name__ == '__main__':
         {
             "question_group": "Window Retrofits (2/2)",
             "question": "What is the model name of the installed windows?",
-            "answer": ['MagicGlass']
+            "answer": []
         },
         {
             "question_group": "Window Retrofits (2/2)",
@@ -280,14 +288,7 @@ if __name__ == '__main__':
             "question_group": "PV Arrays",
             "question": "Are the conduit ends weather resistant or does the junction box have strain relief connectors?",
             "options": ["Yes", "No"],
-            "answer": ["Yes"]
-        },
-        {
-            # This results in a set of images.
-            "question_group": "PV Arrays",
-            "question": "Take a photo of the conduit ends or junction box connectors.",
-            "answer":[os.path.join(IMG_PATH, 'IPC-Logo.png'), os.path.join(IMG_PATH, 'IPC-Logo.png')],
-            "data_type": "photo"
+            "answer": []
         },
         {
             "question_group": "PV Arrays",
