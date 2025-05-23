@@ -19,7 +19,7 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(75.0/255),green=(178.0/255),blue=(176.0/255))
+CUSTOM_DTEAL = colors.Color(red=(189.0/255),green=(209.0/255),blue=(113.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
@@ -210,7 +210,8 @@ def write_oak_park_profile_pdf(data_dict, output_pdf_path):
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
     Story.append(Paragraph('<font name="InterstateBlack">Conduct an Energy Assessment.</font> Free assessments may be available from ComEd for <font name="InterstateLight" color=blue><link href="https://www.comed.com/ways-to-save/for-your-business">commercial</link></font> and <font name="InterstateLight" color=blue><link href="https://www.comed.com/ways-to-save/for-your-business">multifamily</link></font> properties.', pc291, bulletText=UNCHECKED.encode('UTF8')))
     Story.append(Paragraph('Visit the <font name="InterstateLight" color=blue><link href="https://www.sustainoakpark.com/get-started">Village of Oak Park</link></font>’s website for incentives and resources to 1) Improve energy efficiency 2) Reduce your natural gas use by electrifying 3) Generate clean energy.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-
+    Story.append(Paragraph('Get expert assistance for your building’s energy needs from <font name="InterstateLight" color=blue><link href="https://www.buildinghub.energy/">The Building Energy Hub</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]

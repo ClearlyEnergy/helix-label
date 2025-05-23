@@ -322,52 +322,68 @@ class Scores():
 
 class Highlights():
     
-    def score_box(data_dict, category='ESTAR_SCORE', backup_category='EUI'):
+    def score_box(data_dict, category='ESTAR_SCORE', backup_category='EUI', second_backup='WNEUI'):
         pc101 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_H, fontName = FONT_BOLD, textColor=colors.white, leading=14)
         pc102 = ParagraphStyle('column_1', alignment = TA_CENTER, fontSize = FONT_XXL, fontName = FONT_BOLD, textColor = colors.white)
         pc103 = ParagraphStyle('column_2', alignment = TA_CENTER, fontSize = FONT_S, fontName = FONT_BOLD, textColor = colors.white, spaceBefore=26)
 
         first_choice = False
+        second_choice = False
         if (category == 'ESTAR_SCORE') and data_dict['energy_star_score']:
             text_c101 = Paragraph("ENERGY STAR SCORE", pc101)
             text_c102 = Paragraph(str(int(data_dict['energy_star_score']))+'/100', pc102)
             text_c103 = Paragraph('50=median, 75=high performer', pc103)
             first_choice = True
+            second_choice = True
         elif (category == 'EUI') and data_dict['siteIntensity']:
             text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
             text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
             text_c103 = Paragraph('kBtu/sq.ft.', pc103)
             first_choice = True
+            second_choice = True
+        elif (category == 'WNEUI') and data_dict['siteWNIntensity']:
+            text_c101 = Paragraph("WN ENERGY USE INTENSITY", pc101)
+            text_c102 = Paragraph(str(int(data_dict['siteWNIntensity'])), pc102)               
+            text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+            first_choice = True
+            second_choice = True
         elif (category == 'GHG') and data_dict['totalLocationBasedGHGEmissions']:
             text_c101 = Paragraph("GREENHOUSE GAS EMISSIONS", pc101)
             text_c102 = Paragraph(str(int(data_dict['totalLocationBasedGHGEmissions'])), pc102)
             text_c103 = Paragraph("mt CO2e", pc103)
             first_choice = True
+            second_choice = True
         elif category == 'EU':
             text_c101 = Paragraph("ENERGY USE", pc101)
             text_c102 = Paragraph(str("{:,}".format(int(data_dict['site_total']))), pc102)
             text_c103 = Paragraph("MMBtu", pc103)
             first_choice = True
+            second_choice = True
 
         if first_choice == False:
             if (backup_category == 'EUI') and data_dict['siteIntensity']:
                 text_c101 = Paragraph("ENERGY USE INTENSITY", pc101)
                 text_c102 = Paragraph(str(int(data_dict['siteIntensity'])), pc102)               
                 text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+                second_choice = True
             elif (backup_category == 'MEDIAN') and data_dict['percentBetterThanSiteIntensityMedian']:
                 better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
                 text_c101 = Paragraph("EUI % DIFFERENCE", pc101)
                 text_c102 = Paragraph(str(int(abs(data_dict['percentBetterThanSiteIntensityMedian'])))+'%', pc102)               
                 text_c103 = Paragraph(better_worse + " efficient than the national median", pc103)
+                second_choice = True
             elif (backup_category == 'EU') and data_dict['site_total']:
                 text_c101 = Paragraph("ENERGY CONSUMPTION", pc101)
                 text_c102 = Paragraph(str(int(data_dict['site_total'])), pc102)               
                 text_c103 = Paragraph('MMBtu', pc103)
-            else:
-                text_c101 = Paragraph("TBD", pc101)
-                text_c102 = Paragraph('value', pc102)
-                text_c103 = Paragraph('range', pc103)
+                second_choice = True
         
+        if second_choice == False:
+            if (second_backup == 'WNEUI') and data_dict['siteWNIntensity']:
+                text_c101 = Paragraph("WN ENERGY USE INTENSITY", pc101)
+                text_c102 = Paragraph(str(int(data_dict['siteWNIntensity'])), pc102)               
+                text_c103 = Paragraph('kBtu/sq.ft.', pc103)
+
         return text_c101, text_c102, text_c103
         
     def cost_box(data_dict, text_color, category='COST'):
@@ -470,25 +486,25 @@ class Highlights():
         pc272 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = font_color, fontSize = font_size, fontName = font_normal,  spaceBefore = -1, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 6)
         
         if 'ghg' in includes:
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s <font name="InterstateLight" color=blue><link href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator">greenhouse gas emissions</link></font> were: ' + str("{:,}".format(int(data_dict['totalLocationBasedGHGEmissions'])))+" metric tons CO2e", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'<font name="InterstateLight" color=blue><link href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator">Greenhouse gas emissions</link></font> were: ' + str("{:,}".format(int(data_dict['totalLocationBasedGHGEmissions'])))+" metric tons CO2e", pc272)])
             num_line += 1
         if 'ghg_elec' in includes and data_dict['local_elec_ghg_emissions'] and (num_line < 5):
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s greenhouse gas emissions from electricity were: ' + str("{:,}".format(int(data_dict['local_elec_ghg_emissions'])))+" mtCO2e", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'Greenhouse gas emissions from electricity were: ' + str("{:,}".format(int(data_dict['local_elec_ghg_emissions'])))+" mtCO2e", pc272)])
             num_line += 1
         if 'ghg_ng' in includes and data_dict['local_ng_ghg_emissions'] and (num_line < 5):
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'This building’s greenhouse gas emissions from natural gas were: ' + str("{:,}".format(int(data_dict['local_ng_ghg_emissions'])))+" mtCO2e", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'Greenhouse gas emissions from natural gas were: ' + str("{:,}".format(int(data_dict['local_ng_ghg_emissions'])))+" mtCO2e", pc272)])
             num_line += 1
         if 'eui' in includes and (num_line < 5):
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
             num_line += 1
         if data_dict['energy_star_score'] and ('score' in includes) and (num_line < 5):
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s ENERGY STAR score was: " + str(int(data_dict['energy_star_score']))+"/100", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"ENERGY STAR score was: " + str(int(data_dict['energy_star_score']))+"/100", pc272)])
             num_line += 1
 
         if ('median' in includes) and (num_line < 5):
             if data_dict['percentBetterThanSiteIntensityMedian']:
                 better_worse = 'more' if data_dict['percentBetterThanSiteIntensityMedian'] < 0.0 else 'less'
-                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building is " +  str(int(abs(data_dict['percentBetterThanSiteIntensityMedian'])))+ "% " + better_worse + " efficient than the property type national median", pc272)])
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> ''' +  str(int(abs(data_dict['percentBetterThanSiteIntensityMedian'])))+ "% " + better_worse + " efficient than the property type national median", pc272)])
                 num_line += 1
             elif data_dict['medianSiteIntensity']:
                 t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"The national median energy use intensity for a " +  data_dict['systemDefinedPropertyType'].lower()+ " was: " + str(data_dict['medianSiteIntensity'])+" kBtu/sq.ft.", pc272)])
@@ -496,7 +512,7 @@ class Highlights():
 
         if ('cost_sqft' in includes) and (num_line < 5):
             cost_per_sqft = data_dict['energyCost'] / data_dict['propGrossFloorArea']
-            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s cost per square foot was: " + str("{:.2f}".format(cost_per_sqft)) +" $/sq.ft.", pc272)])
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Cost per square foot was: " + str("{:.2f}".format(cost_per_sqft)) +" $/sq.ft.", pc272)])
             num_line += 1
 
         if 'yoy_percent_change_site_eui' in data_dict:
@@ -506,11 +522,11 @@ class Highlights():
                     num_line += 1
             elif 'eui' not in includes:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
                     num_line += 1
         elif 'eui' not in includes:
             if num_line < 5:
-                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building’s energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
+                t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
                 num_line += 1
             
         if 'yoy_percent_change_elec' in data_dict:
@@ -520,11 +536,11 @@ class Highlights():
                     num_line += 1
             else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
                     num_line += 1
         else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
                     num_line += 1
         if 'yoy_percent_change_water' in data_dict:
             if data_dict['yoy_percent_change_water'] and abs(data_dict['yoy_percent_change_water']) > 0:
@@ -538,11 +554,11 @@ class Highlights():
                     num_line += 1
             else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
                     num_line += 1
         else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"This building's natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
                     num_line += 1
 
         return t_achieve, num_line

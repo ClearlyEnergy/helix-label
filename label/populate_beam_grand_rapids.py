@@ -50,7 +50,7 @@ def write_grand_rapids_profile_pdf(data_dict, output_pdf_path):
     
     # Cost Box
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', 'MEDIAN')
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE', 'MEDIAN', 'WNEUI')
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -241,10 +241,10 @@ if __name__ == '__main__':
     if has_cost:
         data_dict = {
             'street': '123 MAIN ST', 'city': 'MAIN CITY', 'state': 'MI', 'zipcode': '01234', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian':-3.4, 'cons_mmbtu_min': 0,
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Manufacturing/Industrial Plant', 'energy_star_score': 90, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian':None, 'cons_mmbtu_min': 0,
             'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
-            'siteIntensity': 100.0,
+            'siteIntensity': 100.0, 'siteWNIntensity': 100.0,
             'energyCost': 10000.0, 
             'energyCostElectricityOnsiteSolarWind': 2110.0,
             'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
@@ -275,3 +275,5 @@ if __name__ == '__main__':
         }
     out_file = 'Grand_Rapids_Profile.pdf'
     write_grand_rapids_profile_pdf(data_dict, out_file)
+
+    
