@@ -298,7 +298,7 @@ class Scores():
             'Manufacturing/Industrial Plant': 'Wastewater Treatment Plant',
             'Mixed Use Property': 'Office', 'Veterinary Office': 'Medical Office', 'Parking': 'Warehouse', 'Courthouse': 'Office', 'Fire Station': 'Office', 'Library': 'Office', 'Mailing Center/Post Office': 'Office', 'Police Station': 'Office', 'Prison/Incarceration': 'Office', 'Social/Meeting Hall': 'Office', 'Transportation Terminal/Station': 'Office', 'Other - Public Services': 'Office',
             'Laboratory': 'Data Center', 'Other - Technology/Science': 'Data Center',
-            'Personal Services (Health/Beauty, Dry Cleaning, etc.)': 'Retail Store', 'Repair Services (Vehicle, Shoe, Locksmith, etc.)': 'Retail Store', 'Other - Services': 'Retail Store',
+            'Personal Services (Health/Beauty, Dry Cleaning, etc.)': 'Retail Store', 'Repair Services (Vehicle, Shoe, Locksmith, etc.)': 'Retail Store', 'Vehicle Repair Services': 'Retail Store', 'Other - Services': 'Retail Store',
             'Drinking Water Treatment & Distribution': 'Wastewater Treatment Plant', 'Energy/Power Station': 'Wastewater Treatment Plant', 'Other - Utility': 'Wastewater Treatment Plant',
             'Self-Storage Facility': 'Warehouse', 'Distribution Center': 'Warehouse', 'Non-Refrigerated Warehouse': 'Warehouse', 'Refrigerated Warehouse': 'Warehouse', 'Garage': 'Warehouse',
             'Other': 'Office'

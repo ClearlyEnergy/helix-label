@@ -172,9 +172,9 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
     if data_dict['onSiteRenewableSystemGeneration'] > 0.0 and num_line <= 5:
         t_achieve.append([Paragraph('''<img src="'''+CHECK_IMG+'''" height="12" width="12"/> '''+"This building generated " + str(data_dict['onSiteRenewableSystemGeneration']) + ' KWh of solar or wind on site.', pc272)])
         num_line +=1
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str(data_dict['yoy_percent_change_site_eui'])+" %.", pc272)])
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str(data_dict['yoy_percent_change_elec'])+" %.", pc272)])
-    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str(data_dict['totalLocationBasedGHGEmissions'])+" metric tons CO2e.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in energy use intensity since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_site_eui']))+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in electricity consumption since last year: " + str("{:.1f}".format(data_dict['yoy_percent_change_elec']))+" %.", pc272)])
+    t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"This building’s greenhouse gas emissions were: " + str("{:.1f}".format(data_dict['totalLocationBasedGHGEmissions']))+" metric tons CO2e.", pc272)])
     t_achieve.append([Paragraph('''<img src="'''+ CHECK_IMG+'''" height="12" width="12"/> '''+"Change in ENERGY STAR Score since last year: " + str(data_dict['yoy_change_score'])+".", pc272)])
  
     if t_achieve:
@@ -226,7 +226,7 @@ def write_orlando_profile_pdf(data_dict, output_pdf_path):
 if __name__ == '__main__':
     data_dict = {
         'street': '400 SOUTH ORANGE AVE', 'city': 'ORLANDO', 'state': 'FL', 'zipcode': '32801', 
-        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+        'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Vehicle Repair Services', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 50, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
         'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
         'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0,
         'energyCost': 10000.0, 
@@ -235,7 +235,7 @@ if __name__ == '__main__':
         'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0,
         'cons_solar': -11000.0,
         'estar_wh': True,
-        'yoy_percent_change_site_eui': 0.15, 'yoy_percent_change_elec': -0.1, 'yoy_change_score': 5,
+        'yoy_percent_change_site_eui': 0.155435, 'yoy_percent_change_elec': -0.16543645, 'yoy_change_score': 5,
         'totalLocationBasedGHGEmissions': 150,
         'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
     }
