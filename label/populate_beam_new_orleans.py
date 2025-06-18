@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #! /usr/bin/python
-# run with python3 -m label.populate_beam_profile
+# run with python3 -m label.populate_beam_new_orleans
 
 import os
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_LEFT, TA_CENTER
@@ -19,14 +19,14 @@ import datetime
 module_path = os.path.abspath(os.path.dirname(__file__))
 FONT_PATH = os.path.normpath(os.path.join(module_path, ".fonts"))
 IMG_PATH = os.path.normpath(os.path.join(module_path, "images"))
-CUSTOM_DTEAL = colors.Color(red=(38.0/255),green=(86.0/255),blue=(145.0/255))
+CUSTOM_DTEAL = colors.Color(red=(43.0/255),green=(76.0/255),blue=(107.0/255))
 
 pdfmetrics.registerFont(TTFont('InterstateLight',FONT_PATH+'/InterstateLight.ttf'))
 pdfmetrics.registerFont(TTFont('InterstateBlack',FONT_PATH+'/InterstateBlack.ttf'))
 #pdfmetrics.registerFont(TTFont('Arial Unicode',FONT_PATH+'/Arial Unicode.ttf'))
 pdfmetrics.registerFont(TTFont("FontAwesome", FONT_PATH+"/FontAwesome.ttf"))
 
-def write_beam_profile_pdf(data_dict, output_pdf_path):
+def write_new_orleans_profile_pdf(data_dict, output_pdf_path):
     is_data_valid, msg, data_dict = validate_data_dict(data_dict)
     doc = ColorFrameSimpleDocTemplate(output_pdf_path,pagesize=letter,rightMargin=20,leftMargin=20,topMargin=20,bottomMargin=20)
     styles = getSampleStyleSheet()                 
@@ -42,16 +42,15 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     
     ### P1
     # Logo
-    column_10 = Frame(doc.leftMargin, doc.height-0.1*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0)    
-    vthep_logo = IMG_PATH+"/beamlogo.png"
-    im = Image(vthep_logo, 2.5*inch, 0.91*inch) #max is 1.1 inch height, #max is 2.5in wide
+    column_10 = ColorFrame(doc.leftMargin, doc.height-0.125*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=20) 
+    vthep_logo = IMG_PATH+"/city_of_new_orleans_logo.png"
+    im = Image(vthep_logo, 2.0*inch, 0.76*inch) #max is 1.1 inch height
     Story.append(im)
     Story.append(FrameBreak)
     
     # Cost Box
-    # OPTIONS ARE ESTAR_SCORE, EUI, WNEUI, GHG, EU
     column_11 = ColorFrame(doc.leftMargin, doc.height-0.23*doc.height, doc.width/3-12, 0.13*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=10)    
-    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE')
+    text_c101, text_c102, text_c103 = Highlights.score_box(data_dict, 'ESTAR_SCORE','EUI')
     Story.append(text_c101)
     Story.append(text_c102)
     Story.append(text_c103)
@@ -122,9 +121,8 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     Story.append(FrameBreak)
     
     # Cost
-    # Options are COST, GHG, COST_INCLSQFT, ELECTRIFY
     y_offset += 0.02
-    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL, 'GHG')
+    text_c231, text_c232 = Highlights.cost_box(data_dict, CUSTOM_DTEAL, 'COST')
     column_231 = ColorFrame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (1/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, roundedBackground=CUSTOM_DTEAL, topPadding=5, bottomPadding=5)    
     column_232 = Frame(doc.leftMargin+doc.width/3+(1/4)*(2/3)*doc.width, doc.height*(1-y_offset), (3/4)*(2/3)*doc.width, 0.04*doc.height, showBoundary=0, topPadding=10)    
     Story.append(text_c231)
@@ -163,7 +161,6 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     Story.append(text_c261)
     Story.append(FrameBreak)
 
-    
     # Energy Highlights Details
     y_offset += 0.17
     column_27 = Frame(doc.leftMargin+doc.width/3, doc.height*(1-y_offset), (2/3)*doc.width, 0.17*doc.height, showBoundary=0, topPadding=0)    
@@ -171,24 +168,6 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     
     ## HIGHLIGHTS: CERTIFICATIONS, SOLAR & EV, GENERAL
     num_line = 0
-    t_cert, num_line = Highlights.cert_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)             
-    if t_cert:
-        ratings_table = Table(t_cert, colWidths = [2.7*inch, 2.7*inch])
-        ratings_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'TOP'),
-            ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(ratings_table)   
-        
-    t_solar, num_line = Highlights.solar_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
-    if t_solar:
-        solar_table = Table(t_solar, colWidths = [5.1*inch])
-        solar_table.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('BACKGROUND',(0,0),(-1,-1),colors.white),
-         ]))
-        Story.append(solar_table)
     
     t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
     if t_achieve:
@@ -221,14 +200,10 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph("Schedule a professional energy audit to identify cost-saving upgrades", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Perform regular building envelope maintenance", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Identify any rebates or incentives offered by your city, state, or utility", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Regularly update and maintain key heating and cooling systems", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 1...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 2...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph("Jurisdiction specific link 3...", pc291, bulletText=UNCHECKED.encode('UTF8')))
-                        
+    Story.append(Paragraph('<font name="InterstateLight" color=blue><link href="https://energysmartnola.info/businesses/#eacall">Reach out to an Energy Smart Advisor</link></font> to discuss a custom upgrade package that could include retrocommissioning, equipment replacement, and demand response options.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Learn more about the federal <font name="InterstateLight" color=blue><link href="https://www.irs.gov/credits-deductions/energy-efficient-commercial-buildings-deduction"> 179D Energy Efficient Commercial Buildings Tax Deduction</link></font> that may apply to projects that improve energy efficiency and generate energy savings.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Request a <font name="InterstateLight" color=blue><link href="https://nola.beam-portal.org/helpdesk/tickets/submit/222/?org=City%20of%20New%20Orleans ">U.S. Department of Energy BETTER Report</link></font> that recommends individualized actions to improve your property’s energy efficiency.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
     templates =[]
@@ -239,13 +214,13 @@ def write_beam_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_beam_profile
+# Run with:  python3 -m label.populate_beam_new_orleans
 if __name__ == '__main__':
-    has_cost = False
+    has_cost = True
     if has_cost:
         data_dict = {
-            'street': '77 MASSACHUSETTS AVE', 'city': 'CAMBRIGE', 'state': 'MA', 'zipcode': '02139', 
-            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
+            'street': '1 FRENCH QUARTER', 'city': 'NEW ORLEANS', 'state': 'LA', 'zipcode': '70112', 
+            'year_built': 1895, 'year_ending': 2024, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 3.4, 'cons_mmbtu_min': 0,
             'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
             'siteIntensity': 100.0,
@@ -255,7 +230,7 @@ if __name__ == '__main__':
             'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
             'cons_solar': -11000.0,
             'estar_wh': True,
-            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
+            'yoy_percent_change_site_eui': 12.5, 'yoy_percent_change_elec': -5.4, 'yoy_percent_change_ng': 5.7,
             'totalLocationBasedGHGEmissions': 150,
             'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
         }
@@ -277,5 +252,5 @@ if __name__ == '__main__':
             'totalLocationBasedGHGEmissions': 150,
             'onSiteRenewableSystemGeneration': 20000, 'numberOfLevelOneEvChargingStations': 3, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
         }
-    out_file = 'BEAM_Profile.pdf'
-    write_beam_profile_pdf(data_dict, out_file)
+    out_file = 'New_Orleans_Profile.pdf'
+    write_new_orleans_profile_pdf(data_dict, out_file)
