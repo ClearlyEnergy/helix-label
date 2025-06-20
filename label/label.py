@@ -141,7 +141,8 @@ class Label:
     def _write_S3(self, file_name, aws_bucket = ''):
         bucket = os.environ.get('S3_BUCKET', aws_bucket)
         filename = 'labels/' + str(uuid.uuid4())+'.pdf'
-        args = {'ContentType': 'application/pdf', 'ACL': 'public-read'}
+        # args = {'ContentType': 'application/pdf', 'ACL': 'public-read'}
+        args = {'ContentType': 'application/pdf' }
         if isinstance(file_name, str):
             self.s3_resource.Object(bucket, filename).upload_file(Filename=file_name, ExtraArgs=args)
             os.remove(file_name)
