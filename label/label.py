@@ -109,7 +109,7 @@ class Label:
                 fn(data_dict, full_path)
                 return full_path, ''
             except FileNotFoundError:
-                with default_storage.open(full_path, 'w') as file:
+                with default_storage.open(full_path, 'wb') as file:
                     fn(data_dict, file)
                 return full_path, ''
         else:
