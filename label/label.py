@@ -1,3 +1,4 @@
+from django.core.files.storage import default_storage
 from label.generic_energy_profile import write_generic_energy_profile_pdf
 from label.populate_beam_profile import write_beam_profile_pdf
 from label.populate_residential_green_addendum import write_green_addendum_pdf
@@ -74,7 +75,7 @@ class Label:
         out_filename = self._write_S3(out_file, aws_bucket)
         return out_filename
 
-    def beam_profile(self, data_dict, object_id, out_path='', out_file='', organization_name=''):
+    def beam_profile(self, data_dict, object_id, out_path='', out_file='', organization_name='', aws_bucket=None):
         org_pdf_mapping = {'City of Ann Arbor': write_ann_arbor_profile_pdf,
                            'Ann Arbor and Washtenaw 2030 District': write_ann_arbor_2030_profile_pdf,
                            'City of Cambridge': write_cambridge_profile_pdf,
@@ -93,7 +94,6 @@ class Label:
                            'City of San Diego': write_san_diego_profile_pdf,
                            'City of Reno': write_reno_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
-                           'Village of Oak Park': write_oak_park_profile_pdf
                            }
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 
@@ -103,9 +103,15 @@ class Label:
         full_path = out_path + '/' + out_file
 
         is_data_valid, msg, data_dict = validate_data_dict(data_dict)
+
         if is_data_valid:
-            fn(data_dict, full_path)
-            return full_path, ''
+            try:
+                fn(data_dict, full_path)
+                return full_path, ''
+            except FileNotFoundError:
+                with default_storage.open(full_path, 'w') as file:
+                    fn(data_dict, file)
+                return full_path, ''
         else:
             return '', f'Errors for {object_id}: ' + msg
 
