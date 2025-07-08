@@ -24,6 +24,7 @@ from label.populate_beam_providence import write_providence_profile_pdf
 from label.populate_beam_reno import write_reno_profile_pdf
 from label.populate_beam_san_diego import write_san_diego_profile_pdf
 from label.populate_beam_south_portland import write_south_portland_profile_pdf
+from label.populate_beam_new_orleans import write_new_orleans_profile_pdf
 from label.populate_remotely_ipc import write_remotely_ipc_pdf
 from label.utils.utils import validate_data_dict
 
@@ -94,6 +95,7 @@ class Label:
                            'City of San Diego': write_san_diego_profile_pdf,
                            'City of Reno': write_reno_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
+                           'City of New Orleans': write_new_orleans_profile_pdf,
                            }
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 
