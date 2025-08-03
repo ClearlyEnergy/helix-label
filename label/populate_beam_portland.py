@@ -187,7 +187,7 @@ def write_portland_profile_pdf(data_dict, output_pdf_path):
          ]))
         Story.append(solar_table)
     
-    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line)
+    t_achieve, num_line = Highlights.general_commercial(data_dict, FONT_T, FONT_NORMAL, CUSTOM_DGRAY, CHECK_IMG, num_line, ['median','eui'])
     if t_achieve:
         achieve_table = Table(t_achieve, colWidths = [5.4*inch])
         achieve_table.setStyle(TableStyle([
@@ -217,12 +217,11 @@ def write_portland_profile_pdf(data_dict, output_pdf_path):
     Story.append(HRFlowable(width="100%", thickness=1, lineCap='round', color= CUSTOM_MGRAY, spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='TOP', dash=None))        
     pc291 = ParagraphStyle('body_left', alignment = TA_LEFT, textColor = CUSTOM_DGRAY, fontSize = FONT_T, fontName = FONT_NORMAL,  spaceBefore = 6, spaceAfter = 0, leading=10, backColor = 'white', bulletIndent = 12, firstLineIndent = 0, leftIndent = 12, rightIndent = 0)
 
-    Story.append(Paragraph('Request the City to sponsor your <font name="InterstateLight" color=blue><link href="https://clearlyenergy.com/building-optimization?">decarbonization roadmap</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('ASHRAE Level I Audit - Contact <font name="InterstateLight" color=blue><link href="mailto:eferrell@portlandmaine.gov">Erin Ferrell</link></font> to learn more about creating a report to identify cost saving measures', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Look into efficiency incentives and rebates available through <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/">Efficiency Maine</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-    Story.append(Paragraph('Identify state and federal incentives through the <font name="InterstateLight" color=blue><link href="https://www.dsireusa.org/">Database of State Incentives for Renewables & Efficiency</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
-
-              
+    Story.append(Paragraph('Not sure where to begin? <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/business-customer-consultation/">Start with a no-cost, no-obligation consultation with Efficiency Maine</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Efficiency Maine offers rebates and incentives for insulation, HVAC, refrigerant, lighting, water heating, and more. <font name="InterstateLight" color=blue><link href="https://www.efficiencymaine.com/at-work/">Find technical assistance, financing tools, and qualified local vendors who can help you with efficiency projects</link></font>.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Schedule regular maintenance of heating and cooling systems to optimize performance.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+    Story.append(Paragraph('Go solar. Install rooftop or parking lot solar panels to save money and boost property value.', pc291, bulletText=UNCHECKED.encode('UTF8')))
+         
               
 ### BUILD PAGE
     page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
@@ -288,7 +287,7 @@ if __name__ == '__main__':
     "year_ending": 2023,
     "yoy_change_score": 0,
     "yoy_percent_change_elec": 0,
-    "yoy_percent_change_site_eui": 0,
+    "yoy_percent_change_site_eui": 12.0,
     "zipcode": "04101"
 }    
 
