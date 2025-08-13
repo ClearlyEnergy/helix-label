@@ -96,6 +96,7 @@ class Label:
                            'City of Reno': write_reno_profile_pdf,
                            'City of South Portland': write_south_portland_profile_pdf,
                            'City of New Orleans': write_new_orleans_profile_pdf,
+                           'State of West Virgnia': write_west_virginia_profile_pdf,
                            }
         fn = org_pdf_mapping.get(organization_name, write_beam_profile_pdf)
 

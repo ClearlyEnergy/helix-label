@@ -494,6 +494,9 @@ class Highlights():
         if 'ghg_ng' in includes and data_dict['local_ng_ghg_emissions'] and (num_line < 5):
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+'Greenhouse gas emissions from natural gas were: ' + str("{:,}".format(int(data_dict['local_ng_ghg_emissions'])))+" mtCO2e", pc272)])
             num_line += 1
+        if 'elec' in includes and (num_line < 5):
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption was: " + str(int(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kWh", pc272)])
+            num_line += 1
         if 'eui' in includes and (num_line < 5):
             t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Energy use intensity was: " + str(int(data_dict['siteIntensity']))+" kBtu/sq.ft.", pc272)])
             num_line += 1
@@ -536,11 +539,11 @@ class Highlights():
                     num_line += 1
             else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kWh", pc272)])
                     num_line += 1
         else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kwh", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseElectricityGridPurchaseKwh']))+" kWh", pc272)])
                     num_line += 1
         if 'yoy_percent_change_water' in data_dict:
             if data_dict['yoy_percent_change_water'] and abs(data_dict['yoy_percent_change_water']) > 0:
@@ -554,12 +557,16 @@ class Highlights():
                     num_line += 1
             else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kBtu", pc272)])
                     num_line += 1
         else:
                 if num_line < 5:
-                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kbtu", pc272)])
+                    t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Natural gas consumption: " + str("{:,.0f}".format(data_dict['siteEnergyUseNaturalGas']))+" kBtu", pc272)])
                     num_line += 1
+
+        if 'ng' in includes and (num_line < 5):
+            t_achieve.append([Paragraph('''<img src="'''+icon+'''" height="12" width="12"/> '''+"Electricity consumption was: " + str(int(data_dict['siteEnergyUseNaturalGas']))+" kBtu", pc272)])
+            num_line += 1
 
         return t_achieve, num_line
 
