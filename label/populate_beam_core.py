@@ -73,8 +73,8 @@ def write_core_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph("LOCATION:", pc13))
     Story.append(Paragraph(data_dict['street'],pc14))
     Story.append(Paragraph(data_dict['city'] + ", " + data_dict["state"] + " " + data_dict["zipcode"], pc14))
-    Story.append(Paragraph("YEAR BUILT:", pc13))
-    Story.append(Paragraph(str(int(data_dict['year_built'])),pc14))
+    Story.append(Paragraph("PROPERTY USE TYPE:", pc13))
+    Story.append(Paragraph(data_dict['systemDefinedPropertyType'],pc14))
     Story.append(Paragraph("GROSS FLOOR AREA:",pc13))
     floor_area = str("{:,}".format(int(data_dict['propGrossFloorArea']))) if data_dict['propGrossFloorArea'] is not None else 'N/A'
     Story.append(Paragraph(floor_area +' Sq.Ft.',pc14))
