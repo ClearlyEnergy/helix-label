@@ -231,22 +231,40 @@ def write_west_virginia_profile_pdf(data_dict, output_pdf_path):
 if __name__ == '__main__':
     has_cost = True
     if has_cost:
-        data_dict = {
-            'street': '1 MAIN ST', 'city': 'NITRO', 'state': 'WV', 'zipcode': '25143', 
-            'year_built': 1935, 'year_ending': 2024, 'propGrossFloorArea': 50000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 5.4, 'cons_mmbtu_min': 0,
-            'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
+                data_dict = {
+            'street': '150 Lively Street', 'city': 'Fayetteville', 'state': 'WV', 'zipcode': '25840', 
+            'year_built': 1988, 'year_ending': 2024, 'propGrossFloorArea': 2100.0, 'systemDefinedPropertyType': 'Vehicle Repair Services', 'energy_star_score': None, 'site_total': 245.586,  'medianSiteIntensity': 64.8, 
+            'percentBetterThanSiteIntensityMedian': None, 'cons_mmbtu_min': 0,
+            'siteEnergyUseElectricityGridPurchase': 188130.0, 'siteEnergyUseElectricityGridPurchaseKwh': 55138.0, 'siteEnergyUseNaturalGas': 57456.0, 'siteEnergyUseKerosene': None, 'siteEnergyUsePropane': None,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
-            'siteIntensity': 100.0,
-            'energyCost': 10000.0, 'percent_electric': 20.0,
-            'energyCostElectricityOnsiteSolarWind': 0.0,
-            'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
+            'siteIntensity': 116.9, 
+            'energyCost': 3348.91,  'percent_electric': 20.0,
+            'energyCostElectricityOnsiteSolarWind': None,
+            'energyCostElectricityGridPurchase': 2259.61, 'energyCostNaturalGas': 1089.30, 'energyCostKerosene': None, 'energyCostPropane': None,
             'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
             'cons_solar': 0.0,
-            'estar_wh': True,
-            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
-            'totalLocationBasedGHGEmissions': 150,
+            'estar_wh': False,
+            'yoy_percent_change_site_eui': None, 'yoy_percent_change_elec': None,
+            'totalLocationBasedGHGEmissions': None,
             'onSiteRenewableSystemGeneration': 0.0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
         }
+
+#        data_dict = {
+#            'street': '1 MAIN ST', 'city': 'NITRO', 'state': 'WV', 'zipcode': '25143', 
+#            'year_built': 1935, 'year_ending': 2024, 'propGrossFloorArea': 50000.0, 'systemDefinedPropertyType': 'Office', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 5.4, 'cons_mmbtu_min': 0,
+#            'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
+#            'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
+#            'siteIntensity': 100.0,
+#            'energyCost': 10000.0, 'percent_electric': 20.0,
+#            'energyCostElectricityOnsiteSolarWind': 0.0,
+#            'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
+#            'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
+#            'cons_solar': 0.0,
+#            'estar_wh': True,
+#            'yoy_percent_change_site_eui': 0.0, 'yoy_percent_change_elec': -0.1,
+#            'totalLocationBasedGHGEmissions': 150,
+#            'onSiteRenewableSystemGeneration': 0.0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
+#        }
 #no costs data example
     else:
         data_dict = {
@@ -265,5 +283,7 @@ if __name__ == '__main__':
             'totalLocationBasedGHGEmissions': 150,
             'onSiteRenewableSystemGeneration': 0.0, 'numberOfLevelOneEvChargingStations': 0, 'numberOfLevelTwoEvChargingStations': 0, 'numberOfDcFastEvChargingStations': 0,
         }
+
+
     out_file = 'West_Virginia_Profile.pdf'
     write_west_virginia_profile_pdf(data_dict, out_file)

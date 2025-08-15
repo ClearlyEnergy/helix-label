@@ -127,17 +127,20 @@ class flowable_triangle(Flowable):
 
 class Charts():
     
-    def pie_chart(data_dict, fuels, fuel_icons, fuel_color):
+    def pie_chart(data_dict, fuels, fuel_icons, fuel_color, cost=True):
         drawing = Drawing(width=1.0*inch, height=1.0*inch)
         data = []
         labels = []
         order = []
 
-        for num, fuel in enumerate(fuels):
-            if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] > 0):
-                data.append(int(data_dict['energyCost'+fuel]))
-                labels.append(fuel_icons[num])
-                order.append(num)
+        # cost based pie chart
+        if cost:
+            for num, fuel in enumerate(fuels):
+                if ('energyCost'+fuel in data_dict) and (data_dict['energyCost'+fuel] is not None) and (data_dict['energyCost'+fuel] > 0):
+                    data.append(int(data_dict['energyCost'+fuel]))
+                    labels.append(fuel_icons[num])
+                    order.append(num)
+        # consumption based pie chart
         if not order: #check fuel unit conversions
             for num, fuel in enumerate(fuels):
                 if ('siteEnergyUse'+fuel in data_dict) and (data_dict['siteEnergyUse'+fuel] is not None) and (data_dict['siteEnergyUse'+fuel] > 0):
@@ -603,14 +606,14 @@ def validate_data_dict(data_dict: dict) -> bool:
                 data_dict['siteEnergyUseFuelOil'] += data_dict['siteEnergyUse'+oil]
             if data_dict['energyCost'+oil] is not None:
                 data_dict['energyCostFuelOil'] += data_dict['energyCost'+oil]
-    propane_list = ['Propane', 'Kerosene']
+    propane_list = ['Kerosene'] #Propane is already included
     for propane in propane_list:
         if 'siteEnergyUse'+propane in data_dict:
             if data_dict['siteEnergyUse'+propane] is not None:
                 data_dict['siteEnergyUsePropane'] += data_dict['siteEnergyUse'+propane]
             if data_dict['energyCost'+propane] is not None:
                 data_dict['energyCostPropane'] += data_dict['energyCost'+propane]
-    district_list = ['DistrictSteam', 'DistrictHotWater', 'DistrictChilledWater']
+    district_list = ['DistrictHotWater', 'DistrictChilledWater'] #DistrictSteam already included
     for district in district_list:
         if 'siteEnergyUse'+district in data_dict:
             if data_dict['siteEnergyUse'+district] is not None:

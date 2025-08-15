@@ -147,8 +147,11 @@ def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
     cost_subTable = Tables.cost_table(data_dict)     
     Story.append(cost_subTable)
     Story.append(FrameBreak)
-    pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR)
-    column_253 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset), (3/10)*(2/3)*doc.width, 0.20*doc.height, showBoundary=0, topPadding=10)        
+    pie = Charts.pie_chart(data_dict, FUELS, FUELICONS, FUELCOLOR, cost=False)
+    column_254 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset+0.15), (3/10)*(2/3)*doc.width, 0.05*doc.height, showBoundary=0, topPadding=10)        
+    text_c254 = Paragraph("Consumption", tf_small_bold)
+    Story.append(text_c254)
+    column_255 = Frame(doc.leftMargin+doc.width/3+(7/15)*doc.width, doc.height*(1-y_offset), (3/10)*(2/3)*doc.width, 0.15*doc.height, showBoundary=0, topPadding=10)        
     Story.append(pie)
     Story.append(FrameBreak)    
     
@@ -227,7 +230,7 @@ def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
     Story.append(Paragraph('Check out the Buildings and the Inflation Reduction Act Policy <font name="InterstateLight" color=blue><u><link href="https://www.usgbc.org/resources/buildings-and-inflation-reduction-act-policy-guidebook">Guidebook</link></u></font>', pc291, bulletText=UNCHECKED.encode('UTF8')))
 
 ### BUILD PAGE
-    page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_253, column_261, column_27, column_281, column_282, column_29]
+    page_1_frames = [column_10, column_11, column_12, column_211, column_212, column_22, column_231, column_232, column_24, column_251, column_252, column_254, column_255, column_261, column_27, column_281, column_282, column_29]
     templates =[]
     templates.append(PageTemplate(frames=page_1_frames,id='firstPage'))
     doc.addPageTemplates(templates)
@@ -236,21 +239,21 @@ def write_ann_arbor_2030_profile_pdf(data_dict, output_pdf_path):
     #populate story with paragraphs    
     doc.build(Story)
 
-# Run with:  python3 -m label.populate_ann_arbor_2030_profile
+# Run with:  python3 -m label.populate_beam_ann_arbor_2030_profile
 if __name__ == '__main__':
     has_cost = True
     if has_cost:
         data_dict = {
             'street': '123 MAIN ST', 'city': 'MAIN CITY', 'state': 'MA', 'zipcode': '02139', 
-            'year_built': 1895, 'year_ending': 2023, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 99, 'site_total': 3434,  'medianSiteIntensity': 2500, 'percentBetterThanSiteIntensityMedian': 0.25, 'cons_mmbtu_min': 0,
-            'siteEnergyUseElectricityGridPurchase': 1000.0, 'siteEnergyUseElectricityGridPurchaseKwh': 100000.0, 'siteEnergyUseNaturalGas': 1000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 1000.0,
+            'year_built': 1895, 'year_ending': 2022, 'propGrossFloorArea': 100000.0, 'systemDefinedPropertyType': 'Hotel', 'energy_star_score': 34, 'site_total': 3434,  'medianSiteIntensity': 69.8, 'percentBetterThanSiteIntensityMedian': 20.0,
+            'siteEnergyUseElectricityGridPurchase': 3412000, 'siteEnergyUseElectricityGridPurchaseKwh': 1000000.0, 'siteEnergyUseNaturalGas': 1000000.0, 'siteEnergyUseKerosene': 0.0, 'siteEnergyUsePropane': 500000.0,
             'siteEnergyUseDiesel': 0.0, 'siteEnergyUseFuelOil1': 0.0, 'siteEnergyUseFuelOil2': 0.0, 'siteEnergyUseFuelOil4': 0.0, 'siteEnergyUseFuelOil5And6': 0.0, 'siteEnergyUseWood': 0.0, 'siteEnergyUseDistrictSteam': 0.0,
             'siteIntensity': 100.0,
-            'energyCost': 10000.0, 
-            'energyCostElectricityOnsiteSolarWind': 2110.0,
-            'energyCostElectricityGridPurchase': 1000.0, 'energyCostNaturalGas': 1000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 1000.0,
+            'energyCost': 100000.0, 
+            'energyCostElectricityOnsiteSolarWind': 0.0,
+            'energyCostElectricityGridPurchase': 50000.0, 'energyCostNaturalGas': 40000.0, 'energyCostKerosene': 0.0, 'energyCostPropane': 10000.0,
             'energyCostDiesel': 0.0, 'energyCostFuelOil1': 0.0, 'energyCostFuelOil2': 0.0, 'energyCostFuelOil4': 0.0, 'energyCostFuelOil5And6': 0.0, 'energyCostWood': 0.0, 'energyCostDistrictSteam': 0.0,
-            'cons_solar': -11000.0,
+            'cons_solar': 0.0,
             'estar_wh': True,
             'yoy_percent_change_site_eui': -7.8, 'yoy_percent_change_elec': -0.1, 'yoy_percent_change_ng': 5.7,
             'totalLocationBasedGHGEmissions': 150,
